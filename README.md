@@ -66,13 +66,13 @@ complex interaction state are implemented in custom hooks.
 
 ## Environment
 
-Create `.env` from `.env.example`:
+Create an uncommitted `.env.local` for machine-specific values:
 
 ```powershell
-Copy-Item .env.example .env
+Copy-Item .env.example .env.local
 ```
 
-Configure:
+Configure `.env.local`:
 
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:8000/api/v1
@@ -124,6 +124,62 @@ Create a static web export:
 ```powershell
 npm run build:web
 ```
+
+## Deploying Expo Web To Vercel
+
+The frontend and backend are separate Vercel projects. Deploy the backend first
+because its production URL is required while building the frontend.
+
+### 1. Create The Frontend Project
+
+Import this repository into Vercel and configure:
+
+- Root Directory: repository root
+- Framework Preset: Other
+- Build Command: `npm run build:web`
+- Output Directory: `dist`
+- Install Command: `npm install`
+
+`vercel.json` already contains the build and output settings.
+
+### 2. Configure Production Variables
+
+In Vercel Project Settings, add these variables for Production:
+
+```env
+EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
+EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+Add equivalent values for Preview if preview deployments should work. A preview
+frontend may call the production backend, or a separate staging backend.
+
+`EXPO_PUBLIC_` values are embedded into the browser/native JavaScript bundle at
+build time. They must not contain secrets.
+
+### 3. Deploy
+
+Push to the production branch or run:
+
+```powershell
+npx vercel --prod
+```
+
+After changing a Vercel environment variable, redeploy the frontend so Expo can
+embed the new value into the web bundle.
+
+### Environment File Strategy
+
+Use:
+
+- `.env.local`: uncommitted local API and Supabase values
+- Vercel Environment Variables: Preview and Production values
+- `.env.example`: committed variable-name documentation
+
+A committed `.env.production` is not required. Vercel injects production
+variables during the build. Keeping production configuration in Vercel avoids
+committing credentials and deployment-specific URLs.
 
 ## Authentication Flow
 
@@ -203,4 +259,3 @@ firewall.
 
 Confirm the user is authenticated, the Supabase migration is applied, and the
 backend can connect to the same Supabase PostgreSQL database.
-
