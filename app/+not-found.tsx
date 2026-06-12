@@ -1,40 +1,27 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
+import { Text, View } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
+import { BrandMark } from '@/src/components/layout/BrandMark';
+import { PublicShell } from '@/src/components/layout/PublicShell';
 
 export default function NotFoundScreen() {
   return (
-    <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>This screen doesn't exist.</Text>
-
-        <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
+    <PublicShell>
+      <View className="gap-8 rounded-[32px] border border-line bg-surface p-6 sm:p-8">
+        <BrandMark />
+        <View className="gap-2">
+          <Text className="text-4xl font-black text-ink">Page not found</Text>
+          <Text className="text-base leading-6 text-muted">
+            The page you requested does not exist or has moved.
+          </Text>
+        </View>
+        <Link
+          accessibilityRole="link"
+          className="min-h-14 rounded-2xl bg-brand px-5 py-4 text-center text-base font-black text-white"
+          href="/">
+          Return home
         </Link>
       </View>
-    </>
+    </PublicShell>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-});

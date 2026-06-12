@@ -1,5 +1,5 @@
 import { DashboardScreen } from '@/src/components/dashboard/DashboardScreen';
 
-export default function TabOneScreen() {
+export default function DashboardRoute() {
   return <DashboardScreen />;
 }

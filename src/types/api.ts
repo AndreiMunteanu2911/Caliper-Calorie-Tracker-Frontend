@@ -65,7 +65,7 @@ export type EstimatedFood = {
   fats: number;
 };
 
-export type PlateAnalysis = {
+export type MealAnalysis = {
   foods: EstimatedFood[];
   total_calories: number;
   total_protein: number;

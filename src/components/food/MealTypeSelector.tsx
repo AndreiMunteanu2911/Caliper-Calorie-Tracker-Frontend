@@ -23,12 +23,12 @@ export function MealTypeSelector({ value, onChange }: MealTypeSelectorProps) {
           <Pressable
             accessibilityRole="radio"
             accessibilityState={{ selected }}
-            className={`rounded-full px-4 py-2 ${
-              selected ? 'bg-lime' : 'bg-white/10'
+            className={`rounded-full border px-4 py-2 ${
+              selected ? 'border-brand bg-brand' : 'border-line bg-surface'
             }`}
             key={mealType}
             onPress={() => onChange(mealType)}>
-            <Text className={selected ? 'font-bold text-canvas' : 'text-white'}>
+            <Text className={selected ? 'font-black text-white' : 'font-bold text-muted'}>
               {LABELS[mealType]}
             </Text>
           </Pressable>

@@ -1,7 +1,8 @@
 import { Modal, Pressable, Text, TextInput, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
-import { PrimaryButton } from '@/src/components/ui/PrimaryButton';
+import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
+import { Button } from '@/src/components/ui/Button';
 import { useQuickLogForm } from '@/src/hooks/useQuickLogForm';
 import type { FoodItem, MealType } from '@/src/types/api';
 
@@ -30,26 +31,26 @@ export function QuickLogModal({
       visible={food !== null}>
       <View className="flex-1 bg-canvas px-5 pb-10 pt-8">
         <View className="flex-row items-center justify-between">
-          <Text className="text-sm font-semibold uppercase tracking-widest text-lime">
+          <Text className="text-sm font-black uppercase tracking-[2px] text-brand">
             Quick log
           </Text>
           <Pressable accessibilityRole="button" onPress={onDismiss}>
-            <Text className="text-base font-semibold text-muted">Cancel</Text>
+            <Text className="text-base font-bold text-muted">Cancel</Text>
           </Pressable>
         </View>
-        <Text className="mt-3 text-3xl font-bold text-white">{food?.name}</Text>
+        <Text className="mt-3 text-3xl font-black text-ink">{food?.name}</Text>
         <Text className="mt-1 text-muted">{food?.brand || 'Nutrition per 100g'}</Text>
 
         <View className="mt-8 gap-3">
-          <Text className="text-sm font-semibold text-white">Meal</Text>
+          <Text className="text-sm font-black text-ink">Meal</Text>
           <MealTypeSelector value={form.mealType} onChange={form.setMealType} />
         </View>
 
         <View className="mt-7 gap-2">
-          <Text className="text-sm font-semibold text-white">Weight in grams</Text>
+          <Text className="text-sm font-black text-ink">Weight in grams</Text>
           <TextInput
             accessibilityLabel="Food weight in grams"
-            className="h-16 rounded-2xl bg-panel px-5 text-2xl font-bold text-white"
+            className="h-16 rounded-2xl border border-line bg-surface px-5 text-2xl font-black text-ink"
             keyboardType="decimal-pad"
             onChangeText={form.setWeight}
             selectTextOnFocus
@@ -57,34 +58,38 @@ export function QuickLogModal({
           />
         </View>
 
-        <View className="my-7 flex-row justify-between rounded-3xl bg-panel p-5">
+        <View className="my-7 flex-row flex-wrap justify-between gap-4 rounded-3xl border border-line bg-surface p-5">
           <View>
             <Text className="text-xs text-muted">Calories</Text>
-            <Text className="text-xl font-bold text-lime">
+            <Text className="text-xl font-black text-brand">
               {Math.round(form.macros.calories)}
             </Text>
           </View>
           <View>
             <Text className="text-xs text-muted">Protein</Text>
-            <Text className="text-xl font-bold text-white">
+            <Text className="text-xl font-black text-ink">
               {form.macros.protein.toFixed(1)}g
             </Text>
           </View>
           <View>
             <Text className="text-xs text-muted">Carbs</Text>
-            <Text className="text-xl font-bold text-white">
+            <Text className="text-xl font-black text-ink">
               {form.macros.carbs.toFixed(1)}g
             </Text>
           </View>
           <View>
             <Text className="text-xs text-muted">Fats</Text>
-            <Text className="text-xl font-bold text-white">
+            <Text className="text-xl font-black text-ink">
               {form.macros.fats.toFixed(1)}g
             </Text>
           </View>
         </View>
-        {error ? <Text className="mb-3 text-red-300">{error}</Text> : null}
-        <PrimaryButton
+        {error ? (
+          <AnimatedPresence className="mb-3 rounded-2xl bg-dangerSoft p-3">
+            <Text className="font-semibold text-danger">{error}</Text>
+          </AnimatedPresence>
+        ) : null}
+        <Button
           label="Add to today"
           disabled={!form.isValid}
           loading={isSaving}

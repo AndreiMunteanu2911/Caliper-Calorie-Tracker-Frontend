@@ -12,7 +12,7 @@ Native, TypeScript, and NativeWind.
 - Native barcode scanning with Expo Camera
 - Debounced USDA food search
 - Open Food Facts barcode lookup
-- AI plate analysis from an image
+- AI meal analysis from a camera or library image
 - Context-aware AI diet advisor chat
 - iOS, Android, and web support
 
@@ -32,10 +32,14 @@ Native, TypeScript, and NativeWind.
 
 ```text
 app/
-  (tabs)/
-    index.tsx        Dashboard route
-    scan.tsx         Barcode, search, and plate analysis route
-    chat.tsx         Diet advisor route
+  index.tsx                         Public welcome route
+  sign-in.tsx                       Sign-in route
+  sign-up.tsx                       Registration route
+  (protected)/
+    (tabs)/
+      dashboard.tsx                 Dashboard route
+      scan.tsx                      Barcode, search, and meal analysis route
+      chat.tsx                      Diet advisor route
 
 src/
   components/
@@ -105,7 +109,14 @@ npm install
 
 ## Development
 
-Start Expo:
+Start the backend first from `Caliper-Backend`:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Then start Expo from `Caliper-Frontend`:
 
 ```powershell
 npm start
@@ -118,6 +129,36 @@ npm run android
 npm run ios
 npm run web
 ```
+
+### Local Test Checklist
+
+1. Open `/` and confirm the welcome page shows separate sign-in and sign-up
+   actions.
+2. Create an account. If Supabase email confirmation is enabled, confirm the
+   email before signing in.
+3. Sign in and confirm the app redirects to `/dashboard`.
+4. Open **Meal Analysis** and test barcode scanning, food search, camera capture,
+   and library image selection.
+5. Log a food, then confirm it appears on the dashboard.
+6. Edit its weight and meal type, then delete it.
+7. Open **AI Advisor**, send a message, and confirm the response uses the current
+   daily macro balance.
+8. Sign out and confirm protected routes redirect to `/`.
+
+For Expo Web, open the URL printed by `npm run web`, normally
+`http://localhost:8081`.
+
+In Supabase **Authentication > URL Configuration**, add the local and production
+auth callback URLs to the redirect allowlist:
+
+```text
+http://localhost:8081/**
+https://your-frontend.vercel.app/**
+caliperfrontend:///**
+```
+
+Keep the production frontend as the Supabase Site URL. The app sends an
+environment-specific email redirect when a user registers.
 
 Create a static web export:
 
@@ -205,8 +246,9 @@ state after the server accepts the change.
 
 ## Camera And Images
 
-Barcode scanning requires camera permission. Plate analysis uses the image
-library and sends a compressed base64 image to the backend.
+Barcode scanning requires camera permission. Meal analysis can capture a new
+camera photo or use the image library, then sends a compressed base64 image to
+the backend.
 
 Camera and photo permissions are configured in `app.json`. Native permission
 changes require rebuilding the native application.
@@ -220,7 +262,7 @@ changes require rebuilding the native application.
 - `useBarcodeScanner`: camera permission and scan state
 - `useBarcodeLookup`: Open Food Facts lookup
 - `useMealLogs`: quick-log creation
-- `usePlateAnalysis`: image selection and AI analysis
+- `useMealAnalysis`: camera/library selection and AI meal analysis
 - `useAdvisorChat`: interactive advisor conversation
 
 ## Required Backend Routes

@@ -1,7 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
-export type ScanMode = 'barcode' | 'search' | 'plate';
+export type ScanMode = 'barcode' | 'search' | 'meal';
 
 export function useScanScreenState() {
   const [mode, setMode] = useState<ScanMode>('barcode');

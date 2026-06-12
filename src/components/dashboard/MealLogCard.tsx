@@ -1,6 +1,9 @@
-import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
+import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
+import { Button } from '@/src/components/ui/Button';
+import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealLogEditor } from '@/src/hooks/useMealLogEditor';
 import type { MealLogItem, MealLogUpdate } from '@/src/types/api';
 
@@ -30,63 +33,72 @@ export function MealLogCard({
 
   if (editor.isEditing) {
     return (
-      <View className="gap-4 rounded-2xl border border-lime/30 bg-panel p-4">
-        <Text className="text-lg font-bold text-white">{log.food_name}</Text>
+      <AnimatedPresence className="gap-4 rounded-3xl border border-brand/20 bg-surface p-4">
+        <Text className="text-lg font-black text-ink">{log.food_name}</Text>
         <MealTypeSelector value={editor.mealType} onChange={editor.setMealType} />
         <TextInput
           accessibilityLabel={`Weight for ${log.food_name}`}
-          className="h-12 rounded-xl bg-black/20 px-4 text-lg text-white"
+          className="h-12 rounded-xl border border-line bg-canvas px-4 text-lg text-ink"
           keyboardType="decimal-pad"
           onChangeText={editor.setWeight}
           value={editor.weight}
         />
         <View className="flex-row gap-3">
-          <Pressable
-            accessibilityRole="button"
-            className="flex-1 items-center rounded-xl bg-white/10 py-3"
-            disabled={isMutating}
-            onPress={editor.cancelEditing}>
-            <Text className="font-semibold text-white">Cancel</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            className="flex-1 items-center rounded-xl bg-lime py-3 disabled:opacity-50"
-            disabled={!editor.isValid || isMutating}
-            onPress={() => void save()}>
-            {isMutating ? (
-              <ActivityIndicator color="#07110d" />
-            ) : (
-              <Text className="font-bold text-canvas">Save</Text>
-            )}
-          </Pressable>
+          <View className="flex-1">
+            <Button
+              label="Cancel"
+              size="compact"
+              variant="secondary"
+              disabled={isMutating}
+              onPress={editor.cancelEditing}
+            />
+          </View>
+          <View className="flex-1">
+            <Button
+              label="Save"
+              size="compact"
+              disabled={!editor.isValid}
+              loading={isMutating}
+              onPress={() => void save()}
+            />
+          </View>
         </View>
-      </View>
+      </AnimatedPresence>
     );
   }
 
   return (
-    <View className="flex-row items-center gap-3 rounded-2xl bg-panel p-4">
+    <AnimatedPresence className="flex-row items-center gap-3 rounded-3xl border border-line bg-surface p-4">
+      <View className="h-11 w-11 items-center justify-center rounded-2xl bg-accentSoft">
+        <Text className="text-lg font-black text-brand">
+          {log.food_name.slice(0, 1).toUpperCase()}
+        </Text>
+      </View>
       <View className="flex-1">
-        <Text className="text-base font-bold text-white">{log.food_name}</Text>
+        <Text className="text-base font-black text-ink">{log.food_name}</Text>
         <Text className="mt-1 text-sm text-muted">
           {Math.round(log.quantity_g)}g / {Math.round(log.calories)} kcal / P{' '}
           {log.protein.toFixed(1)}g
         </Text>
       </View>
       {isMutating ? (
-        <ActivityIndicator color="#b7f34a" />
+        <LoadingSpinner />
       ) : (
         <View className="flex-row gap-3">
-          <Pressable accessibilityRole="button" onPress={editor.startEditing}>
-            <Text className="font-semibold text-lime">Edit</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => void onDelete(log)}>
-            <Text className="font-semibold text-red-300">Delete</Text>
-          </Pressable>
+          <Button
+            label="Edit"
+            size="compact"
+            variant="ghost"
+            onPress={editor.startEditing}
+          />
+          <Button
+            label="Delete"
+            size="compact"
+            variant="danger"
+            onPress={() => void onDelete(log)}
+          />
         </View>
       )}
-    </View>
+    </AnimatedPresence>
   );
 }

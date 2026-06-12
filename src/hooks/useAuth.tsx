@@ -1,4 +1,5 @@
 import type { Session, User } from '@supabase/supabase-js';
+import * as Linking from 'expo-linking';
 import {
   createContext,
   type PropsWithChildren,
@@ -15,7 +16,10 @@ type AuthContextValue = {
   session: Session | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+  ) => Promise<{ requiresEmailConfirmation: boolean }>;
   signOut: () => Promise<void>;
 };
 
@@ -53,8 +57,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (error) throw error;
       },
       signUp: async (email, password) => {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: Linking.createURL('/sign-in'),
+          },
+        });
         if (error) throw error;
+        return { requiresEmailConfirmation: data.session === null };
       },
       signOut: async () => {
         const { error } = await supabase.auth.signOut();
