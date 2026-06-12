@@ -1,4 +1,5 @@
-import { Text, TextInput, View } from 'react-native';
+import { Pencil, Trash2, Utensils } from 'lucide-react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
@@ -33,12 +34,15 @@ export function MealLogCard({
 
   if (editor.isEditing) {
     return (
-      <AnimatedPresence className="gap-4 rounded-3xl border border-brand/20 bg-surface p-4">
+      <AnimatedPresence className="gap-4 rounded-2xl border border-line bg-white p-4 shadow-soft">
         <Text className="text-lg font-black text-ink">{log.food_name}</Text>
-        <MealTypeSelector value={editor.mealType} onChange={editor.setMealType} />
+        <MealTypeSelector
+          value={editor.mealType}
+          onChange={editor.setMealType}
+        />
         <TextInput
           accessibilityLabel={`Weight for ${log.food_name}`}
-          className="h-12 rounded-xl border border-line bg-canvas px-4 text-lg text-ink"
+          className="h-12 rounded-xl border border-line bg-raised px-4 text-lg text-ink"
           keyboardType="decimal-pad"
           onChangeText={editor.setWeight}
           value={editor.weight}
@@ -68,35 +72,36 @@ export function MealLogCard({
   }
 
   return (
-    <AnimatedPresence className="flex-row items-center gap-3 rounded-3xl border border-line bg-surface p-4">
-      <View className="h-11 w-11 items-center justify-center rounded-2xl bg-accentSoft">
-        <Text className="text-lg font-black text-brand">
-          {log.food_name.slice(0, 1).toUpperCase()}
-        </Text>
+    <AnimatedPresence className="flex-row items-center gap-3 rounded-[22px] border border-line bg-white p-4 shadow-soft">
+      <View className="h-11 w-11 items-center justify-center rounded-2xl bg-carbs">
+        <Utensils color="#101010" size={20} strokeWidth={2.5} />
       </View>
       <View className="flex-1">
         <Text className="text-base font-black text-ink">{log.food_name}</Text>
         <Text className="mt-1 text-sm text-muted">
-          {Math.round(log.quantity_g)}g / {Math.round(log.calories)} kcal / P{' '}
+          {Math.round(log.quantity_g)}g  |  {Math.round(log.calories)} kcal  |  P{' '}
           {log.protein.toFixed(1)}g
         </Text>
       </View>
       {isMutating ? (
         <LoadingSpinner />
       ) : (
-        <View className="flex-row gap-3">
-          <Button
-            label="Edit"
-            size="compact"
-            variant="ghost"
+        <View className="flex-row items-center gap-2">
+          <Pressable
+            accessibilityLabel={`Edit ${log.food_name}`}
+            accessibilityRole="button"
+            className="h-10 w-10 items-center justify-center rounded-xl bg-raised"
             onPress={editor.startEditing}
-          />
-          <Button
-            label="Delete"
-            size="compact"
-            variant="danger"
-            onPress={() => void onDelete(log)}
-          />
+          >
+            <Pencil color="#101010" size={17} strokeWidth={2.4} />
+          </Pressable>
+          <Pressable
+            accessibilityLabel={`Delete ${log.food_name}`}
+            accessibilityRole="button"
+            className="h-10 w-10 items-center justify-center rounded-xl bg-dangerSoft"
+            onPress={() => void onDelete(log)}>
+            <Trash2 color="#C64035" size={17} strokeWidth={2.4} />
+          </Pressable>
         </View>
       )}
     </AnimatedPresence>

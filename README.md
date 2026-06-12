@@ -14,6 +14,7 @@ Native, TypeScript, and NativeWind.
 - Open Food Facts barcode lookup
 - AI meal analysis from a camera or library image
 - Context-aware AI diet advisor chat
+- Persistent advisor conversations using today and 30-day nutrition context
 - iOS, Android, and web support
 
 ## Technology
@@ -263,7 +264,7 @@ changes require rebuilding the native application.
 - `useBarcodeLookup`: Open Food Facts lookup
 - `useMealLogs`: quick-log creation
 - `useMealAnalysis`: camera/library selection and AI meal analysis
-- `useAdvisorChat`: interactive advisor conversation
+- `useAdvisorChat`: persisted advisor history loading and messaging
 
 ## Required Backend Routes
 
@@ -275,6 +276,7 @@ DELETE /api/v1/meal-logs/{log_id}
 GET    /api/v1/food/barcode/{barcode}
 GET    /api/v1/food/search
 POST   /api/v1/ai/analyze-plate
+GET    /api/v1/ai/chat
 POST   /api/v1/ai/chat
 ```
 

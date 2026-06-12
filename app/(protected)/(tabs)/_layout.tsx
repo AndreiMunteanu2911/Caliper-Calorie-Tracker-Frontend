@@ -1,73 +1,174 @@
-import { SymbolView } from 'expo-symbols';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
-import { Platform } from 'react-native';
+import {
+  ChartNoAxesCombined,
+  type LucideIcon,
+  MessageCircleMore,
+  ScanLine,
+} from 'lucide-react-native';
+import { Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
+  dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
+  scan: { icon: ScanLine, label: 'Scan' },
+  chat: { icon: MessageCircleMore, label: 'Advisor' },
+};
+
+type DockItemProps = {
+  focused: boolean;
+  icon: LucideIcon;
+  label: string;
+  onLongPress: () => void;
+  onPress: () => void;
+};
+
+function DockItem({
+  focused,
+  icon: Icon,
+  label,
+  onLongPress,
+  onPress,
+}: DockItemProps) {
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: withTiming(focused ? 112 : 50, { duration: 220 }),
+  }), [focused]);
+
+  const labelStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(focused ? 1 : 0, { duration: focused ? 180 : 90 }),
+    transform: [
+      { translateX: withTiming(focused ? 0 : -6, { duration: 180 }) },
+    ],
+  }), [focused]);
+
+  return (
+    <Pressable
+      accessibilityLabel={label}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: focused }}
+      onLongPress={onLongPress}
+      onPress={onPress}>
+      <Animated.View
+        style={[
+          {
+            alignItems: 'center',
+            backgroundColor: focused ? '#FF5A2F' : '#3B3B3B',
+            borderColor: focused ? '#FF7B59' : '#525252',
+            borderRadius: 999,
+            borderWidth: 1,
+            flexDirection: 'row',
+            height: 50,
+            justifyContent: 'center',
+            overflow: 'hidden',
+          },
+          animatedStyle,
+        ]}>
+        <Icon color="#FFFFFF" size={21} strokeWidth={2.35} />
+        {focused ? (
+          <Animated.View className="ml-2" style={labelStyle}>
+            <Text className="font-bold text-white">{label}</Text>
+          </Animated.View>
+        ) : null}
+      </Animated.View>
+    </Pressable>
+  );
+}
+
+function AnimatedTabDock({ state, descriptors, navigation }: BottomTabBarProps) {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View
+      pointerEvents="box-none"
+      style={{
+        bottom: Math.max(insets.bottom, 12),
+        left: 0,
+        position: 'absolute',
+        right: 0,
+      }}>
+      <View
+        style={{
+          alignSelf: 'center',
+          backgroundColor: '#202020',
+          borderColor: '#383838',
+          borderRadius: 999,
+          borderWidth: 1,
+          padding: 8,
+          shadowColor: '#000000',
+          shadowOffset: { width: 0, height: 12 },
+          shadowOpacity: 0.38,
+          shadowRadius: 24,
+          elevation: 18,
+        }}>
+        <View className="flex-row items-center gap-2">
+          {state.routes.map((route, index) => {
+            const focused = state.index === index;
+            const details = TAB_DETAILS[route.name];
+            if (!details) return null;
+
+            const onPress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
+
+              if (!focused && !event.defaultPrevented) {
+                navigation.navigate(route.name, route.params);
+              }
+            };
+
+            const onLongPress = () => {
+              navigation.emit({
+                type: 'tabLongPress',
+                target: route.key,
+              });
+            };
+
+            return (
+              <DockItem
+                focused={focused}
+                icon={details.icon}
+                key={route.key}
+                label={
+                  descriptors[route.key].options.tabBarAccessibilityLabel ??
+                  details.label
+                }
+                onLongPress={onLongPress}
+                onPress={onPress}
+              />
+            );
+          })}
+        </View>
+      </View>
+    </View>
+  );
+}
 
 export default function TabLayout() {
   return (
     <Tabs
       initialRouteName="dashboard"
+      tabBar={(props) => <AnimatedTabDock {...props} />}
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: '#F5F7F2' },
-        tabBarActiveTintColor: '#173F35',
-        tabBarInactiveTintColor: '#77837D',
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '700' },
-        tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderColor: '#E1E7E3',
-          borderTopWidth: 1,
-          height: Platform.OS === 'web' ? 68 : 82,
-          maxWidth: Platform.OS === 'web' ? 440 : undefined,
-          width: Platform.OS === 'web' ? '100%' : undefined,
-          alignSelf: Platform.OS === 'web' ? 'center' : undefined,
-          borderRadius: Platform.OS === 'web' ? 22 : 0,
-          marginBottom: Platform.OS === 'web' ? 16 : 0,
-          paddingBottom: Platform.OS === 'web' ? 8 : 18,
-          paddingTop: 8,
-          shadowColor: '#173F35',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: Platform.OS === 'web' ? 0.1 : 0,
-          shadowRadius: 24,
-        },
+        sceneStyle: { backgroundColor: '#101010' },
       }}>
       <Tabs.Screen
         name="dashboard"
-        options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{ ios: 'chart.pie.fill', android: 'pie_chart', web: 'chart' }}
-              tintColor={color}
-              size={23}
-            />
-          ),
-        }}
+        options={{ title: 'Dashboard', tabBarAccessibilityLabel: 'Today' }}
       />
       <Tabs.Screen
         name="scan"
-        options={{
-          title: 'Meal Analysis',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{ ios: 'camera.fill', android: 'photo_camera', web: 'camera' }}
-              tintColor={color}
-              size={23}
-            />
-          ),
-        }}
+        options={{ title: 'Meal Analysis', tabBarAccessibilityLabel: 'Scan' }}
       />
       <Tabs.Screen
         name="chat"
-        options={{
-          title: 'AI Advisor',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{ ios: 'bubble.left.and.bubble.right.fill', android: 'chat', web: 'chat' }}
-              tintColor={color}
-              size={23}
-            />
-          ),
-        }}
+        options={{ title: 'AI Advisor', tabBarAccessibilityLabel: 'Advisor' }}
       />
     </Tabs>
   );

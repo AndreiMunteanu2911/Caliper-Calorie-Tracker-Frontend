@@ -1,54 +1,75 @@
-import { useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 
 import { apiRequest } from '@/src/lib/api-client';
-
-export type ChatMessage = {
-  id: string;
-  role: 'user' | 'assistant';
-  text: string;
-};
+import type {
+  AdvisorConversation,
+  AdvisorMessage,
+  ChatResponse,
+} from '@/src/types/api';
 
 export function useAdvisorChat() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<AdvisorMessage[]>([]);
   const [draft, setDraft] = useState('');
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const loadHistory = useCallback(async () => {
+    setIsLoadingHistory(true);
+    setError(null);
+    try {
+      const conversation = await apiRequest<AdvisorConversation>('/ai/chat');
+      setMessages(conversation.messages);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Unable to load advisor history.',
+      );
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadHistory();
+    }, [loadHistory]),
+  );
 
   async function sendMessage() {
     const trimmed = draft.trim();
     if (!trimmed || isSending) return;
 
-    const userMessage: ChatMessage = {
-      id: `${Date.now()}-user`,
+    const pendingId = `pending-${Date.now()}`;
+    const pendingMessage: AdvisorMessage = {
+      id: pendingId,
       role: 'user',
-      text: trimmed,
+      content: trimmed,
+      created_at: new Date().toISOString(),
     };
-    setMessages((current) => [...current, userMessage]);
+    setMessages((current) => [...current, pendingMessage]);
     setDraft('');
     setIsSending(true);
     setError(null);
     try {
-      const response = await apiRequest<{ message: string }>('/ai/chat', {
+      const response = await apiRequest<ChatResponse>('/ai/chat', {
         method: 'POST',
         timeoutMs: 90_000,
         body: {
           message: trimmed,
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-          history: messages.slice(-20).map((item) => ({
-            role: item.role,
-            content: item.text,
-          })),
         },
       });
       setMessages((current) => [
-        ...current,
-        {
-          id: `${Date.now()}-assistant`,
-          role: 'assistant',
-          text: response.message,
-        },
+        ...current.filter((item) => item.id !== pendingId),
+        response.user_message,
+        response.assistant_message,
       ]);
     } catch (requestError) {
+      setMessages((current) => current.filter((item) => item.id !== pendingId));
+      setDraft(trimmed);
       setError(
         requestError instanceof Error ? requestError.message : 'Unable to send message.',
       );
@@ -57,5 +78,14 @@ export function useAdvisorChat() {
     }
   }
 
-  return { messages, draft, isSending, error, setDraft, sendMessage };
+  return {
+    messages,
+    draft,
+    isLoadingHistory,
+    isSending,
+    error,
+    setDraft,
+    sendMessage,
+    loadHistory,
+  };
 }

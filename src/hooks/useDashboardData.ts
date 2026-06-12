@@ -14,6 +14,10 @@ function timezone(): string {
   return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 }
 
+function wait(duration: number) {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+}
+
 export function useDashboardData() {
   const { session } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
@@ -29,11 +33,15 @@ export function useDashboardData() {
     setIsLoading(true);
     setError(null);
     try {
-      setData(
-        await apiRequest<DashboardData>(
-          `/dashboard?timezone=${encodeURIComponent(timezone())}`,
-        ),
-      );
+      const path = `/dashboard?timezone=${encodeURIComponent(timezone())}`;
+      let dashboard: DashboardData;
+      try {
+        dashboard = await apiRequest<DashboardData>(path);
+      } catch {
+        await wait(650);
+        dashboard = await apiRequest<DashboardData>(path);
+      }
+      setData(dashboard);
     } catch (requestError) {
       setError(
         requestError instanceof Error

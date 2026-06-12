@@ -7,18 +7,20 @@ import Animated, {
 
 type AnimatedPresenceProps = PropsWithChildren<{
   className?: string;
+  animateLayout?: boolean;
 }>;
 
 export function AnimatedPresence({
   children,
   className,
+  animateLayout = true,
 }: AnimatedPresenceProps) {
   return (
     <Animated.View
       className={className}
       entering={FadeIn.duration(160)}
       exiting={FadeOut.duration(110)}
-      layout={LinearTransition.duration(160)}>
+      layout={animateLayout ? LinearTransition.duration(160) : undefined}>
       {children}
     </Animated.View>
   );

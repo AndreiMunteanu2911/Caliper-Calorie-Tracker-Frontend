@@ -53,8 +53,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       session,
       isLoading,
       signIn: async (email, password) => {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
         if (error) throw error;
+        setSession(data.session);
       },
       signUp: async (email, password) => {
         const { data, error } = await supabase.auth.signUp({
@@ -65,6 +69,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           },
         });
         if (error) throw error;
+        setSession(data.session);
         return { requiresEmailConfirmation: data.session === null };
       },
       signOut: async () => {

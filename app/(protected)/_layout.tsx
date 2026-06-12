@@ -9,8 +9,8 @@ export default function ProtectedLayout() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-canvas">
-        <LoadingSpinner size="large" />
+      <View className="flex-1 items-center justify-center bg-brand">
+        <LoadingSpinner color="white" size="large" />
       </View>
     );
   }

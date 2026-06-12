@@ -33,6 +33,14 @@ export async function apiRequest<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T> {
+  return executeRequest<T>(path, options, true);
+}
+
+async function executeRequest<T>(
+  path: string,
+  options: RequestOptions,
+  canRetryAuth: boolean,
+): Promise<T> {
   const { body, timeoutMs = 30_000, ...requestInit } = options;
   const {
     data: { session },
@@ -74,6 +82,12 @@ export async function apiRequest<T>(
     requestInit.signal?.removeEventListener('abort', abort);
   }
   if (!response.ok) {
+    if (response.status === 401 && canRetryAuth) {
+      const { error } = await supabase.auth.refreshSession();
+      if (!error) {
+        return executeRequest<T>(path, options, false);
+      }
+    }
     const payload = (await response.json().catch(() => null)) as ErrorEnvelope | null;
     const detail =
       payload?.error && typeof payload.error.message === 'string'

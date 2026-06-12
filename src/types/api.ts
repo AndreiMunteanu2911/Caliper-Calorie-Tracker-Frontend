@@ -74,6 +74,20 @@ export type MealAnalysis = {
   confidence_explanation: string;
 };
 
+export type AdvisorMessage = {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  created_at: string;
+};
+
+export type AdvisorConversation = {
+  id: string;
+  messages: AdvisorMessage[];
+};
+
 export type ChatResponse = {
-  message: string;
+  conversation_id: string;
+  user_message: AdvisorMessage;
+  assistant_message: AdvisorMessage;
 };

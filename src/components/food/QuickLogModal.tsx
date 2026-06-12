@@ -1,3 +1,4 @@
+import { Check, Flame, X } from 'lucide-react-native';
 import { Modal, Pressable, Text, TextInput, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
@@ -31,11 +32,15 @@ export function QuickLogModal({
       visible={food !== null}>
       <View className="flex-1 bg-canvas px-5 pb-10 pt-8">
         <View className="flex-row items-center justify-between">
-          <Text className="text-sm font-black uppercase tracking-[2px] text-brand">
+          <Text className="text-sm font-black uppercase tracking-[2px] text-accent">
             Quick log
           </Text>
-          <Pressable accessibilityRole="button" onPress={onDismiss}>
-            <Text className="text-base font-bold text-muted">Cancel</Text>
+          <Pressable
+            accessibilityLabel="Close quick log"
+            accessibilityRole="button"
+            className="h-11 w-11 items-center justify-center rounded-2xl bg-raised"
+            onPress={onDismiss}>
+            <X color="#101010" size={20} strokeWidth={2.6} />
           </Pressable>
         </View>
         <Text className="mt-3 text-3xl font-black text-ink">{food?.name}</Text>
@@ -58,9 +63,12 @@ export function QuickLogModal({
           />
         </View>
 
-        <View className="my-7 flex-row flex-wrap justify-between gap-4 rounded-3xl border border-line bg-surface p-5">
+        <View className="my-7 flex-row flex-wrap justify-between gap-4 rounded-[28px] bg-fatsSoft p-5 shadow-soft">
           <View>
-            <Text className="text-xs text-muted">Calories</Text>
+            <View className="flex-row items-center gap-1">
+              <Flame color="#FF5A2F" size={14} strokeWidth={2.5} />
+              <Text className="text-xs text-muted">Calories</Text>
+            </View>
             <Text className="text-xl font-black text-brand">
               {Math.round(form.macros.calories)}
             </Text>
@@ -91,6 +99,7 @@ export function QuickLogModal({
         ) : null}
         <Button
           label="Add to today"
+          icon={Check}
           disabled={!form.isValid}
           loading={isSaving}
           onPress={() => void onSave(form.mealType, form.quantityG)}

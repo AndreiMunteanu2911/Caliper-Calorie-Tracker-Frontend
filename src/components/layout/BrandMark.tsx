@@ -1,18 +1,21 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+
+import LogoNoText from '@/assets/images/logo-no-text.svg';
+import LogoText from '@/assets/images/logo-text.svg';
 
 type BrandMarkProps = {
   compact?: boolean;
+  inverted?: boolean;
 };
 
 export function BrandMark({ compact = false }: BrandMarkProps) {
   return (
-    <View className="flex-row items-center gap-3">
-      <View className="h-10 w-10 items-center justify-center rounded-2xl bg-brand">
-        <View className="h-4 w-4 rounded-full border-[3px] border-accent" />
-      </View>
-      {!compact ? (
-        <Text className="text-2xl font-black tracking-tight text-ink">Caliper</Text>
-      ) : null}
+    <View className="overflow-hidden rounded-xl shadow-soft">
+      {compact ? (
+        <LogoNoText accessibilityLabel="Caliper" height={44} width={44} />
+      ) : (
+        <LogoText accessibilityLabel="Caliper" height={44} width={118} />
+      )}
     </View>
   );
 }
