@@ -8,13 +8,7 @@ import Animated, {
 
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 
-type ButtonVariant =
-  | 'primary'
-  | 'accent'
-  | 'secondary'
-  | 'dark'
-  | 'ghost'
-  | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'outline';
 type ButtonSize = 'default' | 'compact';
 
 type ButtonProps = Omit<PressableProps, 'children' | 'disabled'> & {
@@ -28,21 +22,21 @@ type ButtonProps = Omit<PressableProps, 'children' | 'disabled'> & {
 };
 
 const CONTAINER_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'border border-white/20 bg-accent shadow-glow',
-  accent: 'border border-white/40 bg-carbs shadow-soft',
-  secondary: 'border border-line bg-surface shadow-soft',
-  dark: 'border border-white/10 bg-white/5',
-  ghost: 'border border-transparent bg-transparent',
-  danger: 'border border-danger/20 bg-dangerSoft',
+  primary: 'border border-accent bg-accent shadow-glow',
+  secondary: 'border border-white bg-white shadow-soft',
+  outline: 'border border-accent bg-brand',
 };
 
 const TEXT_CLASSES: Record<ButtonVariant, string> = {
   primary: 'text-white',
-  accent: 'text-brand',
   secondary: 'text-brand',
-  dark: 'text-white',
-  ghost: 'text-brand',
-  danger: 'text-danger',
+  outline: 'text-accent',
+};
+
+const ICON_COLORS: Record<ButtonVariant, string> = {
+  primary: '#FFFFFF',
+  secondary: '#101010',
+  outline: '#FF5A16',
 };
 
 export function Button({
@@ -83,20 +77,14 @@ export function Button({
           onPressOut?.(event);
         }}>
         {loading ? (
-          <View className="h-8 w-8 items-center justify-center rounded-full bg-white">
-            <LoadingSpinner />
+          <View className="h-8 w-8 items-center justify-center">
+            <LoadingSpinner color={ICON_COLORS[variant]} />
           </View>
         ) : (
           <>
             {Icon && iconPosition === 'left' ? (
               <Icon
-                color={
-                  variant === 'primary' || variant === 'dark'
-                    ? '#FFFFFF'
-                    : variant === 'danger'
-                      ? '#C64035'
-                      : '#101010'
-                }
+                color={ICON_COLORS[variant]}
                 size={18}
                 strokeWidth={2.6}
               />
@@ -106,13 +94,7 @@ export function Button({
             </Text>
             {Icon && iconPosition === 'right' ? (
               <Icon
-                color={
-                  variant === 'primary' || variant === 'dark'
-                    ? '#FFFFFF'
-                    : variant === 'danger'
-                      ? '#C64035'
-                      : '#101010'
-                }
+                color={ICON_COLORS[variant]}
                 size={18}
                 strokeWidth={2.6}
               />

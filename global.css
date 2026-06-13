@@ -22,3 +22,47 @@
     box-sizing: border-box;
   }
 }
+
+@layer utilities {
+  .caliper-scrollbar {
+    scrollbar-color: #ff5a16 transparent;
+    scrollbar-gutter: stable both-edges;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+  }
+
+  .caliper-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+  }
+
+  .caliper-scrollbar::-webkit-scrollbar-track,
+  .caliper-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .caliper-scrollbar::-webkit-scrollbar-thumb {
+    min-height: 36px;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: #ff5a16;
+    background-clip: padding-box;
+  }
+
+  .caliper-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #ff7947;
+    background-clip: padding-box;
+  }
+
+  .caliper-input,
+  .caliper-input:focus,
+  .caliper-input:focus-visible {
+    border: 0 !important;
+    outline: 0 !important;
+    outline-color: transparent !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+  }
+}

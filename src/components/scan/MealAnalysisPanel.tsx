@@ -1,4 +1,5 @@
 import { Camera, ImagePlus, Sparkles } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 import { Image, Text, TextInput, View } from 'react-native';
 
 import { Button } from '@/src/components/ui/Button';
@@ -7,6 +8,7 @@ import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
 
 export function MealAnalysisPanel() {
   const analysis = useMealAnalysis();
+  const router = useRouter();
 
   return (
     <View className="gap-4">
@@ -34,7 +36,7 @@ export function MealAnalysisPanel() {
             icon={Camera}
             iconPosition="left"
             loading={analysis.isAnalyzing}
-            onPress={() => void analysis.takePhoto()}
+            onPress={() => router.push('/meal-camera')}
           />
         </View>
         <View className="flex-1">
@@ -42,7 +44,7 @@ export function MealAnalysisPanel() {
             label="Choose from library"
             icon={ImagePlus}
             iconPosition="left"
-            variant="dark"
+            variant="outline"
             disabled={analysis.isAnalyzing}
             onPress={() => void analysis.choosePhoto()}
           />

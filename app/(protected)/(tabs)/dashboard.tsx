@@ -1,5 +1,11 @@
 import { DashboardScreen } from '@/src/components/dashboard/DashboardScreen';
+import { PageHead } from '@/src/components/layout/PageHead';
 
 export default function DashboardRoute() {
-  return <DashboardScreen />;
+  return (
+    <>
+      <PageHead title="Today" />
+      <DashboardScreen />
+    </>
+  );
 }

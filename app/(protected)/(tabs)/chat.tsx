@@ -1,5 +1,11 @@
 import { AdvisorScreen } from '@/src/components/advisor/AdvisorScreen';
+import { PageHead } from '@/src/components/layout/PageHead';
 
 export default function ChatRoute() {
-  return <AdvisorScreen />;
+  return (
+    <>
+      <PageHead title="AI Advisor" />
+      <AdvisorScreen />
+    </>
+  );
 }

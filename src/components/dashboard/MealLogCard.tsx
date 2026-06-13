@@ -34,15 +34,15 @@ export function MealLogCard({
 
   if (editor.isEditing) {
     return (
-      <AnimatedPresence className="gap-4 rounded-2xl border border-line bg-white p-4 shadow-soft">
-        <Text className="text-lg font-black text-ink">{log.food_name}</Text>
+      <AnimatedPresence className="gap-4 rounded-2xl border border-white/10 bg-[#232220] p-4 shadow-soft">
+        <Text className="text-lg font-black text-white">{log.food_name}</Text>
         <MealTypeSelector
           value={editor.mealType}
           onChange={editor.setMealType}
         />
         <TextInput
           accessibilityLabel={`Weight for ${log.food_name}`}
-          className="h-12 rounded-xl border border-line bg-raised px-4 text-lg text-ink"
+          className="h-12 rounded-xl border border-white/10 bg-[#121212] px-4 text-lg text-white"
           keyboardType="decimal-pad"
           onChangeText={editor.setWeight}
           value={editor.weight}
@@ -72,13 +72,13 @@ export function MealLogCard({
   }
 
   return (
-    <AnimatedPresence className="flex-row items-center gap-3 rounded-[22px] border border-line bg-white p-4 shadow-soft">
+    <AnimatedPresence className="flex-row items-center gap-3 rounded-[22px] border border-white/10 bg-[#232220] p-4 shadow-soft">
       <View className="h-11 w-11 items-center justify-center rounded-2xl bg-carbs">
         <Utensils color="#101010" size={20} strokeWidth={2.5} />
       </View>
       <View className="flex-1">
-        <Text className="text-base font-black text-ink">{log.food_name}</Text>
-        <Text className="mt-1 text-sm text-muted">
+        <Text className="text-base font-black text-white">{log.food_name}</Text>
+        <Text className="mt-1 text-sm text-white/50">
           {Math.round(log.quantity_g)}g  |  {Math.round(log.calories)} kcal  |  P{' '}
           {log.protein.toFixed(1)}g
         </Text>
@@ -90,10 +90,10 @@ export function MealLogCard({
           <Pressable
             accessibilityLabel={`Edit ${log.food_name}`}
             accessibilityRole="button"
-            className="h-10 w-10 items-center justify-center rounded-xl bg-raised"
+            className="h-10 w-10 items-center justify-center rounded-xl bg-white/10"
             onPress={editor.startEditing}
           >
-            <Pencil color="#101010" size={17} strokeWidth={2.4} />
+            <Pencil color="#FFFFFF" size={17} strokeWidth={2.4} />
           </Pressable>
           <Pressable
             accessibilityLabel={`Delete ${log.food_name}`}

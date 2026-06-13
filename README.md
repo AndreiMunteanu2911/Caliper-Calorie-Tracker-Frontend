@@ -3,6 +3,13 @@
 Cross-platform calorie and macro tracking client built with Expo Router, React
 Native, TypeScript, and NativeWind.
 
+[Visit the live site](https://caliperam.vercel.app/)
+
+## Design Credit
+
+The visual design is inspired by
+[Nutri AI Food Calorie Tracker App](https://www.figma.com/community/file/1500608399091759099/nutri-ai-food-calorie-tracker-app).
+
 ## Features
 
 - Supabase email/password authentication

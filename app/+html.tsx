@@ -12,6 +12,8 @@ export default function Root({ children }: { children: ReactNode }) {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/assets/images/favicon.png" type="image/png" />
 
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.

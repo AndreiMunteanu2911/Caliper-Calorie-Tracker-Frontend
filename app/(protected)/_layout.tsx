@@ -1,8 +1,9 @@
-import { Redirect, Slot } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import { View } from 'react-native';
 
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useAuth } from '@/src/hooks/useAuth';
+import { MealAnalysisProvider } from '@/src/hooks/useMealAnalysis';
 
 export default function ProtectedLayout() {
   const { user, isLoading } = useAuth();
@@ -17,5 +18,19 @@ export default function ProtectedLayout() {
   if (!user) {
     return <Redirect href="/" />;
   }
-  return <Slot />;
+  return (
+    <MealAnalysisProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="meal-camera"
+          options={{ animation: 'slide_from_bottom', presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name="barcode-camera"
+          options={{ animation: 'slide_from_bottom', presentation: 'fullScreenModal' }}
+        />
+      </Stack>
+    </MealAnalysisProvider>
+  );
 }

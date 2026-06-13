@@ -91,3 +91,24 @@ export type ChatResponse = {
   user_message: AdvisorMessage;
   assistant_message: AdvisorMessage;
 };
+
+export type Profile = {
+  display_name: string | null;
+  email: string;
+  daily_calorie_target: number;
+  daily_protein_target: number;
+  daily_carbs_target: number;
+  daily_fats_target: number;
+  protein_percentage: number;
+  carbs_percentage: number;
+  fats_percentage: number;
+};
+
+export type ProfileUpdate = {
+  display_name: string;
+  daily_calorie_target: number;
+  target_mode: 'grams' | 'percentages';
+  protein: number;
+  carbs: number;
+  fats: number;
+};

@@ -8,6 +8,7 @@ export type AuthMode = 'sign-in' | 'sign-up';
 export function useAuthForm(mode: AuthMode) {
   const router = useRouter();
   const { signIn, signUp } = useAuth();
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,7 +24,7 @@ export function useAuthForm(mode: AuthMode) {
         await signIn(email.trim(), password);
         router.replace('/dashboard');
       } else {
-        const result = await signUp(email.trim(), password);
+        const result = await signUp(displayName.trim(), email.trim(), password);
         if (result.requiresEmailConfirmation) {
           setMessage('Check your email to confirm your account, then sign in.');
         } else {
@@ -38,12 +39,17 @@ export function useAuthForm(mode: AuthMode) {
   }
 
   return {
+    displayName,
     email,
     password,
     isSubmitting,
     error,
     message,
-    isValid: email.trim().length > 3 && password.length >= 6,
+    isValid:
+      email.trim().length > 3 &&
+      password.length >= 6 &&
+      (mode === 'sign-in' || displayName.trim().length >= 2),
+    setDisplayName,
     setEmail,
     setPassword,
     submit,

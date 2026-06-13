@@ -26,7 +26,7 @@ export function FoodResultCard({ food, onPress }: FoodResultCardProps) {
           </Text>
         </View>
         <View className="flex-row items-center gap-1.5 rounded-xl bg-accentSoft px-3 py-2">
-          <Flame color="#FF5A2F" size={15} strokeWidth={2.5} />
+          <Flame color="#FF5A16" size={15} strokeWidth={2.5} />
           <Text className="font-black text-brand">{Math.round(food.calories)}</Text>
         </View>
         <ChevronRight color="#A4A4A4" size={18} strokeWidth={2.4} />

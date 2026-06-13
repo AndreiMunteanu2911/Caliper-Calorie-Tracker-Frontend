@@ -66,7 +66,7 @@ export function QuickLogModal({
         <View className="my-7 flex-row flex-wrap justify-between gap-4 rounded-[28px] bg-fatsSoft p-5 shadow-soft">
           <View>
             <View className="flex-row items-center gap-1">
-              <Flame color="#FF5A2F" size={14} strokeWidth={2.5} />
+              <Flame color="#FF5A16" size={14} strokeWidth={2.5} />
               <Text className="text-xs text-muted">Calories</Text>
             </View>
             <Text className="text-xl font-black text-brand">

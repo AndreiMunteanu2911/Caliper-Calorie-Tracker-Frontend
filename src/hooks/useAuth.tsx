@@ -17,6 +17,7 @@ type AuthContextValue = {
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (
+    displayName: string,
     email: string,
     password: string,
   ) => Promise<{ requiresEmailConfirmation: boolean }>;
@@ -60,12 +61,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (error) throw error;
         setSession(data.session);
       },
-      signUp: async (email, password) => {
+      signUp: async (displayName, email, password) => {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: Linking.createURL('/sign-in'),
+            data: { display_name: displayName.trim() },
           },
         });
         if (error) throw error;

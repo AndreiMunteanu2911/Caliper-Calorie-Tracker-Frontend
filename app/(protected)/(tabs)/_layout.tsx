@@ -2,9 +2,11 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 import {
   ChartNoAxesCombined,
+  NotebookTabs,
   type LucideIcon,
   MessageCircleMore,
   ScanLine,
+  UserRound,
 } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
@@ -15,8 +17,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
   dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
+  diary: { icon: NotebookTabs, label: 'Diary' },
   scan: { icon: ScanLine, label: 'Scan' },
   chat: { icon: MessageCircleMore, label: 'Advisor' },
+  profile: { icon: UserRound, label: 'Profile' },
 };
 
 type DockItemProps = {
@@ -35,7 +39,7 @@ function DockItem({
   onPress,
 }: DockItemProps) {
   const animatedStyle = useAnimatedStyle(() => ({
-    width: withTiming(focused ? 112 : 50, { duration: 220 }),
+    width: withTiming(focused ? 88 : 44, { duration: 220 }),
   }), [focused]);
 
   const labelStyle = useAnimatedStyle(() => ({
@@ -56,12 +60,12 @@ function DockItem({
         style={[
           {
             alignItems: 'center',
-            backgroundColor: focused ? '#FF5A2F' : '#3B3B3B',
+            backgroundColor: focused ? '#FF5A16' : '#3B3B3B',
             borderColor: focused ? '#FF7B59' : '#525252',
             borderRadius: 999,
             borderWidth: 1,
             flexDirection: 'row',
-            height: 50,
+            height: 44,
             justifyContent: 'center',
             overflow: 'hidden',
           },
@@ -97,7 +101,7 @@ function AnimatedTabDock({ state, descriptors, navigation }: BottomTabBarProps) 
           borderColor: '#383838',
           borderRadius: 999,
           borderWidth: 1,
-          padding: 8,
+          padding: 7,
           shadowColor: '#000000',
           shadowOffset: { width: 0, height: 12 },
           shadowOpacity: 0.38,
@@ -163,12 +167,20 @@ export default function TabLayout() {
         options={{ title: 'Dashboard', tabBarAccessibilityLabel: 'Today' }}
       />
       <Tabs.Screen
+        name="diary"
+        options={{ title: 'Diary', tabBarAccessibilityLabel: 'Diary' }}
+      />
+      <Tabs.Screen
         name="scan"
         options={{ title: 'Meal Analysis', tabBarAccessibilityLabel: 'Scan' }}
       />
       <Tabs.Screen
         name="chat"
         options={{ title: 'AI Advisor', tabBarAccessibilityLabel: 'Advisor' }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{ title: 'Profile', tabBarAccessibilityLabel: 'Profile' }}
       />
     </Tabs>
   );

@@ -1,19 +1,9 @@
-import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
-export type ScanMode = 'barcode' | 'search' | 'meal';
+export type ScanMode = 'search' | 'meal';
 
 export function useScanScreenState() {
-  const [mode, setMode] = useState<ScanMode>('barcode');
+  const [mode, setMode] = useState<ScanMode>('search');
   const [query, setQuery] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-
-  useFocusEffect(
-    useCallback(() => {
-      setIsFocused(true);
-      return () => setIsFocused(false);
-    }, []),
-  );
-
-  return { mode, query, isFocused, setMode, setQuery };
+  return { mode, query, setMode, setQuery };
 }
