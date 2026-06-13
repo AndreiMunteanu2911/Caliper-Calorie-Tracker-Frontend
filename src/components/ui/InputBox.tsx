@@ -10,6 +10,7 @@ import {
 
 type InputBoxProps = TextInputProps & {
   compact?: boolean;
+  dense?: boolean;
   containerClassName?: string;
   inputClassName?: string;
 };
@@ -17,10 +18,12 @@ type InputBoxProps = TextInputProps & {
 export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
   {
     compact = false,
+    dense = false,
     containerClassName = '',
     inputClassName = '',
     onBlur,
     onFocus,
+    style,
     ...textInputProps
   },
   ref,
@@ -29,8 +32,10 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
 
   return (
     <View
-      className={`flex-row items-center overflow-hidden border bg-[#141414] ${
-        compact
+      className={`flex-row items-center border bg-[#141414] ${
+        dense
+          ? 'min-h-11 rounded-2xl px-3'
+          : compact
           ? 'min-h-14 rounded-[18px] px-4 py-1'
           : 'min-h-16 rounded-[24px] p-2 pl-4'
       } ${
@@ -41,8 +46,14 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
       <TextInput
         {...textInputProps}
         ref={ref}
-        className={`caliper-input min-w-0 flex-1 bg-transparent text-base leading-5 text-white ${
-          compact ? 'min-h-10 py-2' : 'min-h-12 py-3'
+        style={[{ textAlignVertical: 'center' }, style]}
+        underlineColorAndroid="transparent"
+        className={`caliper-input min-w-0 flex-1 border-0 rounded-none bg-[#141414] text-base leading-5 text-white ${
+          dense
+            ? 'min-h-9 mt-2 ml-1'
+            : compact
+              ? 'min-h-10 py-2'
+              : 'min-h-12 py-3'
         } ${inputClassName}`}
         onBlur={(event) => {
           setIsFocused(false);

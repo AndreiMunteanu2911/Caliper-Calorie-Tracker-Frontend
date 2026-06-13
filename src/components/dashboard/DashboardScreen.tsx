@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Flame, LogOut, ScanLine } from 'lucide-react-native';
+import { LogOut, ScanLine } from 'lucide-react-native';
 import { Pressable, RefreshControl, Text, View } from 'react-native';
 
 import { MacroRing } from '@/src/components/dashboard/MacroRing';
@@ -98,8 +98,7 @@ export function DashboardScreen() {
           <View className="gap-4">
             <View className="rounded-[28px] bg-fats p-6">
               <View className="flex-row items-center justify-between">
-                <Text className="text-xl font-black text-ink">Calories</Text>
-                <Flame color="#121212" size={22} />
+                <Text className="text-xl font-black text-ink">Calories remaining</Text>
               </View>
               <View className="my-7 items-center">
                 <View className="h-44 w-44 items-center justify-center rounded-full border-[18px] border-brand">

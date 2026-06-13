@@ -1,9 +1,11 @@
 import { Camera, ImagePlus, Sparkles } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { Image, Text, TextInput, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { Button } from '@/src/components/ui/Button';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
+import { Button } from '@/src/components/ui/Button';
+import { InputBox } from '@/src/components/ui/InputBox';
+import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
 
 export function MealAnalysisPanel() {
@@ -21,12 +23,10 @@ export function MealAnalysisPanel() {
           Add optional context, then photograph your meal or choose an existing image.
         </Text>
       </View>
-      <TextInput
-        accessibilityLabel="Meal context"
-        className="min-h-14 rounded-2xl border border-white/10 bg-[#242424] px-4 py-3 text-base text-white"
+      <InputBox
+        compact
         onChangeText={analysis.setContext}
         placeholder="Optional context: chicken, rice, sauce..."
-        placeholderTextColor="#8F8F8F"
         value={analysis.context}
       />
       <View className="gap-3 sm:flex-row">
@@ -35,7 +35,7 @@ export function MealAnalysisPanel() {
             label="Take photo"
             icon={Camera}
             iconPosition="left"
-            loading={analysis.isAnalyzing}
+            disabled={analysis.isAnalyzing}
             onPress={() => router.push('/meal-camera')}
           />
         </View>
@@ -55,14 +55,13 @@ export function MealAnalysisPanel() {
           <Text className="font-semibold text-danger">{analysis.error}</Text>
         </AnimatedPresence>
       ) : null}
-      {analysis.imageUri ? (
-        <AnimatedPresence>
-          <Image
-            accessibilityLabel="Selected meal"
-            className="h-64 w-full rounded-3xl"
-            resizeMode="cover"
-            source={{ uri: analysis.imageUri }}
-          />
+      {analysis.isAnalyzing ? (
+        <AnimatedPresence className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-12 shadow-card">
+          <LoadingSpinner size="large" />
+          <Text className="mt-4 text-lg text-center font-black text-white">Analyzing your meal</Text>
+          <Text className="mt-2 text-center text-sm leading-5 text-white/45">
+            Estimating foods, portions, and macros...
+          </Text>
         </AnimatedPresence>
       ) : null}
       {analysis.analysis ? (

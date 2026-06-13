@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from 'lucide-react-native';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   Pressable,
   Text,
@@ -40,14 +40,61 @@ export function NumberSpinner({
   const roundedValue = Math.round(value / step) * step;
   const previousValue = useRef(roundedValue);
   const direction = roundedValue >= previousValue.current ? 1 : -1;
+  const valueRef = useRef(roundedValue);
 
   useEffect(() => {
     previousValue.current = roundedValue;
+    valueRef.current = roundedValue;
   }, [roundedValue]);
 
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const repeatInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (holdTimer.current) clearTimeout(holdTimer.current);
+      if (repeatInterval.current) clearInterval(repeatInterval.current);
+    };
+  }, []);
+
   function update(dir: number) {
-    onChange(clamp(roundedValue + dir * step, min, max));
+    const current = valueRef.current;
+    onChange(clamp(current + dir * step, min, max));
   }
+
+  const stopHold = useCallback(() => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+    if (repeatInterval.current) {
+      clearInterval(repeatInterval.current);
+      repeatInterval.current = null;
+    }
+  }, []);
+
+  const startHold = useCallback((dir: number) => {
+    stopHold();
+    update(dir);
+
+    const initialDelay = 300;
+    const initialSpeed = 120;
+    const minSpeed = 40;
+    const acceleration = 6;
+
+    holdTimer.current = setTimeout(() => {
+      let speed = initialSpeed;
+
+      const doRepeat = () => {
+        update(dir);
+        speed = Math.max(minSpeed, speed - acceleration);
+        if (repeatInterval.current) clearInterval(repeatInterval.current);
+        repeatInterval.current = setInterval(doRepeat, speed);
+      };
+
+      repeatInterval.current = setInterval(doRepeat, speed);
+    }, initialDelay);
+  }, [stopHold]);
 
   return (
       <View className="min-w-[104px] flex-1 gap-1.5">
@@ -66,7 +113,8 @@ export function NumberSpinner({
           <Pressable
               accessibilityLabel={`Increase ${label}`}
               className="h-8 w-full flex-row items-center"
-              onPress={() => update(1)}>
+              onPressIn={() => startHold(1)}
+              onPressOut={stopHold}>
             <View className="flex-1" />
             <ChevronUp color="#FF5A16" size={15} />
             <View className="flex-1 items-start pl-2">
@@ -100,7 +148,8 @@ export function NumberSpinner({
           <Pressable
               accessibilityLabel={`Decrease ${label}`}
               className="h-8 w-full flex-row items-center"
-              onPress={() => update(-1)}>
+              onPressIn={() => startHold(-1)}
+              onPressOut={stopHold}>
             <View className="flex-1" />
             <ChevronDown color="#FF5A16" size={15} />
             <View className="flex-1 items-start pl-2">

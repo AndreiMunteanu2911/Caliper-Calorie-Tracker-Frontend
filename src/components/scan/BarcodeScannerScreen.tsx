@@ -4,26 +4,36 @@ import { Barcode, ChevronLeft, RefreshCcw } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { FoodResultCard } from '@/src/components/food/FoodResultCard';
-import { QuickLogModal } from '@/src/components/food/QuickLogModal';
 import { Button } from '@/src/components/ui/Button';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useBarcodeLookup } from '@/src/hooks/useBarcodeLookup';
 import { useBarcodeScanner } from '@/src/hooks/useBarcodeScanner';
-import { useMealLogs } from '@/src/hooks/useMealLogs';
-import type { MealType } from '@/src/types/api';
+
+function navigateToFoodDetail(
+  router: ReturnType<typeof useRouter>,
+  food: NonNullable<ReturnType<typeof useBarcodeLookup>['item']>,
+) {
+  router.push({
+    pathname: '/food-detail',
+    params: {
+      external_id: food.external_id,
+      source: food.source,
+      name: food.name,
+      brand: food.brand ?? '',
+      calories: String(food.calories),
+      protein: String(food.protein),
+      carbs: String(food.carbs),
+      fats: String(food.fats),
+      serving_size_g: String(food.serving_size_g),
+    },
+  });
+}
 
 export function BarcodeScannerScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const lookup = useBarcodeLookup();
-  const mealLogs = useMealLogs();
   const scanner = useBarcodeScanner((value) => void lookup.lookup(value));
-
-  async function save(mealType: MealType, quantityG: number) {
-    const created = await mealLogs.createLog(mealType, quantityG);
-    if (created) router.replace('/diary');
-  }
 
   function resume() {
     lookup.reset();
@@ -56,7 +66,10 @@ export function BarcodeScannerScreen() {
 
   return (
     <>
-      <View className="flex-1 bg-brand">
+      <View className="flex-1 items-center bg-[#080808]">
+        <View
+          className="relative h-full w-full overflow-hidden bg-brand shadow-card"
+          style={{ maxWidth: 480 }}>
         <CameraView
           barcodeScannerSettings={{
             barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e'],
@@ -94,7 +107,19 @@ export function BarcodeScannerScreen() {
             </View>
           ) : lookup.item ? (
             <View className="gap-3">
-              <FoodResultCard food={lookup.item} onPress={mealLogs.selectFood} />
+              <Pressable
+                accessibilityHint="Opens food detail"
+                accessibilityRole="button"
+                className="rounded-[24px] border border-white/10 bg-[#242424] p-4 shadow-card active:scale-[0.99] active:opacity-80"
+                onPress={() => navigateToFoodDetail(router, lookup.item!)}>
+                <Text className="text-lg font-black text-white">{lookup.item.name}</Text>
+                {lookup.item.brand ? (
+                  <Text className="mt-1 text-sm text-white/55">{lookup.item.brand}</Text>
+                ) : null}
+                <Text className="mt-2 font-black text-accent">
+                  {Math.round(lookup.item.calories)} kcal
+                </Text>
+              </Pressable>
               <Button
                 label="Scan another"
                 icon={RefreshCcw}
@@ -124,14 +149,8 @@ export function BarcodeScannerScreen() {
             </View>
           )}
         </View>
+        </View>
       </View>
-      <QuickLogModal
-        error={mealLogs.error}
-        food={mealLogs.selectedFood}
-        isSaving={mealLogs.isSaving}
-        onDismiss={mealLogs.dismiss}
-        onSave={save}
-      />
     </>
   );
 }

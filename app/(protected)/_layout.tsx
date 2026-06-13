@@ -30,6 +30,10 @@ export default function ProtectedLayout() {
           name="barcode-camera"
           options={{ animation: 'slide_from_bottom', presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="food-detail"
+          options={{ animation: 'slide_from_right' }}
+        />
       </Stack>
     </MealAnalysisProvider>
   );

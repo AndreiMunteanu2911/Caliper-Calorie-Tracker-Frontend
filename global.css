@@ -87,11 +87,16 @@
   }
 
   .caliper-input:-webkit-autofill,
-  .caliper-input:-webkit-autofill:focus {
+  .caliper-input:-webkit-autofill:focus,
+  .caliper-input:-moz-autofill,
+  .caliper-input:-moz-autofill:focus,
+  .caliper-input:autofill,
+  .caliper-input:autofill:focus {
     -webkit-box-shadow: 0 0 0 1000px #141414 inset !important;
     box-shadow: 0 0 0 1000px #141414 inset !important;
     -webkit-text-fill-color: #ffffff !important;
     caret-color: #ffffff !important;
-    border-radius: inherit;
+    border: 0 !important;
+    border-radius: 0 !important;
   }
 }

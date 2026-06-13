@@ -16,7 +16,6 @@ type MealAsset = Pick<
 
 type MealAnalysisContextValue = {
   context: string;
-  imageUri: string | null;
   analysis: MealAnalysis | null;
   isAnalyzing: boolean;
   error: string | null;
@@ -29,7 +28,6 @@ const MealAnalysisContext = createContext<MealAnalysisContextValue | null>(null)
 
 export function MealAnalysisProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState('');
-  const [imageUri, setImageUri] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<MealAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +37,6 @@ export function MealAnalysisProvider({ children }: PropsWithChildren) {
       setError('The selected image could not be read.');
       return;
     }
-    setImageUri(asset.uri);
     setAnalysis(null);
     setError(null);
     setIsAnalyzing(true);
@@ -82,7 +79,6 @@ export function MealAnalysisProvider({ children }: PropsWithChildren) {
     <MealAnalysisContext.Provider
       value={{
         context,
-        imageUri,
         analysis,
         isAnalyzing,
         error,

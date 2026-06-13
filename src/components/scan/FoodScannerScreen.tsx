@@ -1,47 +1,59 @@
-import { Barcode, Camera, ChevronRight, Search } from 'lucide-react-native';
+import { Barcode, Camera, ChevronRight, Plus, Search } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Pressable,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import type { ScrollView } from 'react-native';
 
-import { FoodResultCard } from '@/src/components/food/FoodResultCard';
-import { QuickLogModal } from '@/src/components/food/QuickLogModal';
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
+import { CustomFoodForm } from '@/src/components/food/CustomFoodForm';
+import { Dropdown } from '@/src/components/ui/Dropdown';
+import { DropdownItem } from '@/src/components/ui/DropdownItem';
+import { InputBox } from '@/src/components/ui/InputBox';
 import { MealAnalysisPanel } from '@/src/components/scan/MealAnalysisPanel';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useFoodSearch } from '@/src/hooks/useFoodSearch';
-import { useMealLogs } from '@/src/hooks/useMealLogs';
 import { useScanScreenState, type ScanMode } from '@/src/hooks/useScanScreenState';
-import type { MealType } from '@/src/types/api';
+import type { FoodItem } from '@/src/types/api';
 
 const MODES = [
   { icon: Search, label: 'Search', value: 'search' },
   { icon: Camera, label: 'Meal photo', value: 'meal' },
 ] satisfies { icon: typeof Barcode; label: string; value: ScanMode }[];
 
+function navigateToFoodDetail(router: ReturnType<typeof useRouter>, food: FoodItem) {
+  router.push({
+    pathname: '/food-detail',
+    params: {
+      external_id: food.external_id,
+      source: food.source,
+      name: food.name,
+      brand: food.brand ?? '',
+      calories: String(food.calories),
+      protein: String(food.protein),
+      carbs: String(food.carbs),
+      fats: String(food.fats),
+      serving_size_g: String(food.serving_size_g),
+    },
+  });
+}
+
 export function FoodScannerScreen() {
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
+  const [showCustomFoodForm, setShowCustomFoodForm] = useState(false);
   const scrollOffset = useRef(0);
   const pendingScrollOffset = useRef<number | null>(null);
   const state = useScanScreenState();
   const search = useFoodSearch(state.query);
-  const mealLogs = useMealLogs();
-
-  async function save(mealType: MealType, quantityG: number) {
-    const created = await mealLogs.createLog(mealType, quantityG);
-    if (created) state.setQuery('');
-  }
 
   function changeMode(mode: ScanMode) {
     const offset = scrollOffset.current;
@@ -148,21 +160,21 @@ export function FoodScannerScreen() {
                   {state.mode === 'search' ? (
                     <AnimatedPresence
                       animateLayout={false}
-                      animateVisibility={false}
-                      className="gap-4">
-                      <TextInput
-                        accessibilityLabel="Search foods"
+                      animateVisibility={false}>
+                      <InputBox
                         autoCorrect={false}
-                        className="h-14 rounded-2xl border border-white/10 bg-[#242424] px-5 text-base text-white"
                         onChangeText={state.setQuery}
                         placeholder="Search chicken breast, oats, rice..."
-                        placeholderTextColor="#8F8F8F"
                         returnKeyType="search"
                         value={state.query}
                       />
-                      {search.isLoading ? <LoadingSpinner /> : null}
+                      {search.isLoading ? (
+                        <View className="items-center pt-4">
+                          <LoadingSpinner />
+                        </View>
+                      ) : null}
                       {search.error ? (
-                        <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+                        <AnimatedPresence className="mt-4 rounded-2xl bg-dangerSoft p-4">
                           <Text className="font-semibold text-danger">{search.error}</Text>
                         </AnimatedPresence>
                       ) : null}
@@ -180,13 +192,31 @@ export function FoodScannerScreen() {
                           </Text>
                         </View>
                       ) : null}
-                      {search.items.map((food) => (
-                        <FoodResultCard
-                          food={food}
-                          key={`${food.source}-${food.external_id}`}
-                          onPress={mealLogs.selectFood}
-                        />
-                      ))}
+                      {search.items.length > 0 ? (
+                        <View className="mt-4">
+                          <Dropdown>
+                            {search.items.map((food, index) => (
+                              <DropdownItem
+                                key={`${food.source}-${food.external_id}`}
+                                label={food.name}
+                                subtitle={food.brand || 'Nutrition per 100g'}
+                                calories={food.calories}
+                                protein={food.protein}
+                                carbs={food.carbs}
+                                fats={food.fats}
+                                onPress={() => navigateToFoodDetail(router, food)}
+                                isLast={index === search.items.length - 1}
+                              />
+                            ))}
+                          </Dropdown>
+                          <Pressable
+                            className="mt-2 flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-accent/40 py-3"
+                            onPress={() => setShowCustomFoodForm(true)}>
+                            <Plus color="#FF5A16" size={16} strokeWidth={2.5} />
+                            <Text className="font-bold text-accent">Custom food</Text>
+                          </Pressable>
+                        </View>
+                      ) : null}
                     </AnimatedPresence>
                   ) : null}
 
@@ -203,12 +233,9 @@ export function FoodScannerScreen() {
           </View>
         </AppPage>
       </ScrollbarContainer>
-      <QuickLogModal
-        error={mealLogs.error}
-        food={mealLogs.selectedFood}
-        isSaving={mealLogs.isSaving}
-        onDismiss={mealLogs.dismiss}
-        onSave={save}
+      <CustomFoodForm
+        onDismiss={() => setShowCustomFoodForm(false)}
+        visible={showCustomFoodForm}
       />
     </>
   );

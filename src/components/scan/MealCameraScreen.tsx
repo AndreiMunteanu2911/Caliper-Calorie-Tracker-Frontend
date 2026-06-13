@@ -63,55 +63,59 @@ export function MealCameraScreen() {
   }
 
   return (
-    <View className="flex-1 bg-brand">
-      <CameraView ref={cameraRef} className="flex-1" facing={facing} />
-      <View className="pointer-events-none absolute inset-0 bg-black/10" />
+    <View className="flex-1 items-center bg-[#080808]">
       <View
-        className="absolute inset-x-0 top-0 flex-row items-center justify-between px-5"
-        style={{ paddingTop: insets.top + 12 }}>
-        <Pressable
-          accessibilityLabel="Close camera"
-          className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
-          onPress={() => router.back()}>
-          <ChevronLeft color="#FFFFFF" size={25} />
-        </Pressable>
-        <Text className="text-xl font-black text-white">AI Camera</Text>
-        <Pressable
-          accessibilityLabel="Switch camera"
-          className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
-          onPress={() =>
-            setFacing((current) => (current === 'back' ? 'front' : 'back'))
-          }>
-          <RotateCcw color="#FFFFFF" size={21} />
-        </Pressable>
-      </View>
-
-      <View className="pointer-events-none absolute inset-x-10 top-[22%] h-[44%] rounded-[36px] border-[3px] border-white">
-        <View className="absolute left-0 right-0 top-1/2 h-px bg-accent" />
-      </View>
-
-      <View
-        className="absolute inset-x-0 bottom-0 items-center rounded-t-[32px] bg-[#121212] px-6 pt-6"
-        style={{ paddingBottom: insets.bottom + 20 }}>
-        <View className="mb-7 flex-row items-center gap-2 rounded-2xl bg-[#2F2F2F] px-4 py-3">
-          <ImageIcon color="#DDC0FF" size={18} />
-          <Text className="text-sm text-white/70">
-            Keep the full plate inside the frame
-          </Text>
+        className="relative h-full w-full overflow-hidden bg-brand shadow-card"
+        style={{ maxWidth: 480 }}>
+        <CameraView ref={cameraRef} className="flex-1" facing={facing} />
+        <View className="pointer-events-none absolute inset-0 bg-black/10" />
+        <View
+          className="absolute inset-x-0 top-0 flex-row items-center justify-between px-5"
+          style={{ paddingTop: insets.top + 12 }}>
+          <Pressable
+            accessibilityLabel="Close camera"
+            className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
+            onPress={() => router.back()}>
+            <ChevronLeft color="#FFFFFF" size={25} />
+          </Pressable>
+          <Text className="text-xl font-black text-white">AI Camera</Text>
+          <Pressable
+            accessibilityLabel="Switch camera"
+            className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
+            onPress={() =>
+              setFacing((current) => (current === 'back' ? 'front' : 'back'))
+            }>
+            <RotateCcw color="#FFFFFF" size={21} />
+          </Pressable>
         </View>
-        <Pressable
-          accessibilityLabel="Take meal photo"
-          accessibilityRole="button"
-          className="h-20 w-20 items-center justify-center rounded-full border-[3px] border-white"
-          disabled={isCapturing}
-          onPress={() => void capture()}>
-          <View className="h-16 w-16 rounded-full bg-white" />
-          {isCapturing ? (
-            <View className="absolute">
-              <LoadingSpinner />
-            </View>
-          ) : null}
-        </Pressable>
+
+        <View className="pointer-events-none absolute inset-x-10 top-[22%] h-[44%] rounded-[36px] border-[3px] border-white">
+          <View className="absolute left-0 right-0 top-1/2 h-px bg-accent" />
+        </View>
+
+        <View
+          className="absolute inset-x-0 bottom-0 items-center rounded-t-[32px] bg-[#121212] px-6 pt-6"
+          style={{ paddingBottom: insets.bottom + 20 }}>
+          <View className="mb-7 flex-row items-center gap-2 rounded-2xl bg-[#2F2F2F] px-4 py-3">
+            <ImageIcon color="#DDC0FF" size={18} />
+            <Text className="text-sm text-white/70">
+              Keep the full plate inside the frame
+            </Text>
+          </View>
+          <Pressable
+            accessibilityLabel="Take meal photo"
+            accessibilityRole="button"
+            className="h-20 w-20 items-center justify-center rounded-full border-[3px] border-white"
+            disabled={isCapturing}
+            onPress={() => void capture()}>
+            <View className="h-16 w-16 rounded-full bg-white" />
+            {isCapturing ? (
+              <View className="absolute">
+                <LoadingSpinner />
+              </View>
+            ) : null}
+          </Pressable>
+        </View>
       </View>
     </View>
   );

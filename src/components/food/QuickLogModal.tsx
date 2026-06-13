@@ -1,9 +1,10 @@
 import { Check, Flame, X } from 'lucide-react-native';
-import { Modal, Pressable, Text, TextInput, View } from 'react-native';
+import { Modal, Pressable, Text, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { Button } from '@/src/components/ui/Button';
+import { InputBox } from '@/src/components/ui/InputBox';
 import { useQuickLogForm } from '@/src/hooks/useQuickLogForm';
 import type { FoodItem, MealType } from '@/src/types/api';
 
@@ -53,9 +54,7 @@ export function QuickLogModal({
 
         <View className="mt-7 gap-2">
           <Text className="text-sm font-black text-ink">Weight in grams</Text>
-          <TextInput
-            accessibilityLabel="Food weight in grams"
-            className="h-16 rounded-2xl border border-line bg-surface px-5 text-2xl font-black text-ink"
+          <InputBox
             keyboardType="decimal-pad"
             onChangeText={form.setWeight}
             selectTextOnFocus

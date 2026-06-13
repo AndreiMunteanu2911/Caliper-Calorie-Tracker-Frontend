@@ -1,5 +1,5 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import { apiRequest, streamApiRequest } from '@/src/lib/api-client';
 import type {
@@ -11,10 +11,16 @@ type ChatStreamEvent =
   | { type: 'delta'; content: string }
   | {
       type: 'done';
+      conversation_id: string;
       user_message: AdvisorMessage;
       assistant_message: AdvisorMessage;
     }
   | { type: 'error'; message: string };
+
+type ConversationSummary = {
+  id: string;
+  title: string;
+};
 
 export function useAdvisorChat() {
   const [messages, setMessages] = useState<AdvisorMessage[]>([]);
@@ -22,6 +28,57 @@ export function useAdvisorChat() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const loadedConversationRef = useRef<string | null>(null);
+
+  const loadConversations = useCallback(async () => {
+    try {
+      setConversations(
+        await apiRequest<ConversationSummary[]>('/ai/conversations'),
+      );
+    } catch {
+      // silently fail
+    }
+  }, []);
+
+  const switchConversation = useCallback(async (id: string) => {
+    setActiveConversationId(id);
+    loadedConversationRef.current = id;
+    setIsLoadingHistory(true);
+    setError(null);
+    try {
+      const conversation = await apiRequest<AdvisorConversation>(
+        `/ai/chat?conversation_id=${encodeURIComponent(id)}`,
+        { timeoutMs: 12_000 },
+      );
+      setMessages(conversation.messages);
+    } catch (requestError) {
+      setMessages([]);
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Unable to load conversation.',
+      );
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  }, []);
+
+  const createNewConversation = useCallback(async () => {
+    try {
+      const { id } = await apiRequest<{ id: string }>('/ai/conversations', {
+        method: 'POST',
+      });
+      setActiveConversationId(id);
+      loadedConversationRef.current = id;
+      setMessages([]);
+      setError(null);
+      await loadConversations();
+    } catch {
+      // silently fail
+    }
+  }, [loadConversations]);
 
   const loadHistory = useCallback(async () => {
     setIsLoadingHistory(true);
@@ -30,9 +87,12 @@ export function useAdvisorChat() {
       const conversation = await apiRequest<AdvisorConversation>('/ai/chat', {
         timeoutMs: 12_000,
       });
+      loadedConversationRef.current = conversation.id || null;
+      setActiveConversationId(conversation.id || null);
       setMessages((current) =>
         current.length === 0 ? conversation.messages : current,
       );
+      await loadConversations();
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -42,7 +102,7 @@ export function useAdvisorChat() {
     } finally {
       setIsLoadingHistory(false);
     }
-  }, []);
+  }, [loadConversations]);
 
   useFocusEffect(
     useCallback(() => {
@@ -75,6 +135,7 @@ export function useAdvisorChat() {
         body: {
           message: trimmed,
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+          conversation_id: activeConversationId,
         },
       }, (event) => {
         if (event.type === 'error') {
@@ -106,6 +167,8 @@ export function useAdvisorChat() {
           return;
         }
         completed = true;
+        loadedConversationRef.current = event.conversation_id;
+        setActiveConversationId(event.conversation_id);
         setMessages((current) => [
           ...current.filter(
             (item) => item.id !== pendingId && item.id !== streamingId,
@@ -117,6 +180,7 @@ export function useAdvisorChat() {
       if (!completed) {
         throw new Error('The streamed response ended unexpectedly.');
       }
+      await loadConversations();
     } catch (requestError) {
       setMessages((current) =>
         current.filter(
@@ -138,8 +202,13 @@ export function useAdvisorChat() {
     isLoadingHistory,
     isSending,
     error,
+    conversations,
+    activeConversationId,
     setDraft,
     sendMessage,
     loadHistory,
+    switchConversation,
+    createNewConversation,
+    loadConversations,
   };
 }

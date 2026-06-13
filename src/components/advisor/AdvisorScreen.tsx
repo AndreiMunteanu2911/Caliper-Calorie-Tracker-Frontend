@@ -1,18 +1,22 @@
-import { RefreshCcw, Send, Sparkles } from 'lucide-react-native';
+import { ChevronDown, Plus, Send, Sparkles } from 'lucide-react-native';
 import {
   KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
-  type ScrollView,
+  ScrollView,
+  StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
 import { MarkdownMessage } from '@/src/components/advisor/MarkdownMessage';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
+import { Button } from '@/src/components/ui/Button';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
@@ -27,17 +31,41 @@ const SUGGESTIONS = [
 
 export function AdvisorScreen() {
   const listRef = useRef<ScrollView>(null);
+  const historyButtonRef = useRef<View>(null);
+  const [showConversations, setShowConversations] = useState(false);
+  const [historyMenuPosition, setHistoryMenuPosition] = useState({
+    left: 0,
+    top: 0,
+  });
+  const { width: windowWidth } = useWindowDimensions();
   const {
     messages,
     draft,
     isLoadingHistory,
     isSending,
     error,
+    conversations,
     setDraft,
     sendMessage,
-    loadHistory,
+    switchConversation,
+    createNewConversation,
   } =
     useAdvisorChat();
+
+  function toggleHistory() {
+    if (showConversations) {
+      setShowConversations(false);
+      return;
+    }
+    historyButtonRef.current?.measureInWindow((x, y, width, height) => {
+      const menuWidth = Math.min(288, windowWidth - 24);
+      setHistoryMenuPosition({
+        left: Math.max(12, Math.min(x + width - menuWidth, windowWidth - menuWidth - 12)),
+        top: y + height + 8,
+      });
+      setShowConversations(true);
+    });
+  }
 
   return (
     <KeyboardAvoidingView
@@ -46,13 +74,32 @@ export function AdvisorScreen() {
       <View className="flex-1 px-4 pb-24 pt-5 sm:px-6">
         <AppPage className="flex-1 min-h-0">
           <View className="min-h-0 flex-1 gap-4">
-            <PageHeader
-              title="AI Advisor"
-              description="Get practical guidance grounded in today's foods, remaining macros, and your recent nutrition history."
-            />
+            <View
+              className="z-50 flex-row items-start justify-between gap-4"
+              style={{ elevation: 30 }}>
+              <View className="flex-1">
+                <PageHeader
+                  title="AI Advisor"
+                  description="Get practical guidance grounded in today's foods, remaining macros, and your recent nutrition history."
+                />
+              </View>
+              <View
+                ref={historyButtonRef}
+                collapsable={false}
+                className="z-50 items-end pt-2">
+                <Button
+                  accessibilityLabel="Conversation history"
+                  icon={ChevronDown}
+                  label="History"
+                  size="compact"
+                  variant="secondary"
+                  onPress={toggleHistory}
+                />
+              </View>
+            </View>
 
             <View
-              className="min-h-0 flex-1 overflow-hidden rounded-[32px] border border-white/10 bg-[#1C1C1C] p-3 shadow-card">
+              className="z-0 min-h-0 flex-1 overflow-hidden rounded-[32px] border border-white/10 bg-[#1C1C1C] p-3 shadow-card">
               <ScrollbarContainer
                 ref={listRef}
                 className="min-h-0 flex-1 rounded-[22px] border border-white/10 bg-[#141414] px-4 shadow-soft"
@@ -84,20 +131,6 @@ export function AdvisorScreen() {
                         </Pressable>
                       ))}
                     </View>
-                    {isLoadingHistory ? (
-                      <View className="mt-5 flex-row items-center gap-2">
-                        <LoadingSpinner />
-                        <Text className="text-sm text-white/45">Loading history...</Text>
-                      </View>
-                    ) : error ? (
-                      <Pressable
-                        accessibilityRole="button"
-                        className="mt-5 flex-row items-center gap-2 rounded-full bg-white/10 px-4 py-3"
-                        onPress={() => void loadHistory()}>
-                        <RefreshCcw color="#FFFFFF" size={16} />
-                        <Text className="font-bold text-white">Retry history</Text>
-                      </Pressable>
-                    ) : null}
                   </View>
                 ) : (
                   messages.map((item: AdvisorMessage) => (
@@ -140,6 +173,7 @@ export function AdvisorScreen() {
                   <InputBox
                     accessibilityLabel="Message for diet advisor"
                     containerClassName="min-w-0 flex-1"
+                    dense={true}
                     inputClassName="max-h-28"
                     multiline
                     onChangeText={setDraft}
@@ -147,22 +181,97 @@ export function AdvisorScreen() {
                     placeholderTextColor="#8F8F8F"
                     value={draft}
                   />
-                  <Pressable
+                  <Button
                     accessibilityLabel="Send message"
-                    accessibilityRole="button"
-                    className={`h-14 w-14 items-center justify-center rounded-full bg-accent ${
-                      !draft.trim() || isSending ? 'opacity-40' : ''
-                    }`}
                     disabled={!draft.trim() || isSending}
-                    onPress={() => void sendMessage()}>
-                    <Send color="#FFFFFF" size={21} />
-                  </Pressable>
+                    icon={Send}
+                    iconPosition="left"
+                    label="Send"
+                    size="compact"
+                    onPress={() => void sendMessage()}
+                  />
                 </View>
               </View>
-            </View>
+          </View>
           </View>
         </AppPage>
       </View>
+      <Modal
+        animationType="fade"
+        onRequestClose={() => setShowConversations(false)}
+        statusBarTranslucent
+        transparent
+        visible={showConversations}>
+        <View style={StyleSheet.absoluteFill}>
+          <Pressable
+            accessibilityLabel="Close conversation history"
+            onPress={() => setShowConversations(false)}
+            style={StyleSheet.absoluteFill}
+          />
+          <View
+            style={{
+              backgroundColor: '#1C1C1C',
+              borderColor: '#6B6B6B',
+              borderRadius: 22,
+              borderWidth: 1,
+              elevation: 40,
+              left: historyMenuPosition.left,
+              overflow: 'hidden',
+              position: 'absolute',
+              shadowColor: '#000000',
+              shadowOffset: { width: 0, height: 16 },
+              shadowOpacity: 0.32,
+              shadowRadius: 28,
+              top: historyMenuPosition.top,
+              width: Math.min(288, windowWidth - 24),
+            }}>
+            <Pressable
+              className="flex-row items-center gap-2 border-b border-[#4A4A4A] px-4 py-3.5 active:bg-white/5"
+              onPress={() => {
+                setShowConversations(false);
+                void createNewConversation();
+              }}>
+              <Plus color="#FF5A16" size={16} strokeWidth={2.5} />
+              <Text className="font-bold text-accent">New conversation</Text>
+            </Pressable>
+            <ScrollView
+              className="caliper-scrollbar"
+              contentContainerClassName="py-1"
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator
+              style={{ maxHeight: 320 }}>
+              {isLoadingHistory ? (
+                <View className="flex-row items-center justify-center gap-3 px-4 py-8">
+                  <LoadingSpinner />
+                  <Text className="text-sm font-semibold text-white/45">
+                    Loading history...
+                  </Text>
+                </View>
+              ) : conversations.length > 0 ? (
+                conversations.map((conv) => (
+                  <Pressable
+                    className="mx-1 rounded-xl px-3 py-3.5 active:bg-white/5"
+                    key={conv.id}
+                    onPress={() => {
+                      setShowConversations(false);
+                      void switchConversation(conv.id);
+                    }}>
+                    <Text className="text-sm font-bold text-white" numberOfLines={1}>
+                      {conv.title}
+                    </Text>
+                  </Pressable>
+                ))
+              ) : (
+                <View className="px-4 py-8">
+                  <Text className="text-center text-sm text-white/35">
+                    No conversations yet
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

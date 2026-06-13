@@ -1,6 +1,5 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
 
 import { useAuth } from '@/src/hooks/useAuth';
 import { apiRequest } from '@/src/lib/api-client';
@@ -128,20 +127,7 @@ export function useDashboardData() {
 
   const deleteLog = useCallback(
     async (log: MealLogItem) => {
-      Alert.alert(
-        'Delete food?',
-        `${log.food_name} will be removed from today's log.`,
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: () => {
-              void performDelete(log);
-            },
-          },
-        ],
-      );
+      void performDelete(log);
     },
     [performDelete],
   );
