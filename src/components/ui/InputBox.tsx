@@ -29,7 +29,7 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
 
   return (
     <View
-      className={`flex-row items-center border bg-[#141414] ${
+      className={`flex-row items-center overflow-hidden border bg-[#141414] ${
         compact
           ? 'min-h-14 rounded-[18px] px-4 py-1'
           : 'min-h-16 rounded-[24px] p-2 pl-4'
@@ -41,7 +41,7 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
       <TextInput
         {...textInputProps}
         ref={ref}
-        className={`caliper-input min-w-0 flex-1 text-base leading-5 text-white ${
+        className={`caliper-input min-w-0 flex-1 bg-transparent text-base leading-5 text-white ${
           compact ? 'min-h-10 py-2' : 'min-h-12 py-3'
         } ${inputClassName}`}
         onBlur={(event) => {
