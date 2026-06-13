@@ -33,7 +33,7 @@ export function BarcodeScannerScreen() {
   if (!scanner.permission) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
-        <LoadingSpinner color="white" />
+        <LoadingSpinner />
       </View>
     );
   }
@@ -89,7 +89,7 @@ export function BarcodeScannerScreen() {
           style={{ paddingBottom: insets.bottom + 20 }}>
           {lookup.isLoading ? (
             <View className="items-center py-5">
-              <LoadingSpinner color="white" />
+              <LoadingSpinner />
               <Text className="mt-3 text-white/60">Looking up nutrition...</Text>
             </View>
           ) : lookup.item ? (

@@ -41,7 +41,7 @@ export function MealCameraScreen() {
   if (!permission) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
-        <LoadingSpinner color="white" />
+        <LoadingSpinner />
       </View>
     );
   }

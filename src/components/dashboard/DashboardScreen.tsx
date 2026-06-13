@@ -28,7 +28,7 @@ export function DashboardScreen() {
   if (isAuthLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
-        <LoadingSpinner color="white" size="large" />
+        <LoadingSpinner size="large" />
       </View>
     );
   }
@@ -161,7 +161,7 @@ export function DashboardScreen() {
           </View>
         ) : (
           <View className="items-center py-20">
-            <LoadingSpinner color="white" />
+            <LoadingSpinner  />
           </View>
         )}
       </AppPage>

@@ -13,6 +13,7 @@ import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
+import { NumberSpinner } from '@/src/components/ui/NumberSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useProfile } from '@/src/hooks/useProfile';
@@ -31,47 +32,6 @@ const CALORIES_PER_GRAM: Record<MacroKey, number> = {
 function numberValue(value: string): number {
   const parsed = Number(value.replace(',', '.'));
   return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function targetValue(value: number): string {
-  return Number(Math.max(0, value).toFixed(1)).toString();
-}
-
-type TargetFieldProps = {
-  label: string;
-  suffix: string;
-  value: string;
-  onChange: (value: string) => void;
-};
-
-function TargetField({ label, suffix, value, onChange }: TargetFieldProps) {
-  return (
-    <View className="min-w-[130px] flex-1 gap-1.5">
-      <Text className="pl-2 text-sm font-bold text-white/70">{label}</Text>
-      <View>
-        <InputBox
-          accessibilityLabel={label}
-          compact
-          containerClassName="pr-12"
-          inputClassName="font-black"
-          keyboardType="decimal-pad"
-          onChangeText={onChange}
-          value={value}
-        />
-        <View
-          className="pointer-events-none"
-          style={{
-            bottom: 0,
-            justifyContent: 'center',
-            position: 'absolute',
-            right: 16,
-            top: 0,
-          }}>
-          <Text className="text-sm font-bold text-white/40">{suffix}</Text>
-        </View>
-      </View>
-    </View>
-  );
 }
 
 type SettingButtonProps = {
@@ -127,22 +87,22 @@ export function ProfileScreen() {
   const [openModal, setOpenModal] = useState<OpenModal>(null);
   const [displayName, setDisplayName] = useState('');
   const [calories, setCalories] = useState('');
-  const [protein, setProtein] = useState('');
-  const [carbs, setCarbs] = useState('');
-  const [fats, setFats] = useState('');
+  const [protein, setProtein] = useState(0);
+  const [carbs, setCarbs] = useState(0);
+  const [fats, setFats] = useState(0);
   const [mode, setMode] = useState<TargetMode>('grams');
   const [saved, setSaved] = useState(false);
 
   function setGoalDrafts(source: Profile, targetMode: TargetMode) {
     setCalories(Math.round(source.daily_calorie_target).toString());
     if (targetMode === 'grams') {
-      setProtein(Math.round(source.daily_protein_target).toString());
-      setCarbs(Math.round(source.daily_carbs_target).toString());
-      setFats(Math.round(source.daily_fats_target).toString());
+      setProtein(Math.round(source.daily_protein_target));
+      setCarbs(Math.round(source.daily_carbs_target));
+      setFats(Math.round(source.daily_fats_target));
     } else {
-      setProtein(source.protein_percentage.toFixed(1));
-      setCarbs(source.carbs_percentage.toFixed(1));
-      setFats(source.fats_percentage.toFixed(1));
+      setProtein(Math.round(source.protein_percentage));
+      setCarbs(Math.round(source.carbs_percentage));
+      setFats(Math.round(source.fats_percentage));
     }
   }
 
@@ -151,108 +111,30 @@ export function ProfileScreen() {
     setDisplayName(profile.display_name ?? '');
     setMode('grams');
     setCalories(Math.round(profile.daily_calorie_target).toString());
-    setProtein(Math.round(profile.daily_protein_target).toString());
-    setCarbs(Math.round(profile.daily_carbs_target).toString());
-    setFats(Math.round(profile.daily_fats_target).toString());
+    setProtein(Math.round(profile.daily_protein_target));
+    setCarbs(Math.round(profile.daily_carbs_target));
+    setFats(Math.round(profile.daily_fats_target));
   }, [profile]);
 
+  const calculatedCalories =
+    protein * CALORIES_PER_GRAM.protein +
+    carbs * CALORIES_PER_GRAM.carbs +
+    fats * CALORIES_PER_GRAM.fats;
+  const percentageTotal = protein + carbs + fats;
+  const percentageTotalValid = percentageTotal === 100;
   const detailsValid = displayName.trim().length >= 2;
   const goalsValid =
-    numberValue(calories) > 0 &&
-    numberValue(calories) <= 20_000 &&
-    numberValue(protein) >= 0 &&
-    numberValue(carbs) >= 0 &&
-    numberValue(fats) >= 0;
-
-  function macroValues(changed?: MacroKey, value?: number) {
-    return {
-      protein: changed === 'protein' ? value ?? 0 : numberValue(protein),
-      carbs: changed === 'carbs' ? value ?? 0 : numberValue(carbs),
-      fats: changed === 'fats' ? value ?? 0 : numberValue(fats),
-    };
-  }
-
-  function setMacroValues(values: Record<MacroKey, number>) {
-    setProtein(targetValue(values.protein));
-    setCarbs(targetValue(values.carbs));
-    setFats(targetValue(values.fats));
-  }
-
-  function setPercentageValues(values: Record<MacroKey, number>) {
-    const total = values.protein + values.carbs + values.fats;
-    if (total <= 0) return;
-    const nextProtein = Number(((values.protein / total) * 100).toFixed(1));
-    const nextCarbs = Number(((values.carbs / total) * 100).toFixed(1));
-    setProtein(targetValue(nextProtein));
-    setCarbs(targetValue(nextCarbs));
-    setFats(targetValue(100 - nextProtein - nextCarbs));
-  }
-
-  function changeCalories(value: string) {
-    setCalories(value);
-    const nextCalories = numberValue(value);
-    if (mode !== 'grams' || nextCalories <= 0) return;
-
-    const current = macroValues();
-    const currentCalories =
-      current.protein * 4 + current.carbs * 4 + current.fats * 9;
-    if (currentCalories <= 0) return;
-    const ratio = nextCalories / currentCalories;
-    setMacroValues({
-      protein: current.protein * ratio,
-      carbs: current.carbs * ratio,
-      fats: current.fats * ratio,
-    });
-  }
-
-  function changeMacro(key: MacroKey, value: string) {
-    const nextValue = numberValue(value);
-    if (mode === 'grams') {
-      if (key === 'protein') setProtein(value);
-      if (key === 'carbs') setCarbs(value);
-      if (key === 'fats') setFats(value);
-      if (!value.trim()) return;
-      const next = macroValues(key, nextValue);
-      setCalories(
-        targetValue(
-          next.protein * CALORIES_PER_GRAM.protein +
-            next.carbs * CALORIES_PER_GRAM.carbs +
-            next.fats * CALORIES_PER_GRAM.fats,
-        ),
-      );
-      return;
-    }
-
-    const changedValue = Math.min(100, Math.max(0, nextValue));
-    const current = macroValues();
-    const otherKeys = (Object.keys(current) as MacroKey[]).filter(
-      (macro) => macro !== key,
-    );
-    const remaining = 100 - changedValue;
-    const otherTotal = otherKeys.reduce((total, macro) => total + current[macro], 0);
-    const next = { ...current, [key]: changedValue };
-    for (const macro of otherKeys) {
-      next[macro] =
-        otherTotal > 0 ? (current[macro] / otherTotal) * remaining : remaining / 2;
-    }
-    const firstOther = otherKeys[0];
-    const secondOther = otherKeys[1];
-    const roundedChanged = Number(changedValue.toFixed(1));
-    const roundedFirst = Number(next[firstOther].toFixed(1));
-    setMacroValues({
-      ...next,
-      [key]: roundedChanged,
-      [firstOther]: roundedFirst,
-      [secondOther]: 100 - roundedChanged - roundedFirst,
-    });
-  }
+    protein >= 0 &&
+    carbs >= 0 &&
+    fats >= 0 &&
+    (mode === 'grams'
+      ? calculatedCalories > 0
+      : numberValue(calories) > 0 &&
+        numberValue(calories) <= 20_000 &&
+        percentageTotalValid);
 
   function closeModal() {
     if (isSaving) return;
-    if (profile) {
-      setDisplayName(profile.display_name ?? '');
-      setGoalDrafts(profile, mode);
-    }
     setOpenModal(null);
   }
 
@@ -273,23 +155,19 @@ export function ProfileScreen() {
   function changeMode(nextMode: TargetMode) {
     if (nextMode === mode) return;
     const calorieTarget = numberValue(calories);
-    const current = macroValues();
     if (nextMode === 'percentages') {
-      const macroCalories =
-        current.protein * 4 + current.carbs * 4 + current.fats * 9;
-      if (macroCalories > 0) {
-        setPercentageValues({
-          protein: (current.protein * 4 * 100) / macroCalories,
-          carbs: (current.carbs * 4 * 100) / macroCalories,
-          fats: (current.fats * 9 * 100) / macroCalories,
-        });
+      if (calculatedCalories > 0) {
+        const nextProtein = Math.round((protein * 4 * 100) / calculatedCalories);
+        const nextCarbs = Math.round((carbs * 4 * 100) / calculatedCalories);
+        setProtein(nextProtein);
+        setCarbs(nextCarbs);
+        setFats(100 - nextProtein - nextCarbs);
+        setCalories(Math.round(calculatedCalories).toString());
       }
     } else if (calorieTarget > 0) {
-      setMacroValues({
-        protein: (calorieTarget * current.protein) / 100 / 4,
-        carbs: (calorieTarget * current.carbs) / 100 / 4,
-        fats: (calorieTarget * current.fats) / 100 / 9,
-      });
+      setProtein(Math.round((calorieTarget * protein) / 100 / 4));
+      setCarbs(Math.round((calorieTarget * carbs) / 100 / 4));
+      setFats(Math.round((calorieTarget * fats) / 100 / 9));
     }
     setMode(nextMode);
   }
@@ -315,11 +193,12 @@ export function ProfileScreen() {
     const didSave = await save({
       display_name:
         profile.display_name?.trim() || profile.email.split('@')[0] || 'Caliper user',
-      daily_calorie_target: numberValue(calories),
+      daily_calorie_target:
+        mode === 'grams' ? calculatedCalories : numberValue(calories),
       target_mode: mode,
-      protein: numberValue(protein),
-      carbs: numberValue(carbs),
-      fats: numberValue(fats),
+      protein,
+      carbs,
+      fats,
     });
     if (didSave) {
       setSaved(true);
@@ -348,7 +227,7 @@ export function ProfileScreen() {
 
           {isLoading && !profile ? (
             <View className="items-center py-24">
-              <LoadingSpinner color="white" />
+              <LoadingSpinner />
             </View>
           ) : (
             <View className="mt-8 gap-4">
@@ -472,32 +351,76 @@ export function ProfileScreen() {
               </Pressable>
             ))}
           </View>
-          <TargetField
-            label="Calories"
-            suffix="kcal"
-            value={calories}
-            onChange={changeCalories}
-          />
+          {mode === 'grams' ? (
+            <View className="gap-1.5">
+              <View className="flex-row items-center gap-1.5 pl-2">
+                <Text className="text-sm font-bold text-white/70">Calories</Text>
+                <Text className="text-xs text-white/40">
+                  (Auto-calculated from gram values)
+                </Text>
+              </View>
+              <View className="relative min-h-14 justify-center rounded-[18px] border border-white/10 bg-[#141414] px-4 pr-14">
+                <Text className="text-lg font-black text-white">
+                  {Math.round(calculatedCalories)}
+                </Text>
+                <View className="pointer-events-none absolute bottom-0 right-4 top-0 justify-center">
+                  <Text className="text-sm font-bold text-white/40">kcal</Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View className="gap-1.5">
+              <Text className="pl-2 text-sm font-bold text-white/70">Calories</Text>
+              <View>
+                <InputBox
+                  accessibilityLabel="Calories"
+                  compact
+                  containerClassName="pr-14"
+                  inputClassName="text-lg font-black"
+                  keyboardType="decimal-pad"
+                  onChangeText={setCalories}
+                  value={calories}
+                />
+                <View className="pointer-events-none absolute bottom-0 right-4 top-0 justify-center">
+                  <Text className="text-sm font-bold text-white/40">kcal</Text>
+                </View>
+              </View>
+            </View>
+          )}
           <View className="flex-row flex-wrap gap-3">
-            <TargetField
-              label="Protein"
-              suffix={mode === 'grams' ? 'g' : '%'}
-              value={protein}
-              onChange={(value) => changeMacro('protein', value)}
+            <NumberSpinner
+                label="Protein"
+                suffix={mode === 'grams' ? 'g' : '%'}
+                value={protein}
+                max={mode === 'grams' ? 1000 : 200}
+                onChange={setProtein}
+                closing={openModal !== 'goals'}
             />
-            <TargetField
-              label="Carbs"
-              suffix={mode === 'grams' ? 'g' : '%'}
-              value={carbs}
-              onChange={(value) => changeMacro('carbs', value)}
+            <NumberSpinner
+                label="Carbs"
+                suffix={mode === 'grams' ? 'g' : '%'}
+                value={carbs}
+                max={mode === 'grams' ? 1500 : 200}
+                onChange={setCarbs}
+                closing={openModal !== 'goals'}
             />
-            <TargetField
-              label="Fat"
-              suffix={mode === 'grams' ? 'g' : '%'}
-              value={fats}
-              onChange={(value) => changeMacro('fats', value)}
+            <NumberSpinner
+                label="Fat"
+                suffix={mode === 'grams' ? 'g' : '%'}
+                value={fats}
+                max={mode === 'grams' ? 500 : 200}
+                onChange={setFats}
+                closing={openModal !== 'goals'}
             />
           </View>
+          {mode === 'percentages' ? (
+            <Text
+              className={`text-sm font-black ${
+                percentageTotalValid ? 'text-white' : 'text-accent'
+              }`}>
+              Total: {percentageTotal}% / 100%
+            </Text>
+          ) : null}
           {error ? (
             <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
               <Text className="font-semibold text-danger">{error}</Text>

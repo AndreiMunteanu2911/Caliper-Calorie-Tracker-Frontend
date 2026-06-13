@@ -24,7 +24,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
-        <LoadingSpinner color="white" size="large" />
+        <LoadingSpinner size="large" />
       </View>
     );
   }

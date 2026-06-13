@@ -57,7 +57,7 @@ export function DiaryScreen() {
 
         {!data ? (
           <View className="items-center py-24">
-            <LoadingSpinner color="white" />
+            <LoadingSpinner />
           </View>
         ) : data.logs.length === 0 ? (
           <Pressable

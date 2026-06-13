@@ -91,7 +91,7 @@ function RootLayoutNav() {
           <Stack.Screen name="sign-up" options={{ headerShown: false }} />
           <Stack.Screen name="(protected)" options={{ headerShown: false }} />
         </Stack>
-        <StatusBar backgroundColor="#101010" style="light" />
+        <StatusBar style="light" />
       </ThemeProvider>
     </AuthProvider>
   );
