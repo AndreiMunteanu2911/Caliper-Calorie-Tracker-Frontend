@@ -1,5 +1,5 @@
 import { CameraView } from 'expo-camera';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Barcode, ChevronLeft, RefreshCcw } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import { useBarcodeScanner } from '@/src/hooks/useBarcodeScanner';
 function navigateToFoodDetail(
   router: ReturnType<typeof useRouter>,
   food: NonNullable<ReturnType<typeof useBarcodeLookup>['item']>,
+  date?: string,
 ) {
   router.push({
     pathname: '/food-detail',
@@ -24,13 +25,19 @@ function navigateToFoodDetail(
       protein: String(food.protein),
       carbs: String(food.carbs),
       fats: String(food.fats),
+      fiber: String(food.fiber),
+      sugar: String(food.sugar),
+      sodium_mg: String(food.sodium_mg),
+      saturated_fat: String(food.saturated_fat),
       serving_size_g: String(food.serving_size_g),
+      date,
     },
   });
 }
 
 export function BarcodeScannerScreen() {
   const router = useRouter();
+  const { date } = useLocalSearchParams<{ date?: string }>();
   const insets = useSafeAreaInsets();
   const lookup = useBarcodeLookup();
   const scanner = useBarcodeScanner((value) => void lookup.lookup(value));
@@ -111,7 +118,7 @@ export function BarcodeScannerScreen() {
                 accessibilityHint="Opens food detail"
                 accessibilityRole="button"
                 className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
-                onPress={() => navigateToFoodDetail(router, lookup.item!)}>
+                onPress={() => navigateToFoodDetail(router, lookup.item!, date)}>
                 <Text className="text-base font-black text-white">{lookup.item.name}</Text>
                 {lookup.item.brand ? (
                   <Text className="mt-0.5 text-xs text-white/55">{lookup.item.brand}</Text>

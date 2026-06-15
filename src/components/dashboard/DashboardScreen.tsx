@@ -22,6 +22,12 @@ export function DashboardScreen() {
   const { profile } = useProfile();
   const progress = data?.progress;
   const today = new Date();
+  const greeting =
+    today.getHours() < 12
+      ? 'Good morning'
+      : today.getHours() < 18
+        ? 'Good afternoon'
+        : 'Good evening';
   const mondayOffset = (today.getDay() + 6) % 7;
   const caloriePercentage = progress?.targets.calories
     ? Math.min(progress.consumed.calories / progress.targets.calories, 1)
@@ -51,7 +57,7 @@ export function DashboardScreen() {
       <AppPage>
         <PageHeader
           title="Your nutrition"
-          description={`Good morning${
+          description={`${greeting}${
             profile?.display_name
               ? `, ${profile.display_name}`
               : user?.email

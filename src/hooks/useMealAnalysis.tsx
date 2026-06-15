@@ -20,6 +20,7 @@ type MealAnalysisContextValue = {
   isAnalyzing: boolean;
   error: string | null;
   setContext: (context: string) => void;
+  setAnalysis: (analysis: MealAnalysis | null) => void;
   analyzeAsset: (asset: MealAsset) => Promise<void>;
   choosePhoto: () => Promise<void>;
 };
@@ -83,6 +84,7 @@ export function MealAnalysisProvider({ children }: PropsWithChildren) {
         isAnalyzing,
         error,
         setContext,
+        setAnalysis,
         analyzeAsset,
         choosePhoto,
       }}>

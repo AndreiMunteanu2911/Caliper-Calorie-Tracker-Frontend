@@ -3,46 +3,69 @@ import { ChevronLeft } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
-import { useNutritionStats, type Period, type StatsTab } from '@/src/hooks/useNutritionStats';
-import { useProfile } from '@/src/hooks/useProfile';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
+import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
+import {
+  type Period,
+  type StatsTab,
+  useNutritionStats,
+} from '@/src/hooks/useNutritionStats';
+import { useWeightLogs } from '@/src/hooks/useWeightLogs';
+import { localDateString, parseLocalDate, shiftLocalDate } from '@/src/lib/dates';
+import type { MacroHistoryEntry, MacroTotals } from '@/src/types/api';
 
-const MACRO_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  protein: { label: 'Protein', color: 'text-protein', bg: 'bg-protein' },
-  carbs: { label: 'Carbs', color: 'text-carbs', bg: 'bg-carbs' },
-  fats: { label: 'Fat', color: 'text-fats', bg: 'bg-fats' },
-};
+const PERIODS: { value: Period; label: string }[] = [
+  { value: 'day', label: 'Day' },
+  { value: 'week', label: '7D' },
+  { value: 'month', label: '30D' },
+  { value: 'quarter', label: '90D' },
+];
 
-function PeriodToggle({ period, onChange }: { period: Period; onChange: (p: Period) => void }) {
-  return (
-    <View className="flex-row rounded-2xl bg-[#151515] p-1">
-      {(['day', 'week'] as const).map((option) => (
-        <Pressable
-          className={`flex-1 items-center rounded-xl px-4 py-2 ${period === option ? 'bg-accent' : ''}`}
-          key={option}
-          onPress={() => onChange(option)}>
-          <Text className={period === option ? 'font-black text-white' : 'font-bold text-white/50'}>
-            {option === 'day' ? 'Day' : 'Week'}
-          </Text>
-        </Pressable>
-      ))}
-    </View>
-  );
-}
+const NUTRIENTS: {
+  label: string;
+  key: keyof MacroTotals;
+  unit: string;
+  hasGoal: boolean;
+}[] = [
+  { label: 'Protein', key: 'protein', unit: 'g', hasGoal: true },
+  { label: 'Carbs', key: 'carbs', unit: 'g', hasGoal: true },
+  { label: 'Fat', key: 'fats', unit: 'g', hasGoal: true },
+  { label: 'Fiber', key: 'fiber', unit: 'g', hasGoal: false },
+  { label: 'Sugar', key: 'sugar', unit: 'g', hasGoal: false },
+  { label: 'Sodium', key: 'sodium_mg', unit: 'mg', hasGoal: false },
+  {
+    label: 'Saturated fat',
+    key: 'saturated_fat',
+    unit: 'g',
+    hasGoal: false,
+  },
+];
 
-function TabBar({ tab, onChange }: { tab: StatsTab; onChange: (t: StatsTab) => void }) {
+function Toggle({
+  options,
+  value,
+  onChange,
+}: {
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <View className="flex-row rounded-2xl border border-white/10 bg-[#242424] p-1">
-      {(['calories', 'macros'] as const).map((option) => (
+      {options.map((option) => (
         <Pressable
-          className={`flex-1 items-center rounded-xl px-4 py-2 ${tab === option ? 'bg-accent' : ''}`}
-          key={option}
-          accessibilityRole="tab"
-          accessibilityState={{ selected: tab === option }}
-          onPress={() => onChange(option)}>
-          <Text className={tab === option ? 'font-black text-white' : 'font-bold text-white/50'}>
-            {option === 'calories' ? 'Calories' : 'Macros'}
+          className={`min-w-0 flex-1 items-center rounded-xl px-2 py-2 ${
+            value === option.value ? 'bg-accent' : ''
+          }`}
+          key={option.value}
+          onPress={() => onChange(option.value)}>
+          <Text
+            className={
+              value === option.value
+                ? 'font-black text-white'
+                : 'font-bold text-white/50'
+            }>
+            {option.label}
           </Text>
         </Pressable>
       ))}
@@ -50,78 +73,35 @@ function TabBar({ tab, onChange }: { tab: StatsTab; onChange: (t: StatsTab) => v
   );
 }
 
-function CalorieBar({ value, max, label }: { value: number; max: number; label: string }) {
-  const barHeight = max > 0 ? Math.max(2, (value / max) * 120) : 0;
-
+function SummaryCard({
+  label,
+  value,
+  goal,
+  unit,
+}: {
+  label: string;
+  value: number;
+  goal?: number;
+  unit: string;
+}) {
+  const percentage = goal && goal > 0 ? (value / goal) * 100 : null;
   return (
-    <View className="flex-1 items-center gap-1">
-      <Text className="text-[10px] font-black text-white" numberOfLines={1}>
+    <View className="min-w-[46%] flex-1 rounded-2xl border border-white/10 bg-[#232220] p-3">
+      <Text className="text-xs font-bold text-white/45">{label}</Text>
+      <Text className="mt-1 text-lg font-black text-white">
         {Math.round(value)}
+        <Text className="text-xs text-white/40"> {unit}</Text>
       </Text>
-      <View className="h-[120px] w-full items-center justify-end">
-        <View
-          className="w-3/4 rounded-t-sm bg-protein"
-          style={{ height: barHeight }}
-        />
-      </View>
-      <Text className="text-[9px] font-semibold text-white/40" numberOfLines={1}>
-        {label}
-      </Text>
-    </View>
-  );
-}
-
-function CalorieHistogram({ entries, period }: { entries: { date: string; calories: number }[]; period: Period }) {
-  const days = period === 'week' ? 7 : 1;
-  const dates: { date: string; calories: number }[] = [];
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    const match = entries.find((e) => e.date === dateStr);
-    dates.push({ date: dateStr, calories: match?.calories ?? 0 });
-  }
-
-  const max = dates.length > 0 ? Math.max(...dates.map((e) => e.calories), 1) : 1;
-
-  return (
-    <View className="flex-row items-end gap-1">
-      {dates.map((entry) => {
-        const dayLabel = new Date(entry.date).toLocaleDateString(undefined, {
-          weekday: 'short',
-        });
-        return (
-          <CalorieBar
-            key={entry.date}
-            label={dayLabel}
-            max={max}
-            value={entry.calories}
-          />
-        );
-      })}
-    </View>
-  );
-}
-
-function SummaryCard({ label, value, goal, unit, showProgress = true }: { label: string; value: number; goal: number; unit: string; showProgress?: boolean }) {
-  const pct = goal > 0 ? Math.round((value / goal) * 100) : 0;
-  return (
-    <View className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#232220] px-3 py-3">
-      <Text className="text-[10px] font-bold text-white/45">{label}</Text>
-      <Text className="mt-0.5 text-lg font-black text-white">
-        {Math.round(value)}
-        <Text className="text-xs font-bold text-white/40"> {unit}</Text>
-      </Text>
-      {showProgress ? (
+      {percentage !== null ? (
         <>
-          <View className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/10">
+          <View className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
             <View
               className="h-full rounded-full bg-accent"
-              style={{ width: `${Math.min(pct, 100)}%` }}
+              style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </View>
-          <Text className="mt-0.5 text-[10px] font-semibold text-white/40">
-            {pct}% of {Math.round(goal)} {unit} goal
+          <Text className="mt-1 text-xs text-white/35">
+            {Math.round(percentage)}% of goal
           </Text>
         </>
       ) : null}
@@ -129,69 +109,150 @@ function SummaryCard({ label, value, goal, unit, showProgress = true }: { label:
   );
 }
 
-function MacrosSummary({ entries, targets }: { entries: { date: string; consumed: { protein: number; carbs: number; fats: number } }[]; targets: { protein: number; carbs: number; fats: number } }) {
-  if (entries.length === 0) {
-    return (
-      <View className="items-center py-6">
-        <Text className="text-sm text-white/40">No data for this period</Text>
-      </View>
-    );
-  }
-
-  const avgProtein = entries.reduce((s, e) => s + e.consumed.protein, 0) / entries.length;
-  const avgCarbs = entries.reduce((s, e) => s + e.consumed.carbs, 0) / entries.length;
-  const avgFats = entries.reduce((s, e) => s + e.consumed.fats, 0) / entries.length;
-
-  const macros = [
-    { key: 'protein', value: avgProtein, goal: targets.protein },
-    { key: 'carbs', value: avgCarbs, goal: targets.carbs },
-    { key: 'fats', value: avgFats, goal: targets.fats },
-  ];
+function CalorieChart({
+  entries,
+  days,
+}: {
+  entries: MacroHistoryEntry[];
+  days: number;
+}) {
+  const caloriesByDate = new Map(
+    entries.map((entry) => [entry.date, entry.consumed.calories]),
+  );
+  const dailyValues = Array.from({ length: days }, (_, index) => {
+    const date = shiftLocalDate(localDateString(), index - days + 1);
+    return {
+      date,
+      calories: caloriesByDate.get(date) ?? 0,
+    };
+  });
+  const bucketSize = days <= 7 ? 1 : days <= 30 ? 3 : 7;
+  const buckets = Array.from(
+    { length: Math.ceil(dailyValues.length / bucketSize) },
+    (_, index) => {
+      const bucketDays = dailyValues.slice(
+        index * bucketSize,
+        (index + 1) * bucketSize,
+      );
+      return {
+        startDate: bucketDays[0].date,
+        calories:
+          bucketDays.reduce((sum, item) => sum + item.calories, 0) /
+          bucketDays.length,
+      };
+    },
+  );
+  const maximum = Math.max(...buckets.map((item) => item.calories), 1);
 
   return (
-    <View className="gap-3">
-      {macros.map((m) => {
-        const meta = MACRO_LABELS[m.key];
-        const pct = m.goal > 0 ? Math.round((m.value / m.goal) * 100) : 0;
-        const barColor = pct > 100 ? 'bg-accent' : meta.bg;
-        return (
-          <View className="rounded-2xl border border-white/10 bg-[#232220] p-3.5" key={m.key}>
-            <View className="flex-row items-center justify-between">
-              <Text className={`text-sm font-black ${meta.color}`}>{meta.label}</Text>
-              <Text className="text-sm font-black text-white">
-                {m.value.toFixed(1)}g
-                <Text className="text-xs font-bold text-white/40"> / {Math.round(m.goal)}g goal</Text>
-              </Text>
-            </View>
-            <View className="mt-2 h-2.5 overflow-hidden rounded-full bg-white/10">
-              <View
-                className={`h-full rounded-full ${barColor}`}
-                style={{ width: `${Math.min(pct, 100)}%` }}
-              />
-            </View>
+    <View className="flex-row items-end gap-1">
+      {buckets.map((item) => (
+        <View
+          className="min-w-0 flex-1 items-center gap-1"
+          key={item.startDate}>
+          <Text className="text-[9px] font-black text-white/70">
+            {Math.round(item.calories)}
+          </Text>
+          <View className="h-28 w-full items-center justify-end">
+            <View
+              className={`${days === 1 ? 'w-12' : 'w-3/4'} rounded-t bg-protein`}
+              style={{
+                height: Math.max(2, (item.calories / maximum) * 112),
+              }}
+            />
           </View>
-        );
-      })}
+          <Text className="text-[9px] text-white/35">
+            {days <= 7
+              ? parseLocalDate(item.startDate).toLocaleDateString(undefined, {
+                  weekday: 'narrow',
+                })
+              : parseLocalDate(item.startDate).toLocaleDateString(undefined, {
+                  month: 'numeric',
+                  day: 'numeric',
+                })}
+          </Text>
+        </View>
+      ))}
     </View>
   );
+}
+
+function average(
+  entries: MacroHistoryEntry[],
+  key: keyof MacroTotals,
+): number {
+  return entries.length
+    ? entries.reduce((sum, entry) => sum + entry.consumed[key], 0) /
+        entries.length
+    : 0;
+}
+
+function bucketSizeLabel(days: number): string {
+  return days <= 30
+    ? '3-day daily averages'
+    : '7-day daily averages';
+}
+
+function correlation(values: [number, number][]): number | null {
+  if (values.length < 3) return null;
+  const meanX = values.reduce((sum, [x]) => sum + x, 0) / values.length;
+  const meanY = values.reduce((sum, [, y]) => sum + y, 0) / values.length;
+  const numerator = values.reduce(
+    (sum, [x, y]) => sum + (x - meanX) * (y - meanY),
+    0,
+  );
+  const denominator = Math.sqrt(
+    values.reduce((sum, [x]) => sum + (x - meanX) ** 2, 0) *
+      values.reduce((sum, [, y]) => sum + (y - meanY) ** 2, 0),
+  );
+  return denominator > 0 ? numerator / denominator : null;
 }
 
 export function NutritionStatsScreen() {
   const router = useRouter();
   const { data, isLoading, error, period, setPeriod } = useNutritionStats();
-  const { profile } = useProfile();
+  const { data: weightData } = useWeightLogs();
   const [tab, setTab] = useState<StatsTab>('calories');
-
   const entries = data?.entries ?? [];
-  const targets = data?.targets ?? { calories: 0, protein: 0, carbs: 0, fats: 0 };
+  const targets = data?.targets;
+  const days = data?.days ?? 1;
 
-  const avgCalories = entries.length > 0
-    ? entries.reduce((s, e) => s + e.consumed.calories, 0) / entries.length
-    : 0;
-
-  const totalCalories = entries.reduce((s, e) => s + e.consumed.calories, 0);
-  const weeklyGoal = period === 'week' ? targets.calories * entries.length : targets.calories;
-  const underGoal = Math.max(0, weeklyGoal - totalCalories);
+  const totalCalories = entries.reduce(
+    (sum, entry) => sum + entry.consumed.calories,
+    0,
+  );
+  const periodGoal = (targets?.calories ?? 0) * days;
+  const difference = periodGoal - totalCalories;
+  const calorieAdherence =
+    targets && days
+      ? (entries.filter(
+          (entry) =>
+            Math.abs(entry.consumed.calories - targets.calories) /
+              targets.calories <=
+            0.1,
+        ).length /
+          days) *
+        100
+      : 0;
+  const proteinConsistency =
+    targets && days
+      ? (entries.filter(
+          (entry) => entry.consumed.protein >= targets.protein * 0.9,
+        ).length /
+          days) *
+        100
+      : 0;
+  const caloriesByDate = new Map(
+    entries.map((entry) => [entry.date, entry.consumed.calories]),
+  );
+  const weightCorrelation = correlation(
+    (weightData?.entries ?? [])
+      .filter((entry) => caloriesByDate.has(entry.recorded_on))
+      .map((entry) => [
+        caloriesByDate.get(entry.recorded_on) ?? 0,
+        entry.weight_kg,
+      ]),
+  );
 
   return (
     <View className="flex-1 bg-brand">
@@ -206,84 +267,109 @@ export function NutritionStatsScreen() {
               onPress={() => router.back()}>
               <ChevronLeft color="#FFFFFF" size={20} />
             </Pressable>
-            <Text className="text-xl font-black text-white">Nutrition Stats</Text>
+            <Text className="text-xl font-black text-white">Nutrition stats</Text>
           </View>
 
           <View className="mb-4 gap-3">
-            <TabBar tab={tab} onChange={setTab} />
-            <PeriodToggle period={period} onChange={setPeriod} />
+            <Toggle
+              options={[
+                { value: 'calories', label: 'Calories' },
+                { value: 'macros', label: 'Nutrients' },
+              ]}
+              value={tab}
+              onChange={(value) => setTab(value as StatsTab)}
+            />
+            <Toggle
+              options={PERIODS}
+              value={period}
+              onChange={(value) => setPeriod(value as Period)}
+            />
           </View>
 
           {isLoading ? (
             <View className="items-center py-16">
               <LoadingSpinner />
             </View>
-          ) : error ? (
-            <View className="rounded-2xl border border-danger/40 bg-[#232220] p-3.5">
-              <Text className="font-semibold text-danger">{error}</Text>
+          ) : error || !targets ? (
+            <View className="rounded-2xl bg-dangerSoft p-4">
+              <Text className="font-semibold text-danger">
+                {error ?? 'Nutrition stats are unavailable.'}
+              </Text>
             </View>
           ) : tab === 'calories' ? (
             <View className="gap-4">
-              <View className="rounded-3xl border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
+              <View className="rounded-3xl border border-white/10 bg-[#1C1C1C] p-4">
                 <Text className="mb-3 text-xs font-black uppercase tracking-widest text-white/45">
-                  {period === 'week' ? 'Daily calories (this week)' : 'Today'}
+                  {days === 1
+                    ? 'Today'
+                    : days === 7
+                      ? 'Daily calories, last 7 days'
+                      : `Last ${days} days, ${bucketSizeLabel(days)}`}
                 </Text>
-                <View className="relative">
-                  <CalorieHistogram
-                    entries={entries.map((e) => ({
-                      date: e.date,
-                      calories: e.consumed.calories,
-                    }))}
-                    period={period}
-                  />
-                </View>
+                <CalorieChart entries={entries} days={days} />
               </View>
-
               <View className="flex-row flex-wrap gap-3">
                 <SummaryCard
                   label="Daily average"
-                  unit="kcal"
-                  value={avgCalories}
+                  value={average(entries, 'calories')}
                   goal={targets.calories}
+                  unit="kcal"
                 />
                 <SummaryCard
-                  label="Goal"
+                  label="Period total"
+                  value={totalCalories}
+                  goal={periodGoal}
                   unit="kcal"
-                  value={targets.calories}
-                  goal={targets.calories}
-                  showProgress={false}
+                />
+                <SummaryCard
+                  label="Calorie adherence"
+                  value={calorieAdherence}
+                  goal={100}
+                  unit="%"
+                />
+                <SummaryCard
+                  label="Protein consistency"
+                  value={proteinConsistency}
+                  goal={100}
+                  unit="%"
                 />
               </View>
-
-              {period === 'week' ? (
-                <View className="rounded-3xl border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
-                  <Text className="text-xs font-black uppercase tracking-widest text-white/45">
-                    Weekly summary
-                  </Text>
-                  <Text className="mt-2 text-2xl font-black text-white">
-                    {Math.round(totalCalories)}
-                    <Text className="text-sm font-bold text-white/40"> kcal logged</Text>
-                  </Text>
-                  <Text className="mt-1 text-sm text-white/55">
-                    {Math.round(weeklyGoal)} kcal goal ·{' '}
-                    <Text className="font-bold text-protein">{Math.round(underGoal)} kcal under goal</Text>
-                  </Text>
-                  <View className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-                    <View
-                      className="h-full rounded-full bg-accent"
-                      style={{ width: `${Math.min((totalCalories / weeklyGoal) * 100, 100)}%` }}
-                    />
-                  </View>
-                </View>
-              ) : null}
+              <View className="rounded-2xl border border-white/10 bg-[#232220] p-4">
+                <Text className="font-black text-white">
+                  {Math.abs(Math.round(difference))} kcal{' '}
+                  {difference >= 0 ? 'under' : 'over'} period goal
+                </Text>
+                <Text className="mt-1 text-sm text-white/45">
+                  Missing logging days count as incomplete days, not successful
+                  adherence.
+                </Text>
+              </View>
+              <View className="rounded-2xl border border-white/10 bg-[#232220] p-4">
+                <Text className="text-xs font-black uppercase tracking-widest text-white/45">
+                  Calories vs weight
+                </Text>
+                <Text className="mt-2 text-lg font-black text-white">
+                  {weightCorrelation === null
+                    ? 'More matching weigh-ins needed'
+                    : `${weightCorrelation >= 0 ? '+' : ''}${weightCorrelation.toFixed(2)} correlation`}
+                </Text>
+                <Text className="mt-1 text-xs leading-5 text-white/40">
+                  This is descriptive and does not prove causation.
+                </Text>
+              </View>
             </View>
           ) : (
             <View className="gap-4">
-              <View className="rounded-3xl border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
-                <Text className="mb-3 text-xs font-black uppercase tracking-widest text-white/45">
-                  Average daily macros vs goal
-                </Text>
-                <MacrosSummary entries={entries} targets={targets} />
+              <View className="flex-row flex-wrap gap-3">
+                {NUTRIENTS.map(({ label, key, unit, hasGoal }) => (
+                  <SummaryCard
+                    key={key}
+                    label={`Average ${label.toLowerCase()}`}
+                    value={average(entries, key)}
+                    goal={hasGoal ? targets[key] : undefined}
+                    unit={unit}
+                  />
+                ))}
               </View>
             </View>
           )}

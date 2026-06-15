@@ -1,5 +1,7 @@
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import {
+  ChevronLeft,
+  ChevronRight,
   Cookie,
   Moon,
   Plus,
@@ -14,10 +16,17 @@ import { MealLogCard } from '@/src/components/dashboard/MealLogCard';
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
 import { Button } from '@/src/components/ui/Button';
+import { CalendarPicker } from '@/src/components/ui/CalendarPicker';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useDashboardData } from '@/src/hooks/useDashboardData';
+import {
+  localDateString,
+  parseLocalDate,
+  shiftLocalDate,
+} from '@/src/lib/dates';
 import { MEAL_TYPES, type MealType } from '@/src/types/api';
+import { useCallback, useState } from 'react';
 
 const MEAL_LABELS: Record<MealType, string> = {
   breakfast: 'Breakfast',
@@ -36,10 +45,28 @@ const MEAL_META: Record<
   snack: { icon: Cookie, color: '#FFFFFF', background: 'bg-accent' },
 };
 
+function diaryDateLabel(value: string): string {
+  const today = localDateString();
+  if (value === today) return 'Today';
+  if (value === shiftLocalDate(today, -1)) return 'Yesterday';
+  if (value === shiftLocalDate(today, 1)) return 'Tomorrow';
+  return parseLocalDate(value).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+}
+
 export function DiaryScreen() {
   const router = useRouter();
+  const [selectedDate, setSelectedDate] = useState(localDateString);
+  useFocusEffect(
+    useCallback(() => {
+      setSelectedDate(localDateString());
+    }, []),
+  );
   const { data, isLoading, mutatingId, error, refresh, deleteLog } =
-    useDashboardData();
+    useDashboardData(selectedDate);
   const totalCalories = data?.logs.reduce((sum, log) => sum + log.calories, 0) ?? 0;
   const totalProtein = data?.logs.reduce((sum, log) => sum + log.protein, 0) ?? 0;
   const totalCarbs = data?.logs.reduce((sum, log) => sum + log.carbs, 0) ?? 0;
@@ -58,20 +85,53 @@ export function DiaryScreen() {
       }>
       <AppPage>
         <PageHeader
-          title="Today's diary"
+          title={selectedDate === localDateString() ? "Today's diary" : 'Diary'}
           description={new Intl.DateTimeFormat(undefined, {
             weekday: 'long',
             month: 'long',
             day: 'numeric',
-          }).format(new Date())}
+          }).format(parseLocalDate(selectedDate))}
           action={
             <Button
               label="Add food"
               size="compact"
-              onPress={() => router.push('/scan')}
+              onPress={() =>
+                router.push({ pathname: '/scan', params: { date: selectedDate } })
+              }
             />
           }
         />
+
+        <View className="mt-4 rounded-2xl border border-white/10 bg-[#232220] p-3">
+          <View className="flex-row items-center gap-2">
+            <Pressable
+              accessibilityLabel="Previous day"
+              className="h-10 w-10 items-center justify-center rounded-xl bg-white/5"
+              onPress={() => {
+                const next = shiftLocalDate(selectedDate, -1);
+                setSelectedDate(next);
+              }}>
+              <ChevronLeft color="#FFFFFF" size={18} />
+            </Pressable>
+            <View className="min-w-0 flex-1">
+              <CalendarPicker
+                displayValue={diaryDateLabel(selectedDate)}
+                label="Diary date"
+                value={selectedDate}
+                onChange={setSelectedDate}
+              />
+            </View>
+            <Pressable
+              accessibilityLabel="Next day"
+              className="h-10 w-10 items-center justify-center rounded-xl bg-white/5"
+              onPress={() => {
+                const next = shiftLocalDate(selectedDate, 1);
+                setSelectedDate(next);
+              }}>
+              <ChevronRight color="#FFFFFF" size={18} />
+            </Pressable>
+          </View>
+        </View>
 
         {error ? (
           <Text className="mt-5 rounded-xl bg-dangerSoft p-3 font-semibold text-danger">
@@ -170,7 +230,12 @@ export function DiaryScreen() {
                     <Pressable
                       accessibilityRole="button"
                       className="mt-1.5 flex-row items-center justify-center gap-1 rounded-xl border border-dashed border-white/15 bg-white/5 py-2 active:bg-white/10"
-                      onPress={() => router.push('/scan')}>
+                      onPress={() =>
+                        router.push({
+                          pathname: '/scan',
+                          params: { date: selectedDate },
+                        })
+                      }>
                       <Plus color="#FF5A16" size={14} strokeWidth={2} />
                       <Text className="text-xs font-black text-accent">
                         Add {MEAL_LABELS[mealType].toLowerCase()}

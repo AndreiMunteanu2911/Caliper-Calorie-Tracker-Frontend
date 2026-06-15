@@ -31,6 +31,12 @@ export function MealLogCard({
         protein: String(log.protein / (log.quantity_g / 100)),
         carbs: String(log.carbs / (log.quantity_g / 100)),
         fats: String(log.fats / (log.quantity_g / 100)),
+        fiber: String(log.fiber / (log.quantity_g / 100)),
+        sugar: String(log.sugar / (log.quantity_g / 100)),
+        sodium_mg: String(log.sodium_mg / (log.quantity_g / 100)),
+        saturated_fat: String(
+          log.saturated_fat / (log.quantity_g / 100),
+        ),
         serving_size_g: '100',
         log_id: log.id,
         existing_weight: String(Math.round(log.quantity_g)),

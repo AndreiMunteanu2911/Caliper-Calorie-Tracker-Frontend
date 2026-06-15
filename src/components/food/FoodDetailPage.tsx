@@ -10,6 +10,7 @@ import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { apiRequest } from '@/src/lib/api-client';
+import { localNoonIso } from '@/src/lib/dates';
 import type { FoodItem, MealLogItem, MealType } from '@/src/types/api';
 
 const MACROS = [
@@ -28,12 +29,17 @@ export function FoodDetailPage() {
     protein: string;
     carbs: string;
     fats: string;
+    fiber?: string;
+    sugar?: string;
+    sodium_mg?: string;
+    saturated_fat?: string;
     external_id: string;
     source: string;
     serving_size_g?: string;
     log_id?: string;
     existing_weight?: string;
     existing_meal_type?: MealType;
+    date?: string;
   }>();
 
   const food: FoodItem = {
@@ -46,6 +52,11 @@ export function FoodDetailPage() {
     protein: Number(params.protein),
     carbs: Number(params.carbs),
     fats: Number(params.fats),
+    fiber: Number(params.fiber ?? 0),
+    sugar: Number(params.sugar ?? 0),
+    sodium_mg: Number(params.sodium_mg ?? 0),
+    saturated_fat: Number(params.saturated_fat ?? 0),
+    is_favorite: false,
   };
   const isEditing = !!params.log_id;
   const [mealType, setMealType] = useState<MealType>(
@@ -80,7 +91,12 @@ export function FoodDetailPage() {
       } else {
         await apiRequest<MealLogItem>('/meal-logs', {
           method: 'POST',
-          body: { food, meal_type: mealType, quantity_g: quantity },
+          body: {
+            food,
+            meal_type: mealType,
+            quantity_g: quantity,
+            ...(params.date ? { logged_at: localNoonIso(params.date) } : {}),
+          },
         });
       }
       router.replace('/diary');

@@ -1,5 +1,5 @@
 import { Barcode, Camera, ChevronRight, Plus, Search } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
   type NativeScrollEvent,
@@ -29,7 +29,11 @@ const MODES = [
   { icon: Camera, label: 'Meal photo', value: 'meal' },
 ] satisfies { icon: typeof Barcode; label: string; value: ScanMode }[];
 
-function navigateToFoodDetail(router: ReturnType<typeof useRouter>, food: FoodItem) {
+function navigateToFoodDetail(
+  router: ReturnType<typeof useRouter>,
+  food: FoodItem,
+  date?: string,
+) {
   router.push({
     pathname: '/food-detail',
     params: {
@@ -41,13 +45,19 @@ function navigateToFoodDetail(router: ReturnType<typeof useRouter>, food: FoodIt
       protein: String(food.protein),
       carbs: String(food.carbs),
       fats: String(food.fats),
+      fiber: String(food.fiber),
+      sugar: String(food.sugar),
+      sodium_mg: String(food.sodium_mg),
+      saturated_fat: String(food.saturated_fat),
       serving_size_g: String(food.serving_size_g),
+      date,
     },
   });
 }
 
 export function FoodScannerScreen() {
   const router = useRouter();
+  const { date } = useLocalSearchParams<{ date?: string }>();
   const scrollViewRef = useRef<ScrollView>(null);
   const [showCustomFoodForm, setShowCustomFoodForm] = useState(false);
   const scrollOffset = useRef(0);
@@ -100,7 +110,9 @@ export function FoodScannerScreen() {
             <Pressable
               accessibilityRole="button"
               className="flex-row items-center rounded-3xl bg-accent p-4"
-              onPress={() => router.push('/barcode-camera')}>
+              onPress={() =>
+                router.push({ pathname: '/barcode-camera', params: { date } })
+              }>
               <View className="h-12 w-12 items-center justify-center rounded-full bg-white/20">
                 <Barcode color="#FFFFFF" size={22} />
               </View>
@@ -108,6 +120,22 @@ export function FoodScannerScreen() {
                 <Text className="text-lg font-black text-white">Scan a barcode</Text>
                 <Text className="mt-0.5 text-sm text-white/75">
                   Point your camera at packaged food
+                </Text>
+              </View>
+              <ChevronRight color="#FFFFFF" size={20} />
+            </Pressable>
+
+            <Pressable
+              accessibilityRole="button"
+              className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
+              onPress={() => router.push('/custom-foods')}>
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-fats">
+                <Search color="#101010" size={21} />
+              </View>
+              <View className="flex-1">
+                <Text className="text-lg font-black text-white">My food library</Text>
+                <Text className="mt-0.5 text-sm text-white/50">
+                  Edit, favorite, search, or delete custom foods
                 </Text>
               </View>
               <ChevronRight color="#FFFFFF" size={20} />
@@ -241,7 +269,7 @@ export function FoodScannerScreen() {
                                 protein={food.protein}
                                 carbs={food.carbs}
                                 fats={food.fats}
-                                onPress={() => navigateToFoodDetail(router, food)}
+                                onPress={() => navigateToFoodDetail(router, food, date)}
                                 isLast={index === search.items.length - 1}
                               />
                             ))}
@@ -271,6 +299,7 @@ export function FoodScannerScreen() {
         </AppPage>
       </ScrollbarContainer>
       <CustomFoodForm
+        date={date}
         onDismiss={() => setShowCustomFoodForm(false)}
         visible={showCustomFoodForm}
       />

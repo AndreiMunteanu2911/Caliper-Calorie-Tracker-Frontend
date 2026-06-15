@@ -17,7 +17,7 @@ function wait(duration: number) {
   return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
-export function useDashboardData() {
+export function useDashboardData(selectedDate?: string) {
   const { session } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,10 @@ export function useDashboardData() {
     setIsLoading(true);
     setError(null);
     try {
-      const path = `/dashboard?timezone=${encodeURIComponent(timezone())}`;
+      const dateQuery = selectedDate
+        ? `&date=${encodeURIComponent(selectedDate)}`
+        : '';
+      const path = `/dashboard?timezone=${encodeURIComponent(timezone())}${dateQuery}`;
       let dashboard: DashboardData;
       try {
         dashboard = await apiRequest<DashboardData>(path);
@@ -50,7 +53,7 @@ export function useDashboardData() {
     } finally {
       setIsLoading(false);
     }
-  }, [session]);
+  }, [selectedDate, session]);
 
   useFocusEffect(
     useCallback(() => {

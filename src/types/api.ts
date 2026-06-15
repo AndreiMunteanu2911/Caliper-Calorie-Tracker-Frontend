@@ -3,6 +3,10 @@ export type MacroTotals = {
   protein: number;
   carbs: number;
   fats: number;
+  fiber: number;
+  sugar: number;
+  sodium_mg: number;
+  saturated_fat: number;
 };
 
 export type DailyMacroProgress = {
@@ -26,6 +30,11 @@ export type FoodItem = {
   protein: number;
   carbs: number;
   fats: number;
+  fiber: number;
+  sugar: number;
+  sodium_mg: number;
+  saturated_fat: number;
+  is_favorite: boolean;
 };
 
 export type MealLogItem = {
@@ -39,6 +48,10 @@ export type MealLogItem = {
   protein: number;
   carbs: number;
   fats: number;
+  fiber: number;
+  sugar: number;
+  sodium_mg: number;
+  saturated_fat: number;
   logged_at: string;
 };
 
@@ -51,6 +64,7 @@ export type MealLogCreate = {
   food: FoodItem;
   meal_type: MealType;
   quantity_g: number;
+  logged_at?: string;
 };
 
 export type MealLogUpdate = {
@@ -65,6 +79,10 @@ export type EstimatedFood = {
   protein: number;
   carbs: number;
   fats: number;
+  fiber: number;
+  sugar: number;
+  sodium_mg: number;
+  saturated_fat: number;
 };
 
 export type MealAnalysis = {
@@ -104,6 +122,19 @@ export type Profile = {
   protein_percentage: number;
   carbs_percentage: number;
   fats_percentage: number;
+  onboarding_status: 'pending' | 'completed' | 'skipped';
+  sex: 'female' | 'male' | null;
+  age: number | null;
+  height_cm: number | null;
+  activity_level:
+    | 'sedentary'
+    | 'light'
+    | 'moderate'
+    | 'very_active'
+    | 'extra_active'
+    | null;
+  goal: 'lose' | 'maintain' | 'gain' | null;
+  target_weight_kg: number | null;
 };
 
 export type MacroHistoryEntry = {
@@ -166,4 +197,10 @@ export type TdeeCalculationResponse = {
   daily_protein_target: number;
   daily_carbs_target: number;
   daily_fats_target: number;
+};
+
+export type OnboardingUpdate = TdeeCalculationRequest & {
+  display_name: string;
+  target_weight_kg: number | null;
+  timezone: string;
 };

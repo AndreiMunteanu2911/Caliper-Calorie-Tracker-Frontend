@@ -101,7 +101,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
             ) : null}
             {form.message ? (
               <AnimatedPresence className="rounded-2xl bg-successSoft p-3.5">
-                <Text className="font-semibold text-brand">{form.message}</Text>
+                <Text className="font-semibold text-white">{form.message}</Text>
               </AnimatedPresence>
             ) : null}
           </View>

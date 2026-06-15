@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { apiRequest } from '@/src/lib/api-client';
 import type { MacroHistoryResponse } from '@/src/types/api';
 
-export type Period = 'day' | 'week';
+export type Period = 'day' | 'week' | 'month' | 'quarter';
 export type StatsTab = 'calories' | 'macros';
 
 export function useNutritionStats() {
@@ -12,7 +12,14 @@ export function useNutritionStats() {
   const [error, setError] = useState<string | null>(null);
   const [period, setPeriod] = useState<Period>('week');
 
-  const days = period === 'week' ? 7 : 1;
+  const days =
+    period === 'quarter'
+      ? 90
+      : period === 'month'
+        ? 30
+        : period === 'week'
+          ? 7
+          : 1;
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
