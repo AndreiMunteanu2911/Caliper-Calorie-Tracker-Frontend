@@ -58,8 +58,8 @@ export function FoodDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   const quantity = Number(weight);
-  const isValid = Number.isFinite(quantity) && quantity >= 1 && quantity <= 10_000;
-  const scale = isValid ? quantity / 100 : 0;
+  const isValid = Number.isFinite(quantity) && quantity >= 1 && quantity <= 999_999;
+  const scale = quantity / 100;
   const scaled = {
     calories: food.calories * scale,
     protein: food.protein * scale,

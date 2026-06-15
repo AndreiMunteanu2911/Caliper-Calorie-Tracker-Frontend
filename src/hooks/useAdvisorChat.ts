@@ -82,21 +82,9 @@ export function useAdvisorChat() {
     setIsLoadingHistory(true);
     setError(null);
     try {
-      const conversation = await apiRequest<AdvisorConversation>('/ai/chat', {
-        timeoutMs: 12_000,
-      });
-      loadedConversationRef.current = conversation.id || null;
-      setActiveConversationId(conversation.id || null);
-      setMessages((current) =>
-        current.length === 0 ? conversation.messages : current,
-      );
       await loadConversations();
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : 'Unable to load advisor history.',
-      );
+    } catch {
+      // silently fail
     } finally {
       setIsLoadingHistory(false);
     }
