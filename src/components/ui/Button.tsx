@@ -64,8 +64,8 @@ export function Button({
         accessibilityLabel={pressableProps.accessibilityLabel ?? label}
         accessibilityRole="button"
         accessibilityState={{ disabled: isDisabled, busy: loading }}
-        className={`${CONTAINER_CLASSES[variant]} flex-row items-center justify-center gap-2 rounded-2xl px-6 shadow-soft ${
-          size === 'compact' ? 'min-h-11' : 'min-h-14'
+        className={`${CONTAINER_CLASSES[variant]} flex-row items-center justify-center gap-2 rounded-xl px-3.5 shadow-soft ${
+          size === 'compact' ? 'min-h-9' : 'min-h-11'
         } ${isDisabled ? 'opacity-40' : ''}`}
         disabled={isDisabled}
         onPressIn={(event) => {
@@ -77,7 +77,7 @@ export function Button({
           onPressOut?.(event);
         }}>
         {loading ? (
-          <View className="h-8 w-8 items-center justify-center">
+          <View className="h-6 w-6 items-center justify-center">
             <LoadingSpinner color={ICON_COLORS[variant]} />
           </View>
         ) : (
@@ -85,18 +85,18 @@ export function Button({
             {Icon && iconPosition === 'left' ? (
               <Icon
                 color={ICON_COLORS[variant]}
-                size={18}
-                strokeWidth={2.6}
+                size={16}
+                strokeWidth={2.5}
               />
             ) : null}
-            <Text className={`text-base font-black tracking-[-0.3px] ${TEXT_CLASSES[variant]}`}>
+            <Text className={`text-sm font-black tracking-[-0.2px] ${TEXT_CLASSES[variant]}`}>
               {label}
             </Text>
             {Icon && iconPosition === 'right' ? (
               <Icon
                 color={ICON_COLORS[variant]}
-                size={18}
-                strokeWidth={2.6}
+                size={16}
+                strokeWidth={2.5}
               />
             ) : null}
           </>

@@ -1,4 +1,3 @@
-import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 import {
   ChartNoAxesCombined,
@@ -9,11 +8,13 @@ import {
   UserRound,
 } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import {ScrollbarContainer} from "@/src/components/ui/ScrollbarContainer";
 
 const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
   dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
@@ -39,7 +40,7 @@ function DockItem({
   onPress,
 }: DockItemProps) {
   const animatedStyle = useAnimatedStyle(() => ({
-    width: withTiming(focused ? 88 : 44, { duration: 220 }),
+    width: withTiming(focused ? 80 : 40, { duration: 220 }),
   }), [focused]);
 
   const labelStyle = useAnimatedStyle(() => ({
@@ -65,16 +66,16 @@ function DockItem({
             borderRadius: 999,
             borderWidth: 1,
             flexDirection: 'row',
-            height: 44,
+            height: 40,
             justifyContent: 'center',
             overflow: 'hidden',
           },
           animatedStyle,
         ]}>
-        <Icon color="#FFFFFF" size={21} strokeWidth={2.35} />
-        {focused ? (
-          <Animated.View className="ml-2" style={labelStyle}>
-            <Text className="font-bold text-white">{label}</Text>
+        <Icon color="#FFFFFF" size={19} strokeWidth={2.35} />
+          {focused ? (
+          <Animated.View className="ml-1.5" style={labelStyle}>
+            <Text className="text-xs font-bold text-white">{label}</Text>
           </Animated.View>
         ) : null}
       </Animated.View>
@@ -82,14 +83,20 @@ function DockItem({
   );
 }
 
-function AnimatedTabDock({ state, descriptors, navigation }: BottomTabBarProps) {
+type TabBarProps = {
+  state: { index: number; routes: { key: string; name: string; params?: Readonly<object | undefined> }[] };
+  descriptors: Record<string, { options: Record<string, any> }>;
+  navigation: Record<string, any>;
+};
+
+function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
   const insets = useSafeAreaInsets();
 
   return (
     <View
       pointerEvents="box-none"
       style={{
-        bottom: Math.max(insets.bottom, 12),
+        bottom: Math.max(insets.bottom, 10),
         left: 0,
         position: 'absolute',
         right: 0,
@@ -101,14 +108,14 @@ function AnimatedTabDock({ state, descriptors, navigation }: BottomTabBarProps) 
           borderColor: '#383838',
           borderRadius: 999,
           borderWidth: 1,
-          padding: 7,
+          padding: 6,
           shadowColor: '#000000',
           shadowOffset: { width: 0, height: 12 },
           shadowOpacity: 0.38,
           shadowRadius: 24,
           elevation: 18,
         }}>
-        <View className="flex-row items-center gap-2">
+        <View className="flex-row items-center gap-1.5">
           {state.routes.map((route, index) => {
             const focused = state.index === index;
             const details = TAB_DETAILS[route.name];
@@ -157,11 +164,11 @@ export default function TabLayout() {
   return (
     <Tabs
       initialRouteName="dashboard"
-      tabBar={(props) => <AnimatedTabDock {...props} />}
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: '#101010' },
-      }}>
+      }}
+      tabBar={(props) => <AnimatedTabDock {...props} />}>
       <Tabs.Screen
         name="dashboard"
         options={{ title: 'Dashboard', tabBarAccessibilityLabel: 'Today' }}

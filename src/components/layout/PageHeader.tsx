@@ -13,16 +13,16 @@ export function PageHeader({
   action,
 }: PageHeaderProps) {
   return (
-    <View className="flex-row items-end justify-between gap-4">
+    <View className="flex-row items-end justify-between gap-3">
       <View className="min-w-0 flex-1">
-        <Text className="text-4xl font-black leading-[42px] tracking-[-1.5px] text-white">
+        <Text className="text-xl font-black leading-6 tracking-[-0.4px] text-white sm:text-2xl">
           {title}
         </Text>
-        <Text className="mt-2 max-w-2xl text-base leading-6 text-white/55">
+        <Text className="mt-0.5 max-w-2xl text-sm leading-5 text-white/55">
           {description}
         </Text>
       </View>
-      {action ? <View className="pb-1">{action}</View> : null}
+      {action ? <View className="pb-0.5">{action}</View> : null}
     </View>
   );
 }

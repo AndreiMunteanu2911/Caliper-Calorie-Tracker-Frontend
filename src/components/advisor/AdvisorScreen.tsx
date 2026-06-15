@@ -71,7 +71,7 @@ export function AdvisorScreen() {
     <KeyboardAvoidingView
       className="flex-1 bg-brand"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <View className="flex-1 px-4 pb-24 pt-5 sm:px-6">
+      <View className="flex-1 px-4 pb-16 pt-4 sm:px-6">
         <AppPage className="flex-1 min-h-0">
           <View className="min-h-0 flex-1 gap-4">
             <View
@@ -99,11 +99,11 @@ export function AdvisorScreen() {
             </View>
 
             <View
-              className="z-0 min-h-0 flex-1 overflow-hidden rounded-[32px] border border-white/10 bg-[#1C1C1C] p-3 shadow-card">
+              className="z-0 min-h-0 flex-1 overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
               <ScrollbarContainer
                 ref={listRef}
-                className="min-h-0 flex-1 rounded-[22px] border border-white/10 bg-[#141414] px-4 shadow-soft"
-                contentContainerClassName="gap-3 py-5"
+                className="min-h-0 flex-1 rounded-[20px] border border-white/10 bg-[#141414] px-3.5 shadow-soft"
+                contentContainerClassName="gap-2.5 py-4"
                 keyboardDismissMode="interactive"
                 keyboardShouldPersistTaps="handled"
                 onContentSizeChange={() =>
@@ -111,20 +111,20 @@ export function AdvisorScreen() {
                 }
                 onLayout={() => listRef.current?.scrollToEnd({ animated: false })}>
                 {messages.length === 0 ? (
-                  <View className="items-center px-4 py-12">
-                    <Text className="text-xl font-black text-white">How can I help?</Text>
-                    <Text className="mt-2 max-w-sm text-center leading-6 text-white/55">
+                  <View className="items-center px-4 py-8">
+                    <Text className="text-lg font-black text-white">How can I help?</Text>
+                    <Text className="mt-1.5 max-w-sm text-center leading-5 text-white/55">
                       I can use today&apos;s foods, remaining macros, and your recent
                       nutrition history.
                     </Text>
-                    <View className="mt-6 w-full gap-2">
+                    <View className="mt-5 w-full gap-2">
                       {SUGGESTIONS.map((suggestion) => (
                         <Pressable
                           accessibilityRole="button"
-                          className="w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[#242424] px-4 py-3.5"
+                          className="w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[#242424] px-3.5 py-3"
                           key={suggestion}
                           onPress={() => setDraft(suggestion)}>
-                          <Sparkles color="#FF5A16" size={16} strokeWidth={2.5} />
+                          <Sparkles color="#FF5A16" size={15} strokeWidth={2.5} />
                           <Text className="min-w-0 flex-1 text-sm font-bold text-white">
                             {suggestion}
                           </Text>
@@ -156,26 +156,24 @@ export function AdvisorScreen() {
                 !messages.some((item) => item.id.startsWith('streaming-')) ? (
                   <AnimatedPresence
                     animateLayout={false}
-                    className="self-start rounded-3xl rounded-bl-lg border border-white/10 bg-[#252525] px-5 py-4">
+                    className="self-start rounded-3xl rounded-bl-lg border border-white/10 bg-[#252525] px-4 py-3">
                     <Text className="text-sm font-semibold text-white/55">
                       Thinking...
                     </Text>
                   </AnimatedPresence>
                 ) : null}
               </ScrollbarContainer>
-              <View className="mt-3 gap-2">
+              <View className="mt-2.5 gap-2">
                 {error ? (
-                  <AnimatedPresence className="rounded-2xl bg-dangerSoft p-3">
+                  <AnimatedPresence className="rounded-2xl bg-dangerSoft p-2.5">
                     <Text className="font-semibold text-danger">{error}</Text>
                   </AnimatedPresence>
                 ) : null}
-                <View className="flex-row items-center gap-3">
+                <View className="flex-row items-center gap-2">
                   <InputBox
                     accessibilityLabel="Message for diet advisor"
                     containerClassName="min-w-0 flex-1"
                     dense={true}
-                    inputClassName="max-h-28"
-                    multiline
                     onChangeText={setDraft}
                     placeholder="Message your nutrition advisor..."
                     placeholderTextColor="#8F8F8F"

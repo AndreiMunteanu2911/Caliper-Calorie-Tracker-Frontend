@@ -1,7 +1,7 @@
 import { supabase } from '@/src/lib/supabase';
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const apiUrl = process.env.EXPO_PUBLIC_API_URL!;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
 if (!apiUrl || !supabaseAnonKey) {
   throw new Error(

@@ -37,7 +37,7 @@ export function MealTypeSelector({
           <Pressable
             accessibilityRole="radio"
             accessibilityState={{ selected }}
-            className={`flex-row items-center gap-2 rounded-full border px-4 py-2.5 ${
+            className={`flex-row items-center gap-1.5 rounded-full border px-3 py-2 ${
               selected
                 ? 'border-accent bg-accent'
                 : dark
@@ -48,7 +48,7 @@ export function MealTypeSelector({
             onPress={() => onChange(mealType)}>
             <Icon
               color={selected ? '#FFFFFF' : dark ? '#B6B6B6' : '#77756F'}
-              size={15}
+              size={13}
               strokeWidth={2.5}
             />
             <Text

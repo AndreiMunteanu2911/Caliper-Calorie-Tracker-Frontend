@@ -97,8 +97,8 @@ export function NumberSpinner({
   }, [stopHold]);
 
   return (
-      <View className="min-w-[104px] flex-1 gap-1.5">
-        <Text className="pl-2 text-sm font-bold text-white/70">{label}</Text>
+      <View className="min-w-[90px] flex-1 gap-1">
+        <Text className="pl-2 text-xs font-bold text-white/70">{label}</Text>
         <View
             accessibilityActions={[
               { name: 'increment', label: `Increase ${label}` },
@@ -106,19 +106,19 @@ export function NumberSpinner({
             ]}
             accessibilityLabel={`${label}, ${roundedValue} ${suffix}`}
             accessibilityRole="adjustable"
-            className="h-28 overflow-hidden rounded-[20px] border border-white/10 bg-[#141414]"
+            className="h-24 overflow-hidden rounded-[16px] border border-white/10 bg-[#141414]"
             onAccessibilityAction={(event) =>
                 update(event.nativeEvent.actionName === 'increment' ? 1 : -1)
             }>
           <Pressable
               accessibilityLabel={`Increase ${label}`}
-              className="h-8 w-full flex-row items-center"
+              className="h-7 w-full flex-row items-center"
               onPressIn={() => startHold(1)}
               onPressOut={stopHold}>
             <View className="flex-1" />
-            <ChevronUp color="#FF5A16" size={15} />
+            <ChevronUp color="#FF5A16" size={13} />
             <View className="flex-1 items-start pl-2">
-              <Text className="text-[11px] font-black text-accent">
+              <Text className="text-[10px] font-black text-accent">
                 {clamp(roundedValue + step, min, max)}
               </Text>
             </View>
@@ -139,21 +139,21 @@ export function NumberSpinner({
                           : FadeOutDown.duration(150)
                 }
                 key={roundedValue}>
-              <Text className="text-xl font-black text-white">
+              <Text className="text-lg font-black text-white">
                 {roundedValue}
-                <Text className="text-xs font-bold text-white/40"> {suffix}</Text>
+                <Text className="text-[10px] font-bold text-white/40"> {suffix}</Text>
               </Text>
             </Animated.View>
           </View>
           <Pressable
               accessibilityLabel={`Decrease ${label}`}
-              className="h-8 w-full flex-row items-center"
+              className="h-7 w-full flex-row items-center"
               onPressIn={() => startHold(-1)}
               onPressOut={stopHold}>
             <View className="flex-1" />
-            <ChevronDown color="#FF5A16" size={15} />
+            <ChevronDown color="#FF5A16" size={13} />
             <View className="flex-1 items-start pl-2">
-              <Text className="text-[11px] font-black text-accent">
+              <Text className="text-[10px] font-black text-accent">
                 {clamp(roundedValue - step, min, max)}
               </Text>
             </View>

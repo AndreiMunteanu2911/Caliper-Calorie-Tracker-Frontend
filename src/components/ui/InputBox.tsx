@@ -34,10 +34,10 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
     <View
       className={`flex-row items-center border bg-[#141414] ${
         dense
-          ? 'min-h-11 rounded-2xl px-3'
+          ? 'min-h-9 rounded-lg px-2'
           : compact
-          ? 'min-h-14 rounded-[18px] px-4 py-1'
-          : 'min-h-16 rounded-[24px] p-2 pl-4'
+          ? 'min-h-10 rounded-lg px-3 py-1'
+          : 'min-h-11 rounded-lg p-1 pl-3'
       } ${
         isFocused
           ? 'border-accent shadow-glow'
@@ -48,12 +48,12 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
         ref={ref}
         style={[{ textAlignVertical: 'center' }, style]}
         underlineColorAndroid="transparent"
-        className={`caliper-input min-w-0 flex-1 border-0 rounded-none bg-[#141414] text-base leading-5 text-white ${
+        className={`caliper-input min-w-0 flex-1 border-0 rounded-none bg-[#141414] text-sm leading-5 text-white ${
           dense
-            ? 'min-h-9 mt-2 ml-1'
+            ? 'min-h-5 py-1.5'
             : compact
-              ? 'min-h-10 py-2'
-              : 'min-h-12 py-3'
+            ? 'min-h-7 py-1'
+              : 'min-h-8 py-1.5'
         } ${inputClassName}`}
         onBlur={(event) => {
           setIsFocused(false);

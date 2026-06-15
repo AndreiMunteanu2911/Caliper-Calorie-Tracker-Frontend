@@ -66,7 +66,7 @@ export function BarcodeScannerScreen() {
 
   return (
     <>
-      <View className="flex-1 items-center bg-[#080808]">
+      <View className="flex-1 items-center bg-brand">
         <View
           className="relative h-full w-full overflow-hidden bg-brand shadow-card"
           style={{ maxWidth: 480 }}>
@@ -86,11 +86,11 @@ export function BarcodeScannerScreen() {
           style={{ paddingTop: insets.top + 12 }}>
           <Pressable
             accessibilityLabel="Close barcode scanner"
-            className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
+            className="h-11 w-11 items-center justify-center rounded-full bg-black/55"
             onPress={() => router.back()}>
-            <ChevronLeft color="#FFFFFF" size={25} />
+            <ChevronLeft color="#FFFFFF" size={22} />
           </Pressable>
-          <Text className="ml-4 text-xl font-black text-white">Barcode scanner</Text>
+          <Text className="ml-4 text-lg font-black text-white">Barcode scanner</Text>
         </View>
 
         <View className="pointer-events-none absolute inset-x-8 top-[28%] h-48 rounded-[30px] border-[3px] border-white">
@@ -110,13 +110,13 @@ export function BarcodeScannerScreen() {
               <Pressable
                 accessibilityHint="Opens food detail"
                 accessibilityRole="button"
-                className="rounded-[24px] border border-white/10 bg-[#242424] p-4 shadow-card active:scale-[0.99] active:opacity-80"
+                className="rounded-[20px] border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
                 onPress={() => navigateToFoodDetail(router, lookup.item!)}>
-                <Text className="text-lg font-black text-white">{lookup.item.name}</Text>
+                <Text className="text-base font-black text-white">{lookup.item.name}</Text>
                 {lookup.item.brand ? (
-                  <Text className="mt-1 text-sm text-white/55">{lookup.item.brand}</Text>
+                  <Text className="mt-0.5 text-xs text-white/55">{lookup.item.brand}</Text>
                 ) : null}
-                <Text className="mt-2 font-black text-accent">
+                <Text className="mt-1.5 text-sm font-black text-accent">
                   {Math.round(lookup.item.calories)} kcal
                 </Text>
               </Pressable>

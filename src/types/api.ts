@@ -30,6 +30,8 @@ export type FoodItem = {
 
 export type MealLogItem = {
   id: string;
+  external_id: string;
+  source: string;
   meal_type: MealType;
   food_name: string;
   quantity_g: number;

@@ -10,7 +10,7 @@ import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { Text, TextInput } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import 'react-native-reanimated';
 import '../global.css';
 
@@ -85,13 +85,15 @@ function RootLayoutNav() {
             card: '#101010',
           },
         }}>
-        <Stack screenOptions={{ contentStyle: { backgroundColor: '#101010' } }}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-          <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-          <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-        </Stack>
-        <StatusBar style="light" />
+        <View className="bg-brand" style={{ height: '100%', overflow: 'hidden' }}>
+          <Stack screenOptions={{ contentStyle: { backgroundColor: '#101010', overflow: 'hidden' } }}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+            <Stack.Screen name="(protected)" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar style="light" />
+        </View>
       </ThemeProvider>
     </AuthProvider>
   );

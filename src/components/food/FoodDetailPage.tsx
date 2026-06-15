@@ -99,68 +99,68 @@ export function FoodDetailPage() {
     <View className="flex-1 bg-brand" style={{ paddingTop: insets.top }}>
       <ScrollbarContainer
         className="flex-1"
-        contentContainerClassName="px-4 pb-32 pt-4 sm:px-6">
+        contentContainerClassName="px-4 pb-20 pt-3 sm:px-6">
         <View className="w-full max-w-lg self-center">
-          <View className="mb-5 flex-row items-center justify-between">
+          <View className="mb-4 flex-row items-center justify-between">
             <Pressable
               accessibilityLabel="Go back"
-              className="h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-[#232323]"
+              className="h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-[#232323]"
               onPress={() => router.back()}>
-              <ChevronLeft color="#FFFFFF" size={22} />
+              <ChevronLeft color="#FFFFFF" size={20} />
             </Pressable>
-            <Text className="text-sm font-black uppercase tracking-[1.5px] text-white/45">
+            <Text className="text-xs font-black uppercase tracking-[1.2px] text-white/45">
               {isEditing ? 'Edit diary item' : 'Food details'}
             </Text>
-            <View className="h-11 w-11" />
+            <View className="h-10 w-10" />
           </View>
 
-          <View className="overflow-hidden rounded-[32px] border border-white/10 bg-[#1C1C1C] p-3 shadow-card">
-            <View className="relative overflow-hidden rounded-[26px] bg-accent p-5">
-              <View className="absolute -right-9 -top-10 h-32 w-32 rounded-full border-[22px] border-white/20" />
-              <View className="flex-row items-start justify-between gap-4">
+          <View className="overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
+            <View className="relative overflow-hidden rounded-[24px] bg-accent p-4">
+              <View className="absolute -right-8 -top-8 h-28 w-28 rounded-full border-[18px] border-white/20" />
+              <View className="flex-row items-start justify-between gap-3">
                 <View className="min-w-0 flex-1">
-                  <Text className="text-xs font-black text-white/70">
+                  <Text className="text-[10px] font-black text-white/70">
                     Per 100g
                   </Text>
-                  <Text className="mt-2 text-3xl font-black tracking-[-1.2px] text-white">
+                  <Text className="mt-1 text-2xl font-black tracking-[-1px] text-white">
                     {food.name}
                   </Text>
                   {food.brand ? (
-                    <Text className="mt-1 font-semibold text-white/75">{food.brand}</Text>
+                    <Text className="mt-0.5 text-sm font-semibold text-white/75">{food.brand}</Text>
                   ) : null}
                 </View>
-                <View className="h-12 w-12 items-center justify-center rounded-full bg-white/55">
-                  <Utensils color="#FFFFFF" size={21} strokeWidth={2.6} />
+                <View className="h-10 w-10 items-center justify-center rounded-full bg-white/55">
+                  <Utensils color="#FFFFFF" size={18} strokeWidth={2.6} />
                 </View>
               </View>
 
-              <View className="mt-6 flex-row items-center gap-5">
+              <View className="mt-4 flex-row items-center gap-4">
                 <MacroDonut
                   carbs={food.carbs}
                   fats={food.fats}
                   protein={food.protein}
-                  size={126}
+                  size={110}
                 />
                 <View>
                   <View className="flex-row items-center gap-2">
-                    <Text className="text-sm font-black text-white/75">Calories</Text>
+                    <Text className="text-xs font-black text-white/75">Calories</Text>
                   </View>
-                  <Text className="mt-1 text-4xl font-black tracking-[-2px] text-white">
+                  <Text className="mt-1 text-3xl font-black tracking-[-1.5px] text-white">
                     {Math.round(food.calories)}
                   </Text>
-                  <Text className="font-bold text-white/70">kcal</Text>
+                  <Text className="text-sm font-bold text-white/70">kcal</Text>
                 </View>
               </View>
             </View>
 
-            <View className="mt-3 flex-row gap-2">
+            <View className="mt-2.5 flex-row gap-2">
               {MACROS.map((macro) => (
                 <View
-                  className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#292929] px-3 py-3"
+                  className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#292929] px-2.5 py-2.5"
                   key={macro.key}>
-                  <View className={`mb-2 h-2 w-8 rounded-full ${macro.color}`} />
-                  <Text className="text-xs font-bold text-white/45">{macro.label}</Text>
-                  <Text className={`mt-1 text-lg font-black ${macro.text}`}>
+                  <View className={`mb-1.5 h-1.5 w-6 rounded-full ${macro.color}`} />
+                  <Text className="text-[10px] font-bold text-white/45">{macro.label}</Text>
+                  <Text className={`mt-0.5 text-base font-black ${macro.text}`}>
                     {food[macro.key].toFixed(1)}g
                   </Text>
                 </View>
@@ -168,11 +168,11 @@ export function FoodDetailPage() {
             </View>
           </View>
 
-          <View className="mt-4 gap-5 rounded-[28px] border border-white/10 bg-[#1C1C1C] p-5 shadow-card">
+          <View className="mt-3.5 gap-4 rounded-[24px] border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
             <View className="gap-2">
               <View className="flex-row items-center gap-2">
-                <Scale color="#FF5A16" size={17} strokeWidth={2.5} />
-                <Text className="font-black text-white">Amount</Text>
+                <Scale color="#FF5A16" size={15} strokeWidth={2.5} />
+                <Text className="text-sm font-black text-white">Amount</Text>
               </View>
               <InputBox
                 compact
@@ -182,17 +182,17 @@ export function FoodDetailPage() {
                 selectTextOnFocus
                 value={weight}
               />
-              <Text className="text-xs font-semibold text-white/35">
+              <Text className="text-[10px] font-semibold text-white/35">
                 Enter the portion weight in grams.
               </Text>
             </View>
 
-            <View className="rounded-[22px] bg-accent px-5 py-4">
-              <Text className="text-xs font-black uppercase tracking-[1.2px] text-white/60">
+            <View className="rounded-[20px] bg-accent px-4 py-3.5">
+              <Text className="text-[10px] font-black uppercase tracking-[1px] text-white/60">
                 This portion
               </Text>
-              <View className="mt-2 flex-row items-end justify-between gap-3">
-                <Text className="text-3xl font-black text-white">
+              <View className="mt-1.5 flex-row items-end justify-between gap-3">
+                <Text className="text-2xl font-black text-white">
                   {Math.round(scaled.calories)} kcal
                 </Text>
                 <Text className="pb-1 text-right text-xs font-bold leading-5 text-white/70">
@@ -202,13 +202,13 @@ export function FoodDetailPage() {
               </View>
             </View>
 
-            <View className="gap-3">
-              <Text className="font-black text-white">Log under</Text>
+            <View className="gap-2.5">
+              <Text className="text-sm font-black text-white">Log under</Text>
               <MealTypeSelector value={mealType} onChange={setMealType} dark />
             </View>
 
             {error ? (
-              <View className="rounded-2xl bg-dangerSoft p-4">
+              <View className="rounded-2xl bg-dangerSoft p-3.5">
                 <Text className="font-semibold text-danger">{error}</Text>
               </View>
             ) : null}

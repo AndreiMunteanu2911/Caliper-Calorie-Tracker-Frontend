@@ -29,7 +29,7 @@ export const ScrollbarContainer = forwardRef<
 ) {
   const base = horizontal
     ? 'caliper-scrollbar flex-row'
-    : 'caliper-scrollbar min-h-0 flex-1';
+    : 'caliper-scrollbar flex-1 min-h-0';
 
   return (
     <ScrollView

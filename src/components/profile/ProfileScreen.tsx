@@ -40,23 +40,23 @@ type SettingButtonProps = {
   onPress: () => void;
 };
 
-function SettingButton({
+  function SettingButton({
   title,
   description,
   onPress,
 }: SettingButtonProps) {
   return (
-    <View className="flex-row items-center gap-4 rounded-[24px] border border-white/10 bg-[#232220] p-4">
+    <View className="flex-row items-center gap-3 rounded-[20px] border border-white/10 bg-[#232220] p-3.5">
       <View className="min-w-0 flex-1">
-        <Text className="text-base font-black text-white">{title}</Text>
-        <Text className="mt-1 text-sm leading-5 text-white/45">{description}</Text>
+        <Text className="text-sm font-black text-white">{title}</Text>
+        <Text className="mt-0.5 text-sm leading-5 text-white/45">{description}</Text>
       </View>
       <Button label="Edit" size="compact" variant="outline" onPress={onPress} />
     </View>
   );
 }
 
-function ModalHeader({
+  function ModalHeader({
   title,
   description,
   onClose,
@@ -66,16 +66,16 @@ function ModalHeader({
   onClose: () => void;
 }) {
   return (
-    <View className="flex-row items-start gap-4 border-b border-white/10 px-5 py-5">
+    <View className="flex-row items-start gap-3 border-b border-white/10 px-4 py-4">
       <View className="min-w-0 flex-1">
-        <Text className="text-2xl font-black text-white">{title}</Text>
-        <Text className="mt-1 text-sm leading-5 text-white/50">{description}</Text>
+        <Text className="text-xl font-black text-white">{title}</Text>
+        <Text className="mt-0.5 text-sm leading-5 text-white/50">{description}</Text>
       </View>
       <Pressable
         accessibilityLabel="Close"
-        className="h-10 w-10 items-center justify-center rounded-full bg-white/5"
+        className="h-9 w-9 items-center justify-center rounded-full bg-white/5"
         onPress={onClose}>
-        <X color="#FFFFFF" size={18} />
+        <X color="#FFFFFF" size={16} />
       </Pressable>
     </View>
   );
@@ -210,7 +210,7 @@ export function ProfileScreen() {
     <>
       <ScrollbarContainer
         className="flex-1 bg-brand"
-        contentContainerClassName="px-5 pb-32 pt-6">
+        contentContainerClassName="px-5 pb-20 pt-5">
         <AppPage>
           <PageHeader
             title="Profile"
@@ -218,9 +218,9 @@ export function ProfileScreen() {
             action={
               <Pressable
                 accessibilityLabel="Sign out"
-                className="h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-[#232220]"
+                className="h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#232220]"
                 onPress={() => void signOut()}>
-                <LogOut color="#FFFFFF" size={18} />
+                <LogOut color="#FFFFFF" size={16} />
               </Pressable>
             }
           />
@@ -230,15 +230,15 @@ export function ProfileScreen() {
               <LoadingSpinner />
             </View>
           ) : (
-            <View className="mt-8 gap-4">
-              <View className="items-center rounded-[28px] border border-white/10 bg-[#232220] p-6">
-                <View className="h-20 w-20 items-center justify-center rounded-full bg-fats">
-                  <UserRound color="#121212" size={34} />
+            <View className="mt-6 gap-3.5">
+              <View className="items-center rounded-[24px] border border-white/10 bg-[#232220] p-5">
+                <View className="h-16 w-16 items-center justify-center rounded-full bg-fats">
+                  <UserRound color="#121212" size={28} />
                 </View>
-                <Text className="mt-4 text-xl font-black text-white">
+                <Text className="mt-3 text-lg font-black text-white">
                   {profile?.display_name || 'Your profile'}
                 </Text>
-                <Text className="mt-1 text-sm text-white/45">{profile?.email}</Text>
+                <Text className="mt-0.5 text-sm text-white/45">{profile?.email}</Text>
               </View>
 
               <SettingButton
@@ -259,12 +259,12 @@ export function ProfileScreen() {
               />
 
               {error && !openModal ? (
-                <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+                <AnimatedPresence className="rounded-2xl bg-dangerSoft p-3.5">
                   <Text className="font-semibold text-danger">{error}</Text>
                 </AnimatedPresence>
               ) : null}
               {saved ? (
-                <AnimatedPresence className="rounded-2xl bg-successSoft p-4">
+                <AnimatedPresence className="rounded-2xl bg-successSoft p-3.5">
                   <Text className="font-semibold text-brand">Profile saved.</Text>
                 </AnimatedPresence>
               ) : null}

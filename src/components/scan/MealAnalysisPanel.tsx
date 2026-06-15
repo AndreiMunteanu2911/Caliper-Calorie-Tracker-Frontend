@@ -14,12 +14,12 @@ export function MealAnalysisPanel() {
 
   return (
     <View className="gap-4">
-      <View className="rounded-[26px] border border-white/10 bg-[#242424] p-5 shadow-soft">
-        <View className="mb-4 h-12 w-12 items-center justify-center rounded-2xl bg-fats">
-          <Sparkles color="#101010" size={22} strokeWidth={2.6} />
+      <View className="rounded-[24px] border border-white/10 bg-[#242424] p-4 shadow-soft">
+        <View className="mb-3 h-10 w-10 items-center justify-center rounded-2xl bg-fats">
+          <Sparkles color="#101010" size={19} strokeWidth={2.6} />
         </View>
-        <Text className="text-2xl font-black tracking-[-0.8px] text-white">Analyze a meal</Text>
-        <Text className="mt-2 leading-6 text-white/55">
+        <Text className="text-xl font-black tracking-[-0.6px] text-white">Analyze a meal</Text>
+        <Text className="mt-1.5 text-sm leading-5 text-white/55">
           Add optional context, then photograph your meal or choose an existing image.
         </Text>
       </View>
@@ -56,17 +56,17 @@ export function MealAnalysisPanel() {
         </AnimatedPresence>
       ) : null}
       {analysis.isAnalyzing ? (
-        <AnimatedPresence className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-12 shadow-card">
+        <AnimatedPresence className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10 shadow-card">
           <LoadingSpinner size="large" />
-          <Text className="mt-4 text-lg text-center font-black text-white">Analyzing your meal</Text>
-          <Text className="mt-2 text-center text-sm leading-5 text-white/45">
+          <Text className="mt-3 text-base text-center font-black text-white">Analyzing your meal</Text>
+          <Text className="mt-1.5 text-center text-sm leading-5 text-white/45">
             Estimating foods, portions, and macros...
           </Text>
         </AnimatedPresence>
       ) : null}
       {analysis.analysis ? (
-        <AnimatedPresence className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-5 shadow-card">
-          <Text className="text-2xl font-black text-white">
+        <AnimatedPresence className="gap-3 rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-card">
+          <Text className="text-xl font-black text-white">
             {Math.round(analysis.analysis.total_calories)} kcal
           </Text>
           <Text className="text-white/55">

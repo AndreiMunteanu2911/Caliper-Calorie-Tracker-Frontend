@@ -31,6 +31,7 @@ export function useAdvisorChat() {
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const loadedConversationRef = useRef<string | null>(null);
+  const isNewConversationRef = useRef(false);
 
   const loadConversations = useCallback(async () => {
     try {
@@ -66,21 +67,18 @@ export function useAdvisorChat() {
   }, []);
 
   const createNewConversation = useCallback(async () => {
-    try {
-      const { id } = await apiRequest<{ id: string }>('/ai/conversations', {
-        method: 'POST',
-      });
-      setActiveConversationId(id);
-      loadedConversationRef.current = id;
-      setMessages([]);
-      setError(null);
-      await loadConversations();
-    } catch {
-      // silently fail
-    }
-  }, [loadConversations]);
+    isNewConversationRef.current = true;
+    loadedConversationRef.current = null;
+    setActiveConversationId(null);
+    setMessages([]);
+    setError(null);
+  }, []);
 
   const loadHistory = useCallback(async () => {
+    if (isNewConversationRef.current) {
+      isNewConversationRef.current = false;
+      return;
+    }
     setIsLoadingHistory(true);
     setError(null);
     try {
@@ -114,6 +112,24 @@ export function useAdvisorChat() {
     const trimmed = draft.trim();
     if (!trimmed || isSending) return;
 
+    let conversationId = activeConversationId;
+
+    if (!conversationId) {
+      try {
+        const { id } = await apiRequest<{ id: string }>('/ai/conversations', {
+          method: 'POST',
+        });
+        conversationId = id;
+        setActiveConversationId(id);
+        loadedConversationRef.current = id;
+        isNewConversationRef.current = false;
+        await loadConversations();
+      } catch {
+        setError('Failed to start a new conversation.');
+        return;
+      }
+    }
+
     const pendingId = `pending-${Date.now()}`;
     const streamingId = `streaming-${Date.now()}`;
     const pendingMessage: AdvisorMessage = {
@@ -135,7 +151,7 @@ export function useAdvisorChat() {
         body: {
           message: trimmed,
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-          conversation_id: activeConversationId,
+          conversation_id: conversationId,
         },
       }, (event) => {
         if (event.type === 'error') {

@@ -36,7 +36,7 @@ export function DashboardScreen() {
   return (
     <ScrollbarContainer
       className="flex-1 bg-brand"
-      contentContainerClassName="px-5 pb-32 pt-6"
+      contentContainerClassName="px-3 xs:px-4 pb-16 pt-4 sm:px-5 sm:pb-20 sm:pt-5"
       refreshControl={
         <RefreshControl
           refreshing={isLoading}
@@ -57,74 +57,74 @@ export function DashboardScreen() {
           action={
             <Pressable
               accessibilityLabel="Sign out"
-              className="h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-[#232220]"
+              className="h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-[#232220]"
               onPress={() => void signOut()}>
-              <LogOut color="#FFFFFF" size={18} />
+              <LogOut color="#FFFFFF" size={15} />
             </Pressable>
           }
         />
 
-        <View className="mt-7 flex-row items-center justify-between rounded-[24px] bg-white px-2 py-4">
+        <View className="mt-4 flex-row items-center justify-between rounded-xl bg-white px-1.5 py-2.5">
           {WEEK_DAYS.map((day, index) => {
             const date = new Date(today);
             date.setDate(today.getDate() - mondayOffset + index);
             const isToday = index === mondayOffset;
             return (
-              <View className="flex-1 items-center gap-2" key={day}>
-                <Text className="text-xs font-semibold text-ink/80">{day}</Text>
+              <View className="flex-1 items-center gap-1" key={day}>
+                <Text className="text-[10px] font-semibold text-ink/80">{day}</Text>
                 <View
-                  className={`h-10 w-10 items-center justify-center rounded-full ${
+                  className={`h-8 w-8 items-center justify-center rounded-full ${
                     isToday ? 'bg-fats' : ''
                   }`}>
-                  <Text className="text-sm font-black text-ink">{date.getDate()}</Text>
+                  <Text className="text-xs font-black text-ink">{date.getDate()}</Text>
                 </View>
               </View>
             );
           })}
         </View>
 
-        <Text className="mb-5 mt-8 text-[26px] font-black tracking-[-1px] text-white">
+        <Text className="mb-3 mt-5 text-base font-black tracking-[-0.3px] text-white sm:text-lg">
           Count Your Daily Calories
         </Text>
 
         {error && !progress ? (
           <Pressable
-            className="rounded-[28px] border border-danger/40 bg-[#232220] p-7"
+            className="rounded-2xl border border-danger/40 bg-[#232220] p-3.5"
             onPress={() => void refresh()}>
-            <Text className="text-xl font-black text-white">Dashboard unavailable</Text>
-            <Text className="mt-2 text-white/55">{error}. Tap to try again.</Text>
+            <Text className="text-sm font-black text-white">Dashboard unavailable</Text>
+            <Text className="mt-1 text-sm text-white/55">{error}. Tap to try again.</Text>
           </Pressable>
         ) : progress ? (
-          <View className="gap-4">
-            <View className="rounded-[28px] bg-fats p-6">
+          <View className="gap-3">
+            <View className="rounded-2xl bg-fats p-3.5">
               <View className="flex-row items-center justify-between">
-                <Text className="text-xl font-black text-ink">Calories remaining</Text>
+                <Text className="text-sm font-black text-ink">Calories remaining</Text>
               </View>
-              <View className="my-7 items-center">
-                <View className="h-44 w-44 items-center justify-center rounded-full border-[18px] border-brand">
-                  <Text className="text-4xl font-black text-ink">
+              <View className="my-4 items-center">
+                <View className="h-28 w-28 items-center justify-center rounded-full border-8 border-brand">
+                  <Text className="text-2xl font-black text-ink">
                     {Math.max(0, Math.round(progress.remaining.calories))}
                   </Text>
-                  <Text className="mt-1 text-sm text-ink/65">Left</Text>
+                  <Text className="mt-0.5 text-xs text-ink/65">Left</Text>
                 </View>
               </View>
-              <View className="h-2 overflow-hidden rounded-full bg-brand/10">
+              <View className="h-1 overflow-hidden rounded-full bg-brand/10">
                 <View
                   className="h-full rounded-full bg-brand"
                   style={{ width: `${caloriePercentage * 100}%` }}
                 />
               </View>
-              <View className="mt-3 flex-row justify-between">
-                <Text className="text-xs font-semibold text-ink/60">
+              <View className="mt-2 flex-row justify-between">
+                <Text className="text-[10px] font-semibold text-ink/60">
                   {Math.round(progress.consumed.calories)} eaten
                 </Text>
-                <Text className="text-xs font-semibold text-ink/60">
+                <Text className="text-[10px] font-semibold text-ink/60">
                   {Math.round(progress.targets.calories)} goal
                 </Text>
               </View>
             </View>
 
-            <View className="flex-row gap-4">
+            <View className="flex-row gap-2.5">
               <MacroRing
                 consumed={progress.consumed.carbs}
                 label="Carbs"
@@ -138,7 +138,7 @@ export function DashboardScreen() {
                 target={progress.targets.protein}
               />
             </View>
-            <View className="flex-row gap-4">
+            <View className="flex-row gap-2.5">
               <MacroRing
                 consumed={progress.consumed.fats}
                 label="Fat"
@@ -146,20 +146,20 @@ export function DashboardScreen() {
                 target={progress.targets.fats}
               />
               <Pressable
-                className="min-w-0 flex-1 justify-between rounded-[28px] bg-[#232220] p-5"
+                className="min-w-0 flex-1 justify-between rounded-2xl bg-[#232220] p-3"
                 onPress={() => router.push('/scan')}>
-                <View className="h-11 w-11 items-center justify-center rounded-full bg-accent">
-                  <ScanLine color="#FFFFFF" size={21} />
+                <View className="h-9 w-9 items-center justify-center rounded-full bg-accent">
+                  <ScanLine color="#FFFFFF" size={18} />
                 </View>
-                <View className="mt-8">
-                  <Text className="text-xl font-black text-white">Log a meal</Text>
-                  <Text className="mt-2 text-sm text-white/50">Scan, search or take a photo</Text>
+                <View className="mt-5">
+                  <Text className="text-base font-black text-white">Log a meal</Text>
+                  <Text className="mt-1 text-xs text-white/50">Scan, search or take a photo</Text>
                 </View>
               </Pressable>
             </View>
           </View>
         ) : (
-          <View className="items-center py-20">
+          <View className="items-center py-12">
             <LoadingSpinner  />
           </View>
         )}

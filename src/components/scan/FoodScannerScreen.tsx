@@ -77,18 +77,21 @@ export function FoodScannerScreen() {
     scrollOffset.current = event.nativeEvent.contentOffset.y;
   }
 
+  const hasQuery = state.query.trim().length >= 2;
+  const showEmptyState = hasQuery && !search.isLoading && search.items.length === 0 && !search.error;
+
   return (
     <>
       <ScrollbarContainer
         ref={scrollViewRef}
         className="flex-1 bg-brand"
-        contentContainerClassName="px-4 pb-32 pt-6 sm:px-6 sm:pt-10"
+        contentContainerClassName="px-4 pb-20 pt-5 sm:px-6 sm:pt-8"
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={restoreScrollPosition}
         onScroll={trackScroll}
         scrollEventThrottle={16}>
         <AppPage>
-          <View className="gap-8">
+          <View className="gap-6">
             <PageHeader
               title="What are you eating?"
               description="Choose the quickest way to add food to your diary."
@@ -96,27 +99,27 @@ export function FoodScannerScreen() {
 
             <Pressable
               accessibilityRole="button"
-              className="flex-row items-center rounded-[28px] bg-accent p-5"
+              className="flex-row items-center rounded-[24px] bg-accent p-4"
               onPress={() => router.push('/barcode-camera')}>
-              <View className="h-14 w-14 items-center justify-center rounded-full bg-white/20">
-                <Barcode color="#FFFFFF" size={25} />
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                <Barcode color="#FFFFFF" size={22} />
               </View>
-              <View className="ml-4 flex-1">
-                <Text className="text-xl font-black text-white">Scan a barcode</Text>
-                <Text className="mt-1 text-sm text-white/75">
+              <View className="ml-3 flex-1">
+                <Text className="text-lg font-black text-white">Scan a barcode</Text>
+                <Text className="mt-0.5 text-sm text-white/75">
                   Point your camera at packaged food
                 </Text>
               </View>
-              <ChevronRight color="#FFFFFF" size={23} />
+              <ChevronRight color="#FFFFFF" size={20} />
             </Pressable>
 
-            <View className="overflow-hidden rounded-[32px] border border-white/10 bg-[#1C1C1C] p-3 shadow-card sm:p-4">
-              <View className="relative overflow-hidden rounded-[26px] border border-white/30 bg-fats px-5 py-6 shadow-soft sm:px-7">
-                <View className="absolute -right-10 -top-12 h-32 w-32 rounded-full border-[22px] border-white/20" />
-                <Text className="text-xs font-black uppercase tracking-[1.5px] text-brand/55">
+            <View className="overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card sm:p-3.5">
+              <View className="relative overflow-hidden rounded-[24px] border border-white/30 bg-fats px-4 py-5 shadow-soft sm:px-6">
+                <View className="absolute -right-8 -top-10 h-28 w-28 rounded-full border-[18px] border-white/20" />
+                <Text className="text-[10px] font-black uppercase tracking-[1.2px] text-brand/55">
                   Add to your day
                 </Text>
-                <Text className="mt-2 text-3xl font-black tracking-[-1.5px] text-brand">
+                <Text className="mt-1 text-2xl font-black tracking-[-1.2px] text-brand">
                   Search or photograph
                 </Text>
                 <Text className="mt-1 text-sm leading-5 text-brand/65">
@@ -124,8 +127,8 @@ export function FoodScannerScreen() {
                 </Text>
               </View>
 
-              <View className="mt-3 gap-6 rounded-[26px] border border-white/10 bg-[#141414] p-4 shadow-card sm:p-7">
-                <View className="flex-row rounded-[20px] border border-white/10 bg-[#242424] p-1.5 shadow-inner">
+              <View className="mt-2.5 gap-5 rounded-[24px] border border-white/10 bg-[#141414] p-3.5 shadow-card sm:p-5">
+                <View className="flex-row rounded-[20px] border border-white/10 bg-[#242424] p-1 shadow-inner">
                   {MODES.map((item) => {
                     const ModeIcon = item.icon;
                     const selected = state.mode === item.value;
@@ -133,7 +136,7 @@ export function FoodScannerScreen() {
                       <Pressable
                         accessibilityRole="tab"
                         accessibilityState={{ selected }}
-                        className={`flex-1 flex-row items-center justify-center gap-2 rounded-2xl py-3 ${
+                        className={`flex-1 flex-row items-center justify-center gap-2 rounded-2xl py-2.5 ${
                           selected ? 'bg-accent shadow-soft' : ''
                         }`}
                         key={item.value}
@@ -169,32 +172,50 @@ export function FoodScannerScreen() {
                         value={state.query}
                       />
                       {search.isLoading ? (
-                        <View className="items-center pt-4">
+                        <View className="mt-3 items-center rounded-[24px] border border-white/10 bg-[#1C1C1C] py-6">
                           <LoadingSpinner />
+                          <Text className="mt-2 text-sm font-semibold text-white/40">
+                            Searching database...
+                          </Text>
                         </View>
                       ) : null}
                       {search.error ? (
-                        <AnimatedPresence className="mt-4 rounded-2xl bg-dangerSoft p-4">
+                        <AnimatedPresence className="mt-3 rounded-2xl bg-dangerSoft p-3.5">
                           <Text className="font-semibold text-danger">{search.error}</Text>
                         </AnimatedPresence>
                       ) : null}
-                      {state.query.trim().length < 2 ? (
-                        <View className="mt-4 items-center rounded-[26px] border border-white/10 bg-[#242424] p-8">
-                          <View className="mb-4 h-14 w-14 items-center justify-center rounded-2xl bg-fats">
-                            <Search color="#101010" size={24} strokeWidth={2.5} />
+                      {!hasQuery ? (
+                        <View className="mt-3 items-center rounded-[24px] border border-white/10 bg-[#242424] p-6">
+                          <View className="mb-3 h-12 w-12 items-center justify-center rounded-2xl bg-fats">
+                            <Search color="#101010" size={20} strokeWidth={2.5} />
                           </View>
-                          <Text className="text-lg font-black text-white">
+                          <Text className="text-base font-black text-white">
                             Search the food database
                           </Text>
-                          <Text className="mt-2 text-center leading-5 text-white/55">
+                          <Text className="mt-1 text-center leading-5 text-white/55">
                             Enter at least two characters to find normalized nutrition
                             values.
                           </Text>
                         </View>
                       ) : null}
+                      {showEmptyState ? (
+                        <View className="mt-3 items-center rounded-[24px] border border-white/10 bg-[#242424] p-6">
+                          <View className="mb-3 h-12 w-12 items-center justify-center rounded-2xl bg-accentSoft">
+                            <Search color="#FF5A16" size={20} strokeWidth={2.5} />
+                          </View>
+                          <Text className="text-base font-black text-white">
+                            No results found
+                          </Text>
+                          <Text className="mt-1 text-center leading-5 text-white/55">
+                            Try a different search term or create a custom food entry.
+                          </Text>
+                        </View>
+                      ) : null}
                       {search.items.length > 0 ? (
-                        <View className="mt-4">
-                          <Dropdown>
+                        <View className="mt-3">
+                          <Dropdown
+                            resultCount={search.items.length}
+                            query={state.query.trim()}>
                             {search.items.map((food, index) => (
                               <DropdownItem
                                 key={`${food.source}-${food.external_id}`}
@@ -210,10 +231,10 @@ export function FoodScannerScreen() {
                             ))}
                           </Dropdown>
                           <Pressable
-                            className="mt-2 flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-accent/40 py-3"
+                            className="mt-2.5 flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-accent/30 bg-accent/[0.04] py-3"
                             onPress={() => setShowCustomFoodForm(true)}>
-                            <Plus color="#FF5A16" size={16} strokeWidth={2.5} />
-                            <Text className="font-bold text-accent">Custom food</Text>
+                            <Plus color="#FF5A16" size={15} strokeWidth={2.5} />
+                            <Text className="font-bold text-accent">Create custom food</Text>
                           </Pressable>
                         </View>
                       ) : null}

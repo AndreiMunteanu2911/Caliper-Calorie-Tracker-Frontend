@@ -25,22 +25,22 @@ export default function WelcomeRoute() {
       <PageHead title="Nutrition Tracker" />
       <PublicShell>
         <View className="w-full max-w-md flex-1 self-center justify-between">
-          <View className="flex-1 items-center justify-center py-12">
-            <Text className="text-5xl font-black tracking-[-2.5px] text-white">
+          <View className="flex-1 items-center justify-center py-8">
+            <Text className="text-4xl font-black tracking-[-2px] text-white">
               Cali<Text className="text-accent">per</Text>
             </Text>
-            <View className="mt-10 items-center">
+            <View className="mt-8 items-center">
               <View className="flex-row items-center gap-2">
-                <Text className="text-2xl font-bold text-white">Eating</Text>
-                <View className="rounded-full bg-accent px-4 py-2">
-                  <Text className="text-2xl font-bold text-white">healthy</Text>
+                <Text className="text-xl font-bold text-white">Eating</Text>
+                <View className="rounded-full bg-accent px-3.5 py-1.5">
+                  <Text className="text-xl font-bold text-white">healthy</Text>
                 </View>
               </View>
-              <Text className="mt-1 text-2xl font-bold text-white">made easy!</Text>
+              <Text className="mt-0.5 text-xl font-bold text-white">made easy!</Text>
             </View>
           </View>
 
-          <View className="gap-3 pb-4 pt-8">
+          <View className="gap-2.5 pb-4 pt-6">
             <Button label="Log In" onPress={() => router.push('/sign-in')} />
             <Button
               label="Sign Up"

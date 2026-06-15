@@ -78,11 +78,11 @@ export function ModalWrapper({
       visible={isMounted}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={[StyleSheet.absoluteFillObject, { height, width }]}>
+        style={[StyleSheet.absoluteFill, { height, width }]}>
         <Animated.View
           className={className}
           style={[
-            StyleSheet.absoluteFillObject,
+            StyleSheet.absoluteFill,
             backdropStyle,
             {
               alignItems: 'center',
@@ -95,7 +95,7 @@ export function ModalWrapper({
           <Pressable
             accessibilityLabel="Close modal"
             onPress={onClose}
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
           />
           <Animated.View
             accessibilityViewIsModal

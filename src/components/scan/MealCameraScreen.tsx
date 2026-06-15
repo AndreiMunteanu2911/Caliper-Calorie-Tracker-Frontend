@@ -63,7 +63,7 @@ export function MealCameraScreen() {
   }
 
   return (
-    <View className="flex-1 items-center bg-[#080808]">
+    <View className="flex-1 items-center bg-brand">
       <View
         className="relative h-full w-full overflow-hidden bg-brand shadow-card"
         style={{ maxWidth: 480 }}>
@@ -74,14 +74,14 @@ export function MealCameraScreen() {
           style={{ paddingTop: insets.top + 12 }}>
           <Pressable
             accessibilityLabel="Close camera"
-            className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
+            className="h-11 w-11 items-center justify-center rounded-full bg-black/55"
             onPress={() => router.back()}>
-            <ChevronLeft color="#FFFFFF" size={25} />
+            <ChevronLeft color="#FFFFFF" size={22} />
           </Pressable>
-          <Text className="text-xl font-black text-white">AI Camera</Text>
+          <Text className="text-lg font-black text-white">AI Camera</Text>
           <Pressable
             accessibilityLabel="Switch camera"
-            className="h-12 w-12 items-center justify-center rounded-full bg-black/55"
+            className="h-11 w-11 items-center justify-center rounded-full bg-black/55"
             onPress={() =>
               setFacing((current) => (current === 'back' ? 'front' : 'back'))
             }>
