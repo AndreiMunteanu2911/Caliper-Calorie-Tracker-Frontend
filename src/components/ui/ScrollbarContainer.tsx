@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import {
   forwardRef,
   type ReactNode,
@@ -27,19 +28,31 @@ export const ScrollbarContainer = forwardRef<
   },
   ref,
 ) {
+  const { style: incomingStyle, ...otherScrollViewProps } = scrollViewProps;
   const base = horizontal
     ? 'caliper-scrollbar flex-row'
     : 'caliper-scrollbar flex-1 min-h-0';
 
   return (
     <ScrollView
-      {...scrollViewProps}
+      {...otherScrollViewProps}
       ref={ref}
       className={`${base} ${className}`}
       contentContainerClassName={contentContainerClassName}
       horizontal={horizontal}
       showsHorizontalScrollIndicator={horizontal}
-      showsVerticalScrollIndicator={!horizontal}>
+      showsVerticalScrollIndicator={!horizontal}
+      style={
+        Platform.OS === 'web'
+          ? [
+              {
+                scrollbarWidth: 'thin' as const,
+                scrollbarColor: '#FF5A16 rgba(16, 16, 16, 0.4)' as const,
+              } as never,
+              incomingStyle,
+            ]
+          : incomingStyle
+      }>
       {children}
     </ScrollView>
   );

@@ -100,23 +100,7 @@ export function useAdvisorChat() {
     const trimmed = draft.trim();
     if (!trimmed || isSending) return;
 
-    let conversationId = activeConversationId;
-
-    if (!conversationId) {
-      try {
-        const { id } = await apiRequest<{ id: string }>('/ai/conversations', {
-          method: 'POST',
-        });
-        conversationId = id;
-        setActiveConversationId(id);
-        loadedConversationRef.current = id;
-        isNewConversationRef.current = false;
-        await loadConversations();
-      } catch {
-        setError('Failed to start a new conversation.');
-        return;
-      }
-    }
+    const conversationId = activeConversationId;
 
     const pendingId = `pending-${Date.now()}`;
     const streamingId = `streaming-${Date.now()}`;
@@ -133,14 +117,17 @@ export function useAdvisorChat() {
     try {
       let receivedContent = '';
       let completed = false;
+      const body: Record<string, unknown> = {
+        message: trimmed,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+      };
+      if (conversationId) {
+        body.conversation_id = conversationId;
+      }
       await streamApiRequest<ChatStreamEvent>('/ai/chat/stream', {
         method: 'POST',
         timeoutMs: 90_000,
-        body: {
-          message: trimmed,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-          conversation_id: conversationId,
-        },
+        body,
       }, (event) => {
         if (event.type === 'error') {
           throw new Error(event.message);

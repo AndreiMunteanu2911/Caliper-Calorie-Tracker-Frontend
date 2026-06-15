@@ -71,7 +71,7 @@ export function AdvisorScreen() {
     <KeyboardAvoidingView
       className="flex-1 bg-brand"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <View className="flex-1 px-4 pb-16 pt-4 sm:px-6">
+      <View className="flex-1 px-4 pb-20 pt-4 sm:px-6">
         <AppPage className="flex-1 min-h-0">
           <View className="min-h-0 flex-1 gap-4">
             <View

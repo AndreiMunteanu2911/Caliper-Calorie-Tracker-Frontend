@@ -52,19 +52,20 @@
   }
 
   .caliper-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: transparent;
   }
 
   .caliper-scrollbar::-webkit-scrollbar-track,
   .caliper-scrollbar::-webkit-scrollbar-corner {
-    background: transparent;
+    background: rgba(16, 16, 16, 0.4);
+    border-radius: 999px;
   }
 
   .caliper-scrollbar::-webkit-scrollbar-thumb {
-    min-height: 36px;
-    border: 2px solid transparent;
+    min-height: 32px;
+    border: 1.5px solid transparent;
     border-radius: 999px;
     background: #ff5a16;
     background-clip: padding-box;
@@ -73,6 +74,10 @@
   .caliper-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #ff7947;
     background-clip: padding-box;
+  }
+
+  .caliper-scrollbar::-webkit-scrollbar-button {
+    display: none;
   }
 
   .caliper-input,
