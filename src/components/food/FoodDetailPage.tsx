@@ -234,13 +234,11 @@ export function FoodDetailPage() {
             ) : null}
             {saved ? (
               <MotionFade>
-                <View className="flex-row items-center justify-center gap-2 rounded-2xl bg-successSoft p-3.5">
+                <View className="flex-row items-center justify-center gap-2 rounded-xl border border-accent bg-brand p-3.5">
                   <MotionPop>
-                    <View className="h-6 w-6 items-center justify-center rounded-full bg-protein">
-                      <Check color="#101010" size={14} strokeWidth={3} />
-                    </View>
+                    <Check color="#FF5A16" size={16} strokeWidth={3} />
                   </MotionPop>
-                  <Text className="font-semibold text-brand">
+                  <Text className="font-black text-accent">
                     {isEditing ? 'Diary item updated.' : 'Food logged.'}
                   </Text>
                 </View>

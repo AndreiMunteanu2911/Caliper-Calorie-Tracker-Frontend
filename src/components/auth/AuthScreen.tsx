@@ -101,8 +101,10 @@ export function AuthScreen({ mode }: AuthScreenProps) {
               </MotionFade>
             ) : null}
             {form.message ? (
-              <MotionFade className="rounded-2xl bg-successSoft p-3.5">
-                <Text className="font-semibold text-white">{form.message}</Text>
+              <MotionFade className="rounded-xl border border-accent bg-brand p-3.5">
+                <Text className="text-center font-black text-accent">
+                  {form.message}
+                </Text>
               </MotionFade>
             ) : null}
           </View>
