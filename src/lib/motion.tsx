@@ -98,7 +98,9 @@ export function MotionPressable({
   const [pressed, setPressed] = useState(false);
 
   return (
-    <View className={containerClassName}>
+    <View
+      className={containerClassName}
+      style={fill ? { alignSelf: 'stretch' } : undefined}>
       <Motion.View
         animate={{
           scale: pressed && !disabled ? 0.975 : selected ? 1.015 : 1,
@@ -106,7 +108,7 @@ export function MotionPressable({
         style={{
           alignSelf: 'stretch',
           width: '100%',
-          ...(fill ? { flex: 1 } : null),
+          ...(fill ? { flex: 1, height: '100%' } : null),
         }}
         transition={motionTransition.quick}
         whileHover={lift && !disabled ? { scale: 1.01, y: -2 } : undefined}>
@@ -115,7 +117,7 @@ export function MotionPressable({
           className={className}
           disabled={disabled}
           style={(state) => [
-            fill ? { flex: 1 } : null,
+            fill ? { flex: 1, height: '100%' } : null,
             typeof props.style === 'function' ? props.style(state) : props.style,
           ]}
           onPressIn={(event) => {

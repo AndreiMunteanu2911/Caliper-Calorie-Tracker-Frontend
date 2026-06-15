@@ -175,7 +175,7 @@ export function DashboardScreen() {
               </View>
             </View>
 
-            <View className="flex-row gap-2.5">
+            <View className="flex-row items-stretch gap-2.5">
               <MacroRing
                 consumed={progress.consumed.carbs}
                 label="Carbs"
@@ -197,8 +197,8 @@ export function DashboardScreen() {
                 target={progress.targets.fats}
               />
               <MotionPressable
-                className="min-w-0 justify-between rounded-2xl bg-[#232220] p-3"
-                containerClassName="min-w-0 flex-1"
+                className="h-full min-w-0 justify-between rounded-2xl bg-[#232220] p-3"
+                containerClassName="min-w-0 flex-1 self-stretch"
                 fill
                 lift
                 onPress={() => router.push('/scan')}>
