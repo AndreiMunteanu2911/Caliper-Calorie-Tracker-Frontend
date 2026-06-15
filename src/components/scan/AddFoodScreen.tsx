@@ -8,12 +8,13 @@ import {
 } from 'lucide-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { CustomFoodForm } from '@/src/components/food/CustomFoodForm';
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
+import { MotionPressable, MotionStagger } from '@/src/lib/motion';
 
 const ACTIONS = [
   {
@@ -59,70 +60,78 @@ export function AddFoodScreen() {
               description="Choose the quickest way to add food to your diary."
             />
 
-            {ACTIONS.map((action) => {
+            {ACTIONS.map((action, index) => {
               const ActionIcon = action.icon;
               return (
-                <Pressable
-                  accessibilityRole="button"
-                  className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
-                  key={action.route}
-                  onPress={() =>
-                    router.push({
-                      pathname: action.route,
-                      params: date ? { date } : undefined,
-                    })
-                  }>
-                  <View
-                    className={`h-12 w-12 items-center justify-center rounded-full ${action.iconClassName}`}>
-                    <ActionIcon color={action.iconColor} size={22} strokeWidth={2.5} />
-                  </View>
-                  <View className="min-w-0 flex-1">
-                    <Text className="text-lg font-black text-white">{action.title}</Text>
-                    <Text className="mt-0.5 text-sm text-white/50">
-                      {action.description}
-                    </Text>
-                  </View>
-                  <ChevronRight color="#FFFFFF" size={20} />
-                </Pressable>
+                <MotionStagger index={index} key={action.route}>
+                  <MotionPressable
+                    accessibilityRole="button"
+                    className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
+                    lift
+                    onPress={() =>
+                      router.push({
+                        pathname: action.route,
+                        params: date ? { date } : undefined,
+                      })
+                    }>
+                    <View
+                      className={`h-12 w-12 items-center justify-center rounded-full ${action.iconClassName}`}>
+                      <ActionIcon color={action.iconColor} size={22} strokeWidth={2.5} />
+                    </View>
+                    <View className="min-w-0 flex-1">
+                      <Text className="text-lg font-black text-white">{action.title}</Text>
+                      <Text className="mt-0.5 text-sm text-white/50">
+                        {action.description}
+                      </Text>
+                    </View>
+                    <ChevronRight color="#FFFFFF" size={20} />
+                  </MotionPressable>
+                </MotionStagger>
               );
             })}
 
-            <Pressable
-              accessibilityRole="button"
-              className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
-              onPress={() => setShowCustomFoodForm(true)}>
-              <View className="h-12 w-12 items-center justify-center rounded-full bg-[#79C7FF]">
-                <Plus color="#101010" size={22} strokeWidth={2.5} />
-              </View>
-              <View className="min-w-0 flex-1">
-                <Text className="text-lg font-black text-white">Add a custom food</Text>
-                <Text className="mt-0.5 text-sm text-white/50">
-                  Create your own nutrition entry
-                </Text>
-              </View>
-              <ChevronRight color="#FFFFFF" size={20} />
-            </Pressable>
+            <MotionStagger index={3}>
+              <MotionPressable
+                accessibilityRole="button"
+                className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
+                lift
+                onPress={() => setShowCustomFoodForm(true)}>
+                <View className="h-12 w-12 items-center justify-center rounded-full bg-[#79C7FF]">
+                  <Plus color="#101010" size={22} strokeWidth={2.5} />
+                </View>
+                <View className="min-w-0 flex-1">
+                  <Text className="text-lg font-black text-white">Add a custom food</Text>
+                  <Text className="mt-0.5 text-sm text-white/50">
+                    Create your own nutrition entry
+                  </Text>
+                </View>
+                <ChevronRight color="#FFFFFF" size={20} />
+              </MotionPressable>
+            </MotionStagger>
 
-            <Pressable
-              accessibilityRole="button"
-              className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
-              onPress={() =>
-                router.push({
-                  pathname: '/custom-foods',
-                  params: date ? { date } : undefined,
-                })
-              }>
-              <View className="h-12 w-12 items-center justify-center rounded-full bg-protein">
-                <Library color="#101010" size={22} strokeWidth={2.5} />
-              </View>
-              <View className="min-w-0 flex-1">
-                <Text className="text-lg font-black text-white">My food library</Text>
-                <Text className="mt-0.5 text-sm text-white/50">
-                  Edit, favorite, search, or delete custom foods
-                </Text>
-              </View>
-              <ChevronRight color="#FFFFFF" size={20} />
-            </Pressable>
+            <MotionStagger index={4}>
+              <MotionPressable
+                accessibilityRole="button"
+                className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
+                lift
+                onPress={() =>
+                  router.push({
+                    pathname: '/custom-foods',
+                    params: date ? { date } : undefined,
+                  })
+                }>
+                <View className="h-12 w-12 items-center justify-center rounded-full bg-protein">
+                  <Library color="#101010" size={22} strokeWidth={2.5} />
+                </View>
+                <View className="min-w-0 flex-1">
+                  <Text className="text-lg font-black text-white">My food library</Text>
+                  <Text className="mt-0.5 text-sm text-white/50">
+                    Edit, favorite, search, or delete custom foods
+                  </Text>
+                </View>
+                <ChevronRight color="#FFFFFF" size={20} />
+              </MotionPressable>
+            </MotionStagger>
           </View>
         </AppPage>
       </ScrollbarContainer>

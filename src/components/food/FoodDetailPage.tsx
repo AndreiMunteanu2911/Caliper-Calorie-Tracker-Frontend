@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronLeft, Flame, Scale, Utensils } from 'lucide-react-native';
+import { Check, ChevronLeft, Flame, Scale, Utensils } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { apiRequest } from '@/src/lib/api-client';
 import { localNoonIso } from '@/src/lib/dates';
+import { MotionFade, MotionPop } from '@/src/lib/motion';
 import type { FoodItem, MealLogItem, MealType } from '@/src/types/api';
 
 const MACROS = [
@@ -67,6 +68,7 @@ export function FoodDetailPage() {
     params.existing_weight ?? String(Math.round(food.serving_size_g || 100)),
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const quantity = Number(weight);
@@ -100,7 +102,8 @@ export function FoodDetailPage() {
           },
         });
       }
-      router.replace('/diary');
+      setSaved(true);
+      setTimeout(() => router.replace('/diary'), 260);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -228,6 +231,20 @@ export function FoodDetailPage() {
               <View className="rounded-2xl bg-dangerSoft p-3.5">
                 <Text className="font-semibold text-danger">{error}</Text>
               </View>
+            ) : null}
+            {saved ? (
+              <MotionFade>
+                <View className="flex-row items-center justify-center gap-2 rounded-2xl bg-successSoft p-3.5">
+                  <MotionPop>
+                    <View className="h-6 w-6 items-center justify-center rounded-full bg-protein">
+                      <Check color="#101010" size={14} strokeWidth={3} />
+                    </View>
+                  </MotionPop>
+                  <Text className="font-semibold text-brand">
+                    {isEditing ? 'Diary item updated.' : 'Food logged.'}
+                  </Text>
+                </View>
+              </MotionFade>
             ) : null}
 
             <Button

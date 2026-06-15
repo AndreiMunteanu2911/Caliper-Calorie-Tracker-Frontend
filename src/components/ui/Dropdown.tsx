@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 import { Search } from 'lucide-react-native';
 
+import { MotionFade } from '@/src/lib/motion';
+
 type DropdownProps = {
   children: ReactNode;
   className?: string;
@@ -11,8 +13,10 @@ type DropdownProps = {
 
 export function Dropdown({ children, className = '', resultCount, query }: DropdownProps) {
   return (
-    <View
-      className={`overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] shadow-card ${className}`}>
+    <MotionFade
+      className={`overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] shadow-card ${className}`}
+      distance={4}
+      scaleFrom={0.985}>
       <View className="flex-row items-center gap-2.5 border-b border-white/8 px-5 py-3.5">
         <View className="h-7 w-7 items-center justify-center rounded-lg bg-accent/15">
           <Search color="#FF5A16" size={14} strokeWidth={2.5} />
@@ -31,6 +35,6 @@ export function Dropdown({ children, className = '', resultCount, query }: Dropd
       <View className="p-2.5">
         {children}
       </View>
-    </View>
+    </MotionFade>
   );
 }

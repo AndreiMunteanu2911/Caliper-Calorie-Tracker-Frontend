@@ -20,7 +20,7 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAdvisorChat } from '@/src/hooks/useAdvisorChat';
-import { MotionFade } from '@/src/lib/motion';
+import { MotionFade, MotionStagger } from '@/src/lib/motion';
 import type { AdvisorMessage } from '@/src/types/api';
 
 const SUGGESTIONS = [
@@ -118,17 +118,18 @@ export function AdvisorScreen() {
                       nutrition history.
                     </Text>
                     <View className="mt-5 w-full gap-2">
-                      {SUGGESTIONS.map((suggestion) => (
-                        <Pressable
-                          accessibilityRole="button"
-                          className="w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[#242424] px-3.5 py-3"
-                          key={suggestion}
-                          onPress={() => setDraft(suggestion)}>
-                          <Sparkles color="#FF5A16" size={15} strokeWidth={2.5} />
-                          <Text className="min-w-0 flex-1 text-sm font-bold text-white">
-                            {suggestion}
-                          </Text>
-                        </Pressable>
+                      {SUGGESTIONS.map((suggestion, index) => (
+                        <MotionStagger index={index} key={suggestion}>
+                          <Pressable
+                            accessibilityRole="button"
+                            className="w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[#242424] px-3.5 py-3"
+                            onPress={() => setDraft(suggestion)}>
+                            <Sparkles color="#FF5A16" size={15} strokeWidth={2.5} />
+                            <Text className="min-w-0 flex-1 text-sm font-bold text-white">
+                              {suggestion}
+                            </Text>
+                          </Pressable>
+                        </MotionStagger>
                       ))}
                     </View>
                   </View>

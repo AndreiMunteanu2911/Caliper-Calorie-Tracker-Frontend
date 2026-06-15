@@ -7,7 +7,11 @@ import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { apiRequest } from '@/src/lib/api-client';
-import { MotionFade } from '@/src/lib/motion';
+import {
+  MotionFade,
+  MotionPressable,
+  MotionProgress,
+} from '@/src/lib/motion';
 import type {
   TdeeCalculationRequest,
   TdeeCalculationResponse,
@@ -58,7 +62,7 @@ function ChoiceCards<T extends string>({
       {options.map((option) => {
         const selected = value === option.value;
         return (
-          <Pressable
+          <MotionPressable
             accessibilityRole="radio"
             accessibilityState={{ selected }}
             className={`rounded-2xl border px-4 py-3 ${
@@ -67,6 +71,7 @@ function ChoiceCards<T extends string>({
                 : 'border-white/10 bg-[#151515]'
             }`}
             key={option.value}
+            selected={selected}
             onPress={() => onChange(option.value)}>
             <Text className={selected ? 'font-black text-accent' : 'font-black text-white'}>
               {option.label}
@@ -74,7 +79,7 @@ function ChoiceCards<T extends string>({
             <Text className="mt-0.5 text-xs text-white/45">
               {option.description}
             </Text>
-          </Pressable>
+          </MotionPressable>
         );
       })}
     </View>
@@ -86,11 +91,13 @@ function StepIndicator({ step }: { step: Step }) {
     <View className="flex-row gap-2">
       {[1, 2, 3].map((item) => (
         <View
-          className={`h-1.5 flex-1 rounded-full ${
-            item <= step ? 'bg-accent' : 'bg-white/10'
-          }`}
-          key={item}
-        />
+          className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"
+          key={item}>
+          <MotionProgress
+            progress={item <= step ? 1 : 0}
+            style={{ backgroundColor: '#FF5A16', borderRadius: 999 }}
+          />
+        </View>
       ))}
     </View>
   );
@@ -213,7 +220,7 @@ export function TdeeCalculatorModal({
                 <Text className="text-sm font-bold text-white/70">Sex</Text>
                 <View className="flex-row gap-2">
                   {(['female', 'male'] as const).map((option) => (
-                    <Pressable
+                    <MotionPressable
                       accessibilityRole="radio"
                       accessibilityState={{ selected: sex === option }}
                       className={`flex-1 items-center rounded-xl border py-3 ${
@@ -221,12 +228,14 @@ export function TdeeCalculatorModal({
                           ? 'border-accent bg-accent'
                           : 'border-white/10 bg-[#151515]'
                       }`}
+                      containerClassName="min-w-0 flex-1"
                       key={option}
+                      selected={sex === option}
                       onPress={() => setSex(option)}>
                       <Text className="font-black text-white">
                         {option === 'female' ? 'Female' : 'Male'}
                       </Text>
-                    </Pressable>
+                    </MotionPressable>
                   ))}
                 </View>
               </View>

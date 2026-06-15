@@ -13,6 +13,12 @@ import { useAuth } from '@/src/hooks/useAuth';
 import { useDashboardData } from '@/src/hooks/useDashboardData';
 import { useProfile } from '@/src/hooks/useProfile';
 import { localDateString } from '@/src/lib/dates';
+import {
+  MotionFade,
+  MotionPressable,
+  MotionProgress,
+  PageSkeleton,
+} from '@/src/lib/motion';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
@@ -82,9 +88,11 @@ export function DashboardScreen() {
                   }`}>
                   <Text className="text-xs font-black text-ink">{date.getDate()}</Text>
                   {isLogged ? (
-                    <View className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-accent">
+                    <MotionFade
+                      className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-accent"
+                      distance={2}>
                       <Check color="#FFFFFF" size={10} strokeWidth={3} />
-                    </View>
+                    </MotionFade>
                   ) : null}
                 </View>
               </View>
@@ -148,10 +156,12 @@ export function DashboardScreen() {
                 className="h-1 overflow-hidden rounded-full bg-brand/10"
                 ref={calorieBarRef}
                 onLayout={(e) => setCalorieBarWidth(e.nativeEvent.layout.width)}>
-                <View
-                  className="h-full rounded-full bg-brand"
-                  style={{ width: calorieBarWidth * caloriePercentage }}
-                />
+                <View className="h-full" style={{ width: calorieBarWidth }}>
+                  <MotionProgress
+                    progress={caloriePercentage}
+                    style={{ backgroundColor: '#101010', borderRadius: 999 }}
+                  />
+                </View>
               </View>
               <View className="mt-2 flex-row justify-between">
                 <Text className="text-xs font-semibold text-ink/60">
@@ -184,8 +194,11 @@ export function DashboardScreen() {
                 softColorClass="bg-accent"
                 target={progress.targets.fats}
               />
-              <Pressable
-                className="min-w-0 flex-1 justify-between rounded-2xl bg-[#232220] p-3"
+              <MotionPressable
+                className="min-w-0 justify-between rounded-2xl bg-[#232220] p-3"
+                containerClassName="min-w-0 flex-1"
+                fill
+                lift
                 onPress={() => router.push('/scan')}>
                 <View className="h-9 w-9 items-center justify-center rounded-full bg-accent">
                   <ScanLine color="#FFFFFF" size={18} />
@@ -194,13 +207,11 @@ export function DashboardScreen() {
                   <Text className="text-base font-black text-white">Log a meal</Text>
                   <Text className="mt-1 text-xs text-white/50">Scan, search or take a photo</Text>
                 </View>
-              </Pressable>
+              </MotionPressable>
             </View>
           </View>
         ) : (
-          <View className="items-center py-12">
-            <LoadingSpinner  />
-          </View>
+          <PageSkeleton />
         )}
       </AppPage>
     </ScrollbarContainer>

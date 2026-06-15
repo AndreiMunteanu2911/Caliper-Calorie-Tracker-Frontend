@@ -1,6 +1,7 @@
 import { Flame } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { MotionPressable } from '@/src/lib/motion';
 type DropdownItemProps = {
   label: string;
   subtitle: string;
@@ -25,11 +26,12 @@ export function DropdownItem({
   className = '',
 }: DropdownItemProps) {
   return (
-    <Pressable
+    <MotionPressable
       accessibilityRole="button"
       className={`rounded-2xl border border-white/[0.06] bg-[#232323] px-3.5 py-3 active:bg-white/[0.06] ${
         isLast ? '' : 'mb-1.5'
       } ${className}`}
+      lift
       onPress={onPress}>
       <View className="flex-row items-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded-2xl bg-accentSoft">
@@ -62,6 +64,6 @@ export function DropdownItem({
           </View>
         </View>
       </View>
-    </Pressable>
+    </MotionPressable>
   );
 }

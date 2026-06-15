@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { AppPage } from '@/src/components/layout/AppPage';
-import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import {
   type Period,
@@ -13,6 +12,12 @@ import {
 } from '@/src/hooks/useNutritionStats';
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
 import { localDateString, parseLocalDate, shiftLocalDate } from '@/src/lib/dates';
+import {
+  MotionFade,
+  MotionPressable,
+  MotionProgress,
+  PageSkeleton,
+} from '@/src/lib/motion';
 import type {
   MacroHistoryEntry,
   MacroTotals,
@@ -20,10 +25,10 @@ import type {
 } from '@/src/types/api';
 
 const PERIODS: { value: Period; label: string }[] = [
-  { value: 'day', label: 'Day' },
-  { value: 'week', label: '7D' },
-  { value: 'month', label: '30D' },
-  { value: 'quarter', label: '90D' },
+  { value: 'day', label: '1 Day' },
+  { value: 'week', label: '7 Days' },
+  { value: 'month', label: '30 Days' },
+  { value: 'quarter', label: '90 Days' },
 ];
 
 const NUTRIENTS: {
@@ -58,11 +63,13 @@ function Toggle({
   return (
     <View className="flex-row rounded-2xl border border-white/10 bg-[#242424] p-1">
       {options.map((option) => (
-        <Pressable
+        <MotionPressable
           className={`min-w-0 flex-1 items-center rounded-xl px-2 py-2 ${
             value === option.value ? 'bg-accent' : ''
           }`}
+          containerClassName="min-w-0 flex-1"
           key={option.value}
+          selected={value === option.value}
           onPress={() => onChange(option.value)}>
           <Text
             className={
@@ -72,7 +79,7 @@ function Toggle({
             }>
             {option.label}
           </Text>
-        </Pressable>
+        </MotionPressable>
       ))}
     </View>
   );
@@ -100,9 +107,9 @@ function SummaryCard({
       {percentage !== null ? (
         <>
           <View className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-            <View
-              className="h-full rounded-full bg-accent"
-              style={{ width: `${Math.min(percentage, 100)}%` }}
+            <MotionProgress
+              progress={percentage / 100}
+              style={{ backgroundColor: '#FF5A16', borderRadius: 999 }}
             />
           </View>
           <Text className="mt-1 text-xs text-white/35">
@@ -152,19 +159,19 @@ function CalorieChart({
   return (
     <View className="flex-row items-end gap-1">
       {buckets.map((item) => (
-        <View
-          className="min-w-0 flex-1 items-center gap-1"
-          key={item.startDate}>
+        <View className="min-w-0 flex-1 items-center gap-1" key={item.startDate}>
           <Text className="text-[9px] font-black text-white/70">
             {Math.round(item.calories)}
           </Text>
           <View className="h-28 w-full items-center justify-end">
             <View
-              className={`${days === 1 ? 'w-12' : 'w-3/4'} rounded-t bg-protein`}
-              style={{
-                height: Math.max(2, (item.calories / maximum) * 112),
-              }}
-            />
+              className={`${days === 1 ? 'w-12' : 'w-3/4'} h-full rounded-t`}>
+              <MotionProgress
+                progress={item.calories / maximum}
+                style={{ backgroundColor: '#45C588', borderRadius: 4 }}
+                vertical
+              />
+            </View>
           </View>
           <Text className="text-[9px] text-white/35">
             {days <= 7
@@ -355,9 +362,7 @@ export function NutritionStatsScreen() {
           </View>
 
           {isLoading ? (
-            <View className="items-center py-16">
-              <LoadingSpinner />
-            </View>
+            <PageSkeleton />
           ) : error || !targets ? (
             <View className="rounded-2xl bg-dangerSoft p-4">
               <Text className="font-semibold text-danger">
@@ -365,7 +370,7 @@ export function NutritionStatsScreen() {
               </Text>
             </View>
           ) : tab === 'calories' ? (
-            <View className="gap-4">
+            <View className="gap-4" key={`calories-${period}`}>
               <View className="rounded-3xl border border-white/10 bg-[#1C1C1C] p-4">
                 <Text className="mb-3 text-xs font-black uppercase tracking-widest text-white/45">
                   {days === 1
@@ -431,7 +436,7 @@ export function NutritionStatsScreen() {
               </View>
             </View>
           ) : (
-            <View className="gap-4">
+            <View className="gap-4" key={`macros-${period}`}>
               <View className="flex-row flex-wrap gap-3">
                 {NUTRIENTS.map(({ label, key, unit, hasGoal }) => (
                   <SummaryCard

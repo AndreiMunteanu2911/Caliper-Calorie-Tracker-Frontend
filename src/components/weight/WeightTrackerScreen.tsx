@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import {
+  Check,
   ChevronLeft,
   Trash2,
   TrendingDown,
@@ -22,7 +23,11 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
 import { useProfile } from '@/src/hooks/useProfile';
-import { MotionFade } from '@/src/lib/motion';
+import {
+  MotionFade,
+  MotionPop,
+  MotionSkeleton,
+} from '@/src/lib/motion';
 import type { WeightLogItem } from '@/src/types/api';
 import {
   isLocalDateString,
@@ -237,9 +242,11 @@ function WeightChart({
       </View>
     );
   }
-
   return (
-    <View className="h-[234px] items-center overflow-hidden rounded-2xl bg-[#181818] py-3">
+    <MotionFade
+      className="h-[234px] items-center overflow-hidden rounded-2xl bg-[#181818] py-3"
+      distance={4}
+      key={entries.map((entry) => entry.id).join('-')}>
       <Svg height={height} viewBox={`0 0 ${width} ${height}`} width="100%">
         {chart.yTicks.map((tick) => (
           <Fragment key={tick.value}>
@@ -295,7 +302,7 @@ function WeightChart({
           </SvgText>
         ))}
       </Svg>
-    </View>
+    </MotionFade>
   );
 }
 
@@ -304,6 +311,7 @@ export function WeightTrackerScreen() {
   const { data, isLoading, isSaving, error, save, remove } = useWeightLogs();
   const [weight, setWeight] = useState('');
   const [date, setDate] = useState(localDateValue);
+  const [saved, setSaved] = useState(false);
   const entries = data?.entries ?? [];
   const weightValue = Number(weight.replace(',', '.'));
   const isValid =
@@ -318,8 +326,13 @@ export function WeightTrackerScreen() {
   );
 
   async function submit() {
+    setSaved(false);
     const didSave = await save({ weight_kg: weightValue, recorded_on: date });
-    if (didSave) setWeight('');
+    if (didSave) {
+      setWeight('');
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1800);
+    }
   }
 
   return (
@@ -436,12 +449,26 @@ export function WeightTrackerScreen() {
                 <Text className="font-semibold text-danger">{error}</Text>
               </MotionFade>
             ) : null}
+            {saved ? (
+              <MotionFade>
+                <View className="flex-row items-center gap-2 rounded-2xl bg-successSoft p-3.5">
+                  <MotionPop>
+                    <View className="h-6 w-6 items-center justify-center rounded-full bg-protein">
+                      <Check color="#101010" size={14} strokeWidth={3} />
+                    </View>
+                  </MotionPop>
+                  <Text className="font-semibold text-brand">Weight saved.</Text>
+                </View>
+              </MotionFade>
+            ) : null}
 
             <View className="rounded-3xl border border-white/10 bg-[#232220] p-4">
               <Text className="text-base font-black text-white">History</Text>
               {isLoading && entries.length === 0 ? (
-                <View className="items-center py-8">
-                  <LoadingSpinner />
+                <View className="gap-2 py-3">
+                  <MotionSkeleton className="h-12 w-full" />
+                  <MotionSkeleton className="h-12 w-full" />
+                  <MotionSkeleton className="h-12 w-full" />
                 </View>
               ) : entries.length === 0 ? (
                 <Text className="py-6 text-center text-sm text-white/40">

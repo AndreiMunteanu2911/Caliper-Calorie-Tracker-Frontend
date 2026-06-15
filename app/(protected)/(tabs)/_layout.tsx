@@ -57,7 +57,10 @@ function DockItem({
             onPressIn={() => setIsPressed(true)}
             onPressOut={() => setIsPressed(false)}>
             <Motion.View
-                animate={{ scale: isPressed ? 0.96 : 1, width }}
+                animate={{
+                    scale: isPressed ? 0.96 : 1,
+                    width,
+                }}
                 style={{
                     alignItems: 'center',
                     backgroundColor: focused ? '#FF5A16' : '#3B3B3B',

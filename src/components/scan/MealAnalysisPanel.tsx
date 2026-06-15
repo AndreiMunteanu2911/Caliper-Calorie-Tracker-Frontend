@@ -10,7 +10,7 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
 import { apiRequest } from '@/src/lib/api-client';
 import { localNoonIso } from '@/src/lib/dates';
-import { MotionFade } from '@/src/lib/motion';
+import { MotionFade, MotionStagger } from '@/src/lib/motion';
 import type {
   EstimatedFood,
   FoodItem,
@@ -142,19 +142,22 @@ export function MealAnalysisPanel() {
         </MotionFade>
       ) : null}
       {analysis.isAnalyzing ? (
-        <MotionFade className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10 shadow-card">
-          <LoadingSpinner size="large" />
-          <Text className="mt-3 text-center text-base font-black text-white">
-            Analyzing your meal
-          </Text>
-          <Text className="mt-1.5 text-center text-sm leading-5 text-white/45">
-            Estimating foods, portions, macros, and micronutrients...
-          </Text>
+        <MotionFade>
+          <View className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10 shadow-card">
+            <LoadingSpinner size="large" />
+            <Text className="mt-3 text-center text-base font-black text-white">
+              Analyzing your meal
+            </Text>
+            <Text className="mt-1.5 text-center text-sm leading-5 text-white/45">
+              Estimating foods, portions, macros, and micronutrients...
+            </Text>
+          </View>
         </MotionFade>
       ) : null}
       {analysis.analysis ? (
-        <MotionFade className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-card">
-          <View>
+        <MotionFade>
+          <View className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-card">
+            <View>
             <Text className="text-xl font-black text-white">
               Review detected foods
             </Text>
@@ -162,19 +165,18 @@ export function MealAnalysisPanel() {
               AI estimates are approximate. Adjust portions or remove incorrect
               items before saving.
             </Text>
-          </View>
+            </View>
 
-          <MealTypeSelector value={mealType} onChange={setMealType} dark />
+            <MealTypeSelector value={mealType} onChange={setMealType} dark />
 
-          {foods.map((food) => {
+            {foods.map((food, index) => {
             const ratio =
               Number(food.quantity) > 0 && food.estimated_weight_g > 0
                 ? Number(food.quantity) / food.estimated_weight_g
                 : 0;
             return (
-              <View
-                className="rounded-2xl border border-white/10 bg-[#181818] p-3"
-                key={food.id}>
+              <MotionStagger index={index} key={food.id}>
+              <View className="rounded-2xl border border-white/10 bg-[#181818] p-3">
                 <View className="flex-row items-start gap-3">
                   <View className="min-w-0 flex-1">
                     <Text className="font-black text-white">{food.name}</Text>
@@ -204,26 +206,28 @@ export function MealAnalysisPanel() {
                   <Text className="font-bold text-white/45">grams</Text>
                 </View>
               </View>
+              </MotionStagger>
             );
-          })}
+            })}
 
-          <Text className="text-sm leading-5 text-white/55">
-            {analysis.analysis.confidence_explanation}
-          </Text>
-          {logError ? (
-            <View className="rounded-2xl bg-dangerSoft p-3">
-              <Text className="font-semibold text-danger">{logError}</Text>
-            </View>
-          ) : null}
-          <Button
-            label={`Log meal (${foods.length} items)`}
-            loading={isLogging}
-            disabled={
-              foods.length === 0 ||
-              foods.some((food) => !(Number(food.quantity) > 0))
-            }
-            onPress={() => void logMeal()}
-          />
+            <Text className="text-sm leading-5 text-white/55">
+              {analysis.analysis.confidence_explanation}
+            </Text>
+            {logError ? (
+              <View className="rounded-2xl bg-dangerSoft p-3">
+                <Text className="font-semibold text-danger">{logError}</Text>
+              </View>
+            ) : null}
+            <Button
+              label={`Log meal (${foods.length} items)`}
+              loading={isLogging}
+              disabled={
+                foods.length === 0 ||
+                foods.some((food) => !(Number(food.quantity) > 0))
+              }
+              onPress={() => void logMeal()}
+            />
+          </View>
         </MotionFade>
       ) : null}
     </View>

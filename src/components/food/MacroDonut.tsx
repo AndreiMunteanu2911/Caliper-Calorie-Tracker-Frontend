@@ -1,5 +1,7 @@
 import { Text, View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+import Svg from 'react-native-svg';
+
+import { MotionPop } from '@/src/lib/motion';
 
 const STROKE_WIDTH = 18;
 const RADIUS = 60;
@@ -35,6 +37,7 @@ export function MacroDonut({ protein, carbs, fats, size = VIEWBOX }: MacroDonutP
     const scale = total > 0 ? 1 : 0;
 
     return (
+        <MotionPop>
         <View className="items-center justify-center" style={{ width: size, height: size }}>
             <Svg width={size} height={size} viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}>
                 {segments.map((seg) => {
@@ -65,5 +68,6 @@ export function MacroDonut({ protein, carbs, fats, size = VIEWBOX }: MacroDonutP
                 {total > 0 ? `${Math.round(total)}g` : '-'}
             </Text>
         </View>
+        </MotionPop>
     );
 }

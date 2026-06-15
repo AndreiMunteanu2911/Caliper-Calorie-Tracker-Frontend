@@ -17,7 +17,6 @@ import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
 import { Button } from '@/src/components/ui/Button';
 import { CalendarPicker } from '@/src/components/ui/CalendarPicker';
-import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useDashboardData } from '@/src/hooks/useDashboardData';
 import {
@@ -27,6 +26,12 @@ import {
 } from '@/src/lib/dates';
 import { MEAL_TYPES, type MealType } from '@/src/types/api';
 import { useCallback, useState } from 'react';
+import {
+  MotionFade,
+  MotionPressable,
+  MotionStagger,
+  PageSkeleton,
+} from '@/src/lib/motion';
 
 const MEAL_LABELS: Record<MealType, string> = {
   breakfast: 'Breakfast',
@@ -60,6 +65,9 @@ function diaryDateLabel(value: string): string {
 export function DiaryScreen() {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState(localDateString);
+  const [collapsedMeals, setCollapsedMeals] = useState<
+    Partial<Record<MealType, boolean>>
+  >({});
   useFocusEffect(
     useCallback(() => {
       setSelectedDate(localDateString());
@@ -140,11 +148,9 @@ export function DiaryScreen() {
         ) : null}
 
         {!data ? (
-          <View className="items-center py-16">
-            <LoadingSpinner />
-          </View>
+          <PageSkeleton />
         ) : (
-          <View className="mt-5 gap-4">
+          <View className="mt-5 gap-4" key={selectedDate}>
             <View className="overflow-hidden rounded-2xl bg-accent p-3.5 shadow-glow">
               <View className="absolute -right-8 -top-9 h-28 w-28 rounded-full border-8 border-white/10" />
               <View className="flex-row items-start justify-between">
@@ -177,18 +183,26 @@ export function DiaryScreen() {
               </View>
             </View>
 
-            {MEAL_TYPES.map((mealType) => {
+            {MEAL_TYPES.map((mealType, mealIndex) => {
               const logs = data.logs.filter((log) => log.meal_type === mealType);
               const calories = logs.reduce((sum, log) => sum + log.calories, 0);
               const protein = logs.reduce((sum, log) => sum + log.protein, 0);
               const carbs = logs.reduce((sum, log) => sum + log.carbs, 0);
               const fats = logs.reduce((sum, log) => sum + log.fats, 0);
               const { icon: MealIcon, color, background } = MEAL_META[mealType];
+              const collapsed = collapsedMeals[mealType] ?? false;
               return (
-                <View
-                  className="overflow-hidden rounded-2xl border border-white/10 bg-[#1D1D1D] p-2 shadow-card"
-                  key={mealType}>
-                  <View className="flex-row items-center justify-between px-1 py-1">
+                <MotionStagger index={mealIndex} key={mealType}>
+                <View className="overflow-hidden rounded-2xl border border-white/10 bg-[#1D1D1D] p-2 shadow-card">
+                  <MotionPressable
+                    accessibilityLabel={`${collapsed ? 'Expand' : 'Collapse'} ${MEAL_LABELS[mealType]}`}
+                    className="flex-row items-center justify-between px-1 py-1"
+                    onPress={() =>
+                      setCollapsedMeals((current) => ({
+                        ...current,
+                        [mealType]: !collapsed,
+                      }))
+                    }>
                     <View className="flex-row items-center gap-2">
                       <View className={`h-7 w-7 items-center justify-center rounded-lg ${background}`}>
                         <MealIcon color={color} size={14} strokeWidth={2} />
@@ -214,8 +228,8 @@ export function DiaryScreen() {
                         </Text>
                       ) : null}
                     </View>
-                  </View>
-                  {logs.length > 0 ? (
+                  </MotionPressable>
+                  {!collapsed && logs.length > 0 ? (
                     <View className="mt-1.5 gap-1.5">
                       {logs.map((log) => (
                         <MealLogCard
@@ -226,23 +240,26 @@ export function DiaryScreen() {
                         />
                       ))}
                     </View>
-                  ) : (
-                    <Pressable
-                      accessibilityRole="button"
-                      className="mt-1.5 flex-row items-center justify-center gap-1 rounded-xl border border-dashed border-white/15 bg-white/5 py-2 active:bg-white/10"
-                      onPress={() =>
-                        router.push({
-                          pathname: '/scan',
-                          params: { date: selectedDate },
-                        })
-                      }>
-                      <Plus color="#FF5A16" size={14} strokeWidth={2} />
-                      <Text className="text-xs font-black text-accent">
-                        Add {MEAL_LABELS[mealType].toLowerCase()}
-                      </Text>
-                    </Pressable>
-                  )}
+                  ) : !collapsed ? (
+                    <MotionFade distance={3}>
+                      <Pressable
+                        accessibilityRole="button"
+                        className="mt-1.5 flex-row items-center justify-center gap-1 rounded-xl border border-dashed border-white/15 bg-white/5 py-2 active:bg-white/10"
+                        onPress={() =>
+                          router.push({
+                            pathname: '/scan',
+                            params: { date: selectedDate },
+                          })
+                        }>
+                        <Plus color="#FF5A16" size={14} strokeWidth={2} />
+                        <Text className="text-xs font-black text-accent">
+                          Add {MEAL_LABELS[mealType].toLowerCase()}
+                        </Text>
+                      </Pressable>
+                    </MotionFade>
+                  ) : null}
                 </View>
+                </MotionStagger>
               );
             })}
           </View>

@@ -12,6 +12,7 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useFoodSearch } from '@/src/hooks/useFoodSearch';
 import type { FoodItem } from '@/src/types/api';
+import { MotionStagger } from '@/src/lib/motion';
 
 function openFood(
   router: ReturnType<typeof useRouter>,
@@ -127,17 +128,20 @@ export function FoodSearchScreen() {
             <View className="mt-4">
               <Dropdown resultCount={search.items.length} query={query.trim()}>
                 {search.items.map((food, index) => (
-                  <DropdownItem
-                    key={`${food.source}-${food.external_id}`}
-                    label={food.name}
-                    subtitle={food.brand || 'Nutrition per 100g'}
-                    calories={food.calories}
-                    protein={food.protein}
-                    carbs={food.carbs}
-                    fats={food.fats}
-                    onPress={() => openFood(router, food, date)}
-                    isLast={index === search.items.length - 1}
-                  />
+                  <MotionStagger
+                    index={index}
+                    key={`${food.source}-${food.external_id}`}>
+                    <DropdownItem
+                      label={food.name}
+                      subtitle={food.brand || 'Nutrition per 100g'}
+                      calories={food.calories}
+                      protein={food.protein}
+                      carbs={food.carbs}
+                      fats={food.fats}
+                      onPress={() => openFood(router, food, date)}
+                      isLast={index === search.items.length - 1}
+                    />
+                  </MotionStagger>
                 ))}
               </Dropdown>
             </View>
@@ -145,10 +149,12 @@ export function FoodSearchScreen() {
 
           {hasQuery && !search.isLoading ? (
             <Pressable
-              className="mt-3 flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-accent/30 bg-accent/[0.04] py-3"
+              className="mt-3 min-h-11 flex-row items-center justify-center gap-2 rounded-xl border border-accent bg-brand px-3.5"
               onPress={() => setShowCustomFoodForm(true)}>
               <Plus color="#FF5A16" size={15} strokeWidth={2.5} />
-              <Text className="font-bold text-accent">Create custom food</Text>
+              <Text className="text-sm font-black tracking-tight text-accent">
+                Create custom food
+              </Text>
             </Pressable>
           ) : null}
         </AppPage>

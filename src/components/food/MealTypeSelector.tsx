@@ -1,6 +1,7 @@
 import { Cookie, Moon, Sun, Sunrise } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { MotionPressable } from '@/src/lib/motion';
 import { MEAL_TYPES, type MealType } from '@/src/types/api';
 
 type MealTypeSelectorProps = {
@@ -34,7 +35,7 @@ export function MealTypeSelector({
         const selected = mealType === value;
         const Icon = ICONS[mealType];
         return (
-          <Pressable
+          <MotionPressable
             accessibilityRole="radio"
             accessibilityState={{ selected }}
             className={`flex-row items-center gap-1.5 rounded-full border px-3 py-2 ${
@@ -45,6 +46,7 @@ export function MealTypeSelector({
                   : 'border-line bg-surface'
             }`}
             key={mealType}
+            selected={selected}
             onPress={() => onChange(mealType)}>
             <Icon
               color={selected ? '#FFFFFF' : dark ? '#B6B6B6' : '#77756F'}
@@ -61,7 +63,7 @@ export function MealTypeSelector({
               }>
               {LABELS[mealType]}
             </Text>
-          </Pressable>
+          </MotionPressable>
         );
       })}
     </View>

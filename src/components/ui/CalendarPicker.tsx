@@ -9,6 +9,7 @@ import { Pressable, Text, View } from 'react-native';
 import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { localDateString, parseLocalDate } from '@/src/lib/dates';
+import { MotionFade, MotionPressable } from '@/src/lib/motion';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -26,6 +27,7 @@ export function CalendarPicker({
   displayValue,
 }: CalendarPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [monthDirection, setMonthDirection] = useState<1 | -1>(1);
   const [visibleMonth, setVisibleMonth] = useState(() => {
     const selected = parseLocalDate(value);
     return new Date(selected.getFullYear(), selected.getMonth(), 1);
@@ -68,6 +70,7 @@ export function CalendarPicker({
   }
 
   function shiftMonth(offset: number) {
+    setMonthDirection(offset > 0 ? 1 : -1);
     setVisibleMonth(
       (current) =>
         new Date(current.getFullYear(), current.getMonth() + offset, 1),
@@ -125,9 +128,14 @@ export function CalendarPicker({
             ))}
           </View>
 
-          <View className="gap-1">
-            {weeks.map((week, weekIndex) => (
-              <View className="flex-row" key={`week-${weekIndex}`}>
+          <MotionFade
+            distance={8}
+            horizontal
+            key={`${visibleMonth.getFullYear()}-${visibleMonth.getMonth()}`}
+            reverse={monthDirection < 0}>
+            <View className="gap-1">
+              {weeks.map((week, weekIndex) => (
+                <View className="flex-row" key={`week-${weekIndex}`}>
                 {week.map((day, dayIndex) => {
                   if (day === null) {
                     return (
@@ -148,7 +156,7 @@ export function CalendarPicker({
                   const today = dateValue === localDateString();
                   return (
                     <View className="flex-1 p-1" key={dateValue}>
-                      <Pressable
+                      <MotionPressable
                         accessibilityLabel={dateValue}
                         className={`h-12 items-center justify-center rounded-xl border ${
                           selected
@@ -157,6 +165,7 @@ export function CalendarPicker({
                               ? 'border-accent bg-accent/10'
                               : 'border-transparent bg-white/[0.03]'
                         }`}
+                        selected={selected}
                         onPress={() => selectDay(day)}>
                         <Text
                           className={
@@ -168,13 +177,14 @@ export function CalendarPicker({
                           }>
                           {day}
                         </Text>
-                      </Pressable>
+                      </MotionPressable>
                     </View>
                   );
                 })}
-              </View>
-            ))}
-          </View>
+                </View>
+              ))}
+            </View>
+          </MotionFade>
 
           <Pressable
             className="mt-4 items-center rounded-xl border border-accent py-3"

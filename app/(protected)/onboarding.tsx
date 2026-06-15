@@ -10,6 +10,11 @@ import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useOnboarding } from '@/src/hooks/useOnboarding';
 import { apiRequest } from '@/src/lib/api-client';
 import type { OnboardingUpdate, Profile } from '@/src/types/api';
+import {
+  MotionPop,
+  MotionPressable,
+  MotionProgress,
+} from '@/src/lib/motion';
 
 const ACTIVITY = [
   ['sedentary', 'Mostly seated'],
@@ -131,11 +136,13 @@ export default function OnboardingRoute() {
         <View className="mt-5 flex-row gap-2">
           {[0, 1, 2].map((index) => (
             <View
-              className={`h-1.5 flex-1 rounded-full ${
-                index <= step ? 'bg-accent' : 'bg-white/10'
-              }`}
-              key={index}
-            />
+              className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"
+              key={index}>
+              <MotionProgress
+                progress={index <= step ? 1 : 0}
+                style={{ backgroundColor: '#FF5A16', borderRadius: 999 }}
+              />
+            </View>
           ))}
         </View>
 
@@ -309,23 +316,24 @@ function Choice({
   fill?: boolean;
 }) {
   return (
-    <Pressable
+    <MotionPressable
       className={`${fill ? 'relative w-full justify-center' : ''} flex-row items-center gap-2 rounded-xl border px-3 py-2.5 ${
         selected
           ? 'border-accent bg-accent'
           : 'border-white/10 bg-[#232220]'
       }`}
+      containerClassName={fill ? 'w-full' : ''}
+      selected={selected}
       onPress={onPress}>
       {selected ? (
-        <Check
-          color="#FFFFFF"
-          size={14}
-          style={fill ? { left: 12, position: 'absolute' } : undefined}
-        />
+        <MotionPop
+          style={fill ? { left: 12, position: 'absolute' } : undefined}>
+          <Check color="#FFFFFF" size={14} />
+        </MotionPop>
       ) : null}
       <Text className={selected ? 'font-black text-white' : 'font-bold text-white/60'}>
         {label}
       </Text>
-    </Pressable>
+    </MotionPressable>
   );
 }

@@ -11,7 +11,6 @@ import { PageHeader } from '@/src/components/layout/PageHeader';
 import { TdeeCalculatorModal } from '@/src/components/profile/TdeeCalculatorModal';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
-import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { NumberSpinner } from '@/src/components/ui/NumberSpinner';
@@ -19,7 +18,12 @@ import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useProfile } from '@/src/hooks/useProfile';
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
-import { MotionFade } from '@/src/lib/motion';
+import {
+  MotionFade,
+  MotionPressable,
+  MotionStagger,
+  PageSkeleton,
+} from '@/src/lib/motion';
 import type { Profile, TdeeCalculationResponse } from '@/src/types/api';
 
 type TargetMode = 'grams' | 'percentages';
@@ -75,6 +79,13 @@ export function ProfileScreen() {
   const [targetWeight, setTargetWeight] = useState('');
   const [mode, setMode] = useState<TargetMode>('grams');
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (!saved) return;
+
+    const timer = setTimeout(() => setSaved(false), 3000);
+    return () => clearTimeout(timer);
+  }, [saved]);
 
   function setGoalDrafts(source: Profile, targetMode: TargetMode) {
     setCalories(Math.round(source.daily_calorie_target).toString());
@@ -251,9 +262,7 @@ export function ProfileScreen() {
           />
 
           {isLoading && !profile ? (
-            <View className="items-center py-24">
-              <LoadingSpinner />
-            </View>
+            <PageSkeleton />
           ) : (
             <View className="mt-6 gap-3.5">
               <View className="items-center rounded-3xl border border-white/10 bg-[#232220] p-5">
@@ -266,49 +275,61 @@ export function ProfileScreen() {
                 <Text className="mt-0.5 text-sm text-white/45">{profile?.email}</Text>
               </View>
 
-              <SettingButton
-                title="Edit details"
-                description="Update your display name and review your email."
-                onPress={openDetails}
-              />
-              <SettingButton
-                title="Daily goals"
-                description={`${Math.round(
-                  profile?.daily_calorie_target ?? 0,
-                )} kcal, ${Math.round(
-                  profile?.daily_protein_target ?? 0,
-                )}g protein, ${Math.round(
-                  profile?.daily_carbs_target ?? 0,
-                )}g carbs, ${Math.round(profile?.daily_fats_target ?? 0)}g fat`}
-                onPress={openGoals}
-              />
-              <SettingButton
-                title="TDEE calculator"
-                description="Estimate maintenance calories and apply automatic macro goals."
-                buttonLabel="Calculate"
-                onPress={() => setOpenModal('tdee')}
-              />
-              <SettingButton
-                title="Target weight"
-                description={
-                  profile?.target_weight_kg
-                    ? `${profile.target_weight_kg.toFixed(1)} kg`
-                    : 'Not set. Add one to enable target-date projections.'
-                }
-                onPress={openTargetWeight}
-              />
-              <SettingButton
-                title="Weight tracker"
-                description="Log weigh-ins and follow your progress over time."
-                buttonLabel="Open"
-                onPress={() => router.push('/weight')}
-              />
-              <SettingButton
-                title="Nutrition"
-                description="View your calorie and macro stats over time."
-                buttonLabel="View"
-                onPress={() => router.push('/nutrition')}
-              />
+              {[
+                <SettingButton
+                  key="details"
+                  title="Edit details"
+                  description="Update your display name and review your email."
+                  onPress={openDetails}
+                />,
+                <SettingButton
+                  key="goals"
+                  title="Daily goals"
+                  description={`${Math.round(
+                    profile?.daily_calorie_target ?? 0,
+                  )} kcal, ${Math.round(
+                    profile?.daily_protein_target ?? 0,
+                  )}g protein, ${Math.round(
+                    profile?.daily_carbs_target ?? 0,
+                  )}g carbs, ${Math.round(profile?.daily_fats_target ?? 0)}g fat`}
+                  onPress={openGoals}
+                />,
+                <SettingButton
+                  key="tdee"
+                  title="TDEE calculator"
+                  description="Estimate maintenance calories and apply automatic macro goals."
+                  buttonLabel="Calculate"
+                  onPress={() => setOpenModal('tdee')}
+                />,
+                <SettingButton
+                  key="target-weight"
+                  title="Target weight"
+                  description={
+                    profile?.target_weight_kg
+                      ? `${profile.target_weight_kg.toFixed(1)} kg`
+                      : 'Not set. Add one to enable target-date projections.'
+                  }
+                  onPress={openTargetWeight}
+                />,
+                <SettingButton
+                  key="weight"
+                  title="Weight tracker"
+                  description="Log weigh-ins and follow your progress over time."
+                  buttonLabel="Open"
+                  onPress={() => router.push('/weight')}
+                />,
+                <SettingButton
+                  key="nutrition"
+                  title="Nutrition"
+                  description="View your calorie and macro stats over time."
+                  buttonLabel="View"
+                  onPress={() => router.push('/nutrition')}
+                />,
+              ].map((setting, index) => (
+                <MotionStagger index={index} key={index}>
+                  {setting}
+                </MotionStagger>
+              ))}
 
               {error && !openModal ? (
                 <MotionFade className="rounded-2xl bg-dangerSoft p-3.5">
@@ -316,8 +337,10 @@ export function ProfileScreen() {
                 </MotionFade>
               ) : null}
               {saved ? (
-                <MotionFade className="rounded-2xl bg-successSoft p-3.5">
-                  <Text className="font-semibold text-brand">Profile saved.</Text>
+                <MotionFade className="rounded-xl border border-accent bg-brand p-3.5">
+                  <Text className="text-center font-black text-accent">
+                    Profile saved.
+                  </Text>
                 </MotionFade>
               ) : null}
             </View>
@@ -457,11 +480,13 @@ export function ProfileScreen() {
           keyboardShouldPersistTaps="handled">
           <View className="flex-row rounded-2xl bg-[#151515] p-1">
             {(['grams', 'percentages'] as const).map((option) => (
-              <Pressable
+              <MotionPressable
                 className={`flex-1 items-center rounded-xl px-2 py-3 ${
                   mode === option ? 'bg-accent' : ''
                 }`}
+                containerClassName="min-w-0 flex-1"
                 key={option}
+                selected={mode === option}
                 onPress={() => changeMode(option)}>
                 <Text
                   className={
@@ -471,7 +496,7 @@ export function ProfileScreen() {
                   }>
                   {option === 'grams' ? 'Weight / grams' : 'Percentages'}
                 </Text>
-              </Pressable>
+              </MotionPressable>
             ))}
           </View>
           {mode === 'grams' ? (

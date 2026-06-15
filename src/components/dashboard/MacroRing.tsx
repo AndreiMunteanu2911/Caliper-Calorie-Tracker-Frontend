@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
+import { MotionProgress } from '@/src/lib/motion';
+
 type MacroRingProps = {
   label: string;
   consumed: number;
@@ -37,10 +39,12 @@ export function MacroRing({
       <View
         className="mt-5 h-1.5 overflow-hidden rounded-full bg-brand/10"
         onLayout={(e) => setBarWidth(e.nativeEvent.layout.width)}>
-        <View
-          className="h-full rounded-full bg-brand"
-          style={{ width: barWidth * percentage }}
-        />
+        <View className="h-full" style={{ width: barWidth }}>
+          <MotionProgress
+            progress={percentage}
+            style={{ backgroundColor: '#101010', borderRadius: 999 }}
+          />
+        </View>
       </View>
       <Text className="mt-2 text-xs font-semibold text-brand/55">
         {Math.round(target - consumed) > 0
