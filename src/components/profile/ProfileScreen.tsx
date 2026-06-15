@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import {
   LogOut,
   UserRound,
@@ -38,12 +39,14 @@ type SettingButtonProps = {
   title: string;
   description: string;
   onPress: () => void;
+  buttonLabel?: string;
 };
 
   function SettingButton({
   title,
   description,
   onPress,
+  buttonLabel = 'Edit',
 }: SettingButtonProps) {
   return (
     <View className="flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[#232220] p-3.5">
@@ -51,7 +54,7 @@ type SettingButtonProps = {
         <Text className="text-sm font-black text-white">{title}</Text>
         <Text className="mt-0.5 text-sm leading-5 text-white/45">{description}</Text>
       </View>
-      <Button label="Edit" size="compact" variant="outline" onPress={onPress} />
+      <Button label={buttonLabel} size="compact" variant="outline" onPress={onPress} />
     </View>
   );
 }
@@ -82,6 +85,7 @@ type SettingButtonProps = {
 }
 
 export function ProfileScreen() {
+  const router = useRouter();
   const { signOut } = useAuth();
   const { profile, isLoading, isSaving, error, save } = useProfile();
   const [openModal, setOpenModal] = useState<OpenModal>(null);
@@ -256,6 +260,12 @@ export function ProfileScreen() {
                   profile?.daily_carbs_target ?? 0,
                 )}g carbs, ${Math.round(profile?.daily_fats_target ?? 0)}g fat`}
                 onPress={openGoals}
+              />
+              <SettingButton
+                title="Nutrition"
+                description="View your calorie and macro stats over time."
+                buttonLabel="View"
+                onPress={() => router.push('/nutrition')}
               />
 
               {error && !openModal ? (

@@ -106,6 +106,18 @@ export type Profile = {
   fats_percentage: number;
 };
 
+export type MacroHistoryEntry = {
+  date: string;
+  consumed: MacroTotals;
+};
+
+export type MacroHistoryResponse = {
+  days: number;
+  timezone: string;
+  entries: MacroHistoryEntry[];
+  targets: MacroTotals;
+};
+
 export type ProfileUpdate = {
   display_name: string;
   daily_calorie_target: number;
