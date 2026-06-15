@@ -48,7 +48,7 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
         ref={ref}
         style={[{ textAlignVertical: 'center' }, style]}
         underlineColorAndroid="transparent"
-        className={`caliper-input min-w-0 flex-1 border-0 rounded-none bg-[#141414] text-sm leading-5 text-white ${
+        className={`caliper-input min-w-0 flex-1 border-0 rounded-none bg-[#141414] text-sm font-bold tracking-tight leading-5 text-white ${
           dense
             ? 'min-h-5 py-1.5'
             : compact

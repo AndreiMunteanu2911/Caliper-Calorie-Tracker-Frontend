@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { LogOut, ScanLine } from 'lucide-react-native';
+import { ScanLine } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { Pressable, RefreshControl, Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
@@ -17,7 +17,7 @@ const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
 export function DashboardScreen() {
   const router = useRouter();
-  const { user, isLoading: isAuthLoading, signOut } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const { data, isLoading, error, refresh } = useDashboardData();
   const { profile } = useProfile();
   const progress = data?.progress;
@@ -58,14 +58,6 @@ export function DashboardScreen() {
                 ? `, ${user.email.split('@')[0]}`
                 : ''
           }. Here is your progress for today.`}
-          action={
-            <Pressable
-              accessibilityLabel="Sign out"
-              className="h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-[#232220]"
-              onPress={() => void signOut()}>
-              <LogOut color="#FFFFFF" size={15} />
-            </Pressable>
-          }
         />
 
         <View className="mt-4 flex-row items-center justify-between rounded-xl bg-white px-1.5 py-2.5">

@@ -29,7 +29,7 @@ export function MealAnalysisPanel() {
         placeholder="Optional context: chicken, rice, sauce..."
         value={analysis.context}
       />
-      <View className="gap-3 sm:flex-row">
+      <View className="gap-3">
         <View className="flex-1">
           <Button
             label="Take photo"
