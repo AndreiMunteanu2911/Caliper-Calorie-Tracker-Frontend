@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Check, Flame, Scale, Utensils } from 'lucide-react-native';
+import { Check, Scale, Utensils } from 'lucide-react-native';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

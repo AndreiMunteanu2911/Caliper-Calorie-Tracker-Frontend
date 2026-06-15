@@ -13,7 +13,6 @@ import {
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
 import { localDateString, parseLocalDate, shiftLocalDate } from '@/src/lib/dates';
 import {
-  MotionFade,
   MotionPressable,
   MotionProgress,
   PageSkeleton,

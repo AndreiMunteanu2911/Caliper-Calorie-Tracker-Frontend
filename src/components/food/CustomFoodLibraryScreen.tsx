@@ -1,4 +1,4 @@
-import { Pencil, Plus, Search, Star } from 'lucide-react-native';
+import { Pencil, Search, Star } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
