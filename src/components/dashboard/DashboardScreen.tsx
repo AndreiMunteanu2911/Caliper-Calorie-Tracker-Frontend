@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { ScanLine } from 'lucide-react-native';
+import { Check, ScanLine } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { Pressable, RefreshControl, Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
@@ -12,6 +12,7 @@ import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useDashboardData } from '@/src/hooks/useDashboardData';
 import { useProfile } from '@/src/hooks/useProfile';
+import { localDateString } from '@/src/lib/dates';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
@@ -71,14 +72,20 @@ export function DashboardScreen() {
             const date = new Date(today);
             date.setDate(today.getDate() - mondayOffset + index);
             const isToday = index === mondayOffset;
+            const isLogged = data?.logged_dates.includes(localDateString(date));
             return (
               <View className="flex-1 items-center gap-1" key={day}>
                 <Text className="text-xs font-semibold text-ink/80">{day}</Text>
                 <View
-                  className={`h-8 w-8 items-center justify-center rounded-full ${
+                  className={`relative h-8 w-8 items-center justify-center rounded-full ${
                     isToday ? 'bg-fats' : ''
                   }`}>
                   <Text className="text-xs font-black text-ink">{date.getDate()}</Text>
+                  {isLogged ? (
+                    <View className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-accent">
+                      <Check color="#FFFFFF" size={10} strokeWidth={3} />
+                    </View>
+                  ) : null}
                 </View>
               </View>
             );

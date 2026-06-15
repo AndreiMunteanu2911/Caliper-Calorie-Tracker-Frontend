@@ -7,7 +7,7 @@ import {
   MessageCircleMore,
   UserRound,
 } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -101,10 +101,10 @@ function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
 
   return (
     <View
-      pointerEvents="box-none"
       style={{
         bottom: Math.max(insets.bottom, 10),
         left: 0,
+        pointerEvents: 'box-none',
         position: 'absolute',
         right: 0,
       }}>
@@ -116,11 +116,15 @@ function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
           borderRadius: 999,
           borderWidth: 1,
           padding: 7,
-          shadowColor: '#000000',
-          shadowOffset: { width: 0, height: 12 },
-          shadowOpacity: 0.38,
-          shadowRadius: 24,
           elevation: 18,
+          ...(Platform.OS === 'web'
+            ? { boxShadow: '0 12px 24px rgba(0, 0, 0, 0.38)' }
+            : {
+                shadowColor: '#000000',
+                shadowOffset: { width: 0, height: 12 },
+                shadowOpacity: 0.38,
+                shadowRadius: 24,
+              }),
         }}>
         <View className="flex-row items-center gap-1.5">
           {state.routes.map((route, index) => {

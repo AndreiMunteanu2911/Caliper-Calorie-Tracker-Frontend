@@ -91,8 +91,8 @@ export function AddFoodScreen() {
               accessibilityRole="button"
               className="flex-row items-center gap-3 rounded-3xl border border-white/10 bg-[#232220] p-4"
               onPress={() => setShowCustomFoodForm(true)}>
-              <View className="h-12 w-12 items-center justify-center rounded-full bg-accent">
-                <Plus color="#FFFFFF" size={22} strokeWidth={2.5} />
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-[#79C7FF]">
+                <Plus color="#101010" size={22} strokeWidth={2.5} />
               </View>
               <View className="min-w-0 flex-1">
                 <Text className="text-lg font-black text-white">Add a custom food</Text>

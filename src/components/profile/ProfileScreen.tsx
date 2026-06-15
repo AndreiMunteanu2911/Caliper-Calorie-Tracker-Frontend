@@ -23,7 +23,7 @@ import { useWeightLogs } from '@/src/hooks/useWeightLogs';
 import type { Profile, TdeeCalculationResponse } from '@/src/types/api';
 
 type TargetMode = 'grams' | 'percentages';
-type OpenModal = 'details' | 'goals' | 'tdee' | null;
+type OpenModal = 'details' | 'goals' | 'targetWeight' | 'tdee' | null;
 type MacroKey = 'protein' | 'carbs' | 'fats';
 
 const CALORIES_PER_GRAM: Record<MacroKey, number> = {
@@ -72,6 +72,7 @@ export function ProfileScreen() {
   const [protein, setProtein] = useState(0);
   const [carbs, setCarbs] = useState(0);
   const [fats, setFats] = useState(0);
+  const [targetWeight, setTargetWeight] = useState('');
   const [mode, setMode] = useState<TargetMode>('grams');
   const [saved, setSaved] = useState(false);
 
@@ -96,6 +97,11 @@ export function ProfileScreen() {
     setProtein(Math.round(profile.daily_protein_target));
     setCarbs(Math.round(profile.daily_carbs_target));
     setFats(Math.round(profile.daily_fats_target));
+    setTargetWeight(
+      profile.target_weight_kg === null
+        ? ''
+        : String(profile.target_weight_kg),
+    );
   }, [profile]);
 
   const calculatedCalories =
@@ -105,6 +111,10 @@ export function ProfileScreen() {
   const percentageTotal = protein + carbs + fats;
   const percentageTotalValid = percentageTotal === 100;
   const detailsValid = displayName.trim().length >= 2;
+  const targetWeightValue = numberValue(targetWeight);
+  const targetWeightValid =
+    !targetWeight.trim() ||
+    (targetWeightValue >= 20 && targetWeightValue <= 500);
   const goalsValid =
     protein >= 0 &&
     carbs >= 0 &&
@@ -132,6 +142,17 @@ export function ProfileScreen() {
     setSaved(false);
     setGoalDrafts(profile, mode);
     setOpenModal('goals');
+  }
+
+  function openTargetWeight() {
+    if (!profile) return;
+    setSaved(false);
+    setTargetWeight(
+      profile.target_weight_kg === null
+        ? ''
+        : String(profile.target_weight_kg),
+    );
+    setOpenModal('targetWeight');
   }
 
   function changeMode(nextMode: TargetMode) {
@@ -163,6 +184,7 @@ export function ProfileScreen() {
       protein: profile.daily_protein_target,
       carbs: profile.daily_carbs_target,
       fats: profile.daily_fats_target,
+      target_weight_kg: profile.target_weight_kg,
     });
     if (didSave) {
       setSaved(true);
@@ -181,6 +203,27 @@ export function ProfileScreen() {
       protein,
       carbs,
       fats,
+      target_weight_kg: profile.target_weight_kg,
+    });
+    if (didSave) {
+      setSaved(true);
+      setOpenModal(null);
+    }
+  }
+
+  async function saveTargetWeight() {
+    if (!profile || !targetWeightValid) return;
+    const didSave = await save({
+      display_name:
+        profile.display_name?.trim() ||
+        profile.email.split('@')[0] ||
+        'Caliper user',
+      daily_calorie_target: profile.daily_calorie_target,
+      target_mode: 'grams',
+      protein: profile.daily_protein_target,
+      carbs: profile.daily_carbs_target,
+      fats: profile.daily_fats_target,
+      target_weight_kg: targetWeight.trim() ? targetWeightValue : null,
     });
     if (didSave) {
       setSaved(true);
@@ -244,6 +287,15 @@ export function ProfileScreen() {
                 description="Estimate maintenance calories and apply automatic macro goals."
                 buttonLabel="Calculate"
                 onPress={() => setOpenModal('tdee')}
+              />
+              <SettingButton
+                title="Target weight"
+                description={
+                  profile?.target_weight_kg
+                    ? `${profile.target_weight_kg.toFixed(1)} kg`
+                    : 'Not set. Add one to enable target-date projections.'
+                }
+                onPress={openTargetWeight}
               />
               <SettingButton
                 title="Weight tracker"
@@ -337,11 +389,60 @@ export function ProfileScreen() {
             protein: result.daily_protein_target,
             carbs: result.daily_carbs_target,
             fats: result.daily_fats_target,
+            target_weight_kg: profile.target_weight_kg,
           });
           if (didSave) setSaved(true);
           return didSave;
         }}
       />
+
+      <ModalWrapper
+        isOpen={openModal === 'targetWeight'}
+        onClose={closeModal}>
+        <ModalHeader
+          title="Target weight"
+          description="Set the weight used for progress and target-date projections."
+          onClose={closeModal}
+        />
+        <View className="gap-5 p-5">
+          <View className="gap-1.5">
+            <Text className="pl-2 text-sm font-bold text-white/70">
+              Target weight in kilograms
+            </Text>
+            <InputBox
+              accessibilityLabel="Target weight in kilograms"
+              compact
+              keyboardType="decimal-pad"
+              onChangeText={setTargetWeight}
+              placeholder="Optional"
+              placeholderTextColor="#777777"
+              value={targetWeight}
+            />
+            <Text className="pl-2 text-xs leading-5 text-white/40">
+              Leave this blank to remove your target.
+            </Text>
+          </View>
+          {error ? (
+            <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+              <Text className="font-semibold text-danger">{error}</Text>
+            </AnimatedPresence>
+          ) : null}
+          <View className="gap-3">
+            <Button
+              label="Save target"
+              disabled={!targetWeightValid}
+              loading={isSaving}
+              onPress={() => void saveTargetWeight()}
+            />
+            <Button
+              label="Cancel"
+              variant="secondary"
+              disabled={isSaving}
+              onPress={closeModal}
+            />
+          </View>
+        </View>
+      </ModalWrapper>
 
       <ModalWrapper
         isOpen={openModal === 'goals'}

@@ -37,7 +37,136 @@ function isValidDateValue(value: string): boolean {
   return isLocalDateString(value);
 }
 
-function WeightChart({ entries }: { entries: WeightLogItem[] }) {
+function dayDifference(left: string, right: string): number {
+  return (
+    (parseLocalDate(left).getTime() - parseLocalDate(right).getTime()) /
+    86_400_000
+  );
+}
+
+function smoothedWeights(entries: WeightLogItem[]) {
+  return entries.map((entry, index) => {
+    const window = entries.slice(0, index + 1).filter((candidate) => {
+      const age = dayDifference(entry.recorded_on, candidate.recorded_on);
+      return age >= 0 && age <= 6;
+    });
+    const weighted = window.map((candidate) => {
+      const age = dayDifference(entry.recorded_on, candidate.recorded_on);
+      return {
+        weight: candidate.weight_kg,
+        factor: 7 - age,
+      };
+    });
+    const totalFactor = weighted.reduce((sum, item) => sum + item.factor, 0);
+    return {
+      ...entry,
+      smoothed_weight_kg:
+        weighted.reduce(
+          (sum, item) => sum + item.weight * item.factor,
+          0,
+        ) / totalFactor,
+    };
+  });
+}
+
+function weightProjection(
+  entries: WeightLogItem[],
+  targetWeight: number | null | undefined,
+) {
+  if (!targetWeight || entries.length < 4) return null;
+  const recentCutoff = localDateString(
+    new Date(
+      parseLocalDate(entries[entries.length - 1].recorded_on).getTime() -
+        55 * 86_400_000,
+    ),
+  );
+  const smoothed = smoothedWeights(entries).filter(
+    (entry) => entry.recorded_on >= recentCutoff,
+  );
+  if (smoothed.length < 4) return null;
+
+  const firstDate = smoothed[0].recorded_on;
+  const elapsedDays = dayDifference(
+    smoothed[smoothed.length - 1].recorded_on,
+    firstDate,
+  );
+  if (elapsedDays < 14) return null;
+
+  const points = smoothed.map((entry) => ({
+    x: dayDifference(entry.recorded_on, firstDate),
+    y: entry.smoothed_weight_kg,
+  }));
+  const meanX = points.reduce((sum, point) => sum + point.x, 0) / points.length;
+  const meanY = points.reduce((sum, point) => sum + point.y, 0) / points.length;
+  const denominator = points.reduce(
+    (sum, point) => sum + (point.x - meanX) ** 2,
+    0,
+  );
+  if (denominator === 0) return null;
+
+  const dailyChange =
+    points.reduce(
+      (sum, point) => sum + (point.x - meanX) * (point.y - meanY),
+      0,
+    ) / denominator;
+  const weeklyChange = dailyChange * 7;
+  const currentWeight = smoothed[smoothed.length - 1].smoothed_weight_kg;
+  const distance = targetWeight - currentWeight;
+  const movingTowardTarget =
+    Math.abs(distance) < 0.1 ||
+    (distance < 0 && dailyChange < 0) ||
+    (distance > 0 && dailyChange > 0);
+  const residuals = points.map(
+    (point) => point.y - (meanY + dailyChange * (point.x - meanX)),
+  );
+  const variability = Math.sqrt(
+    residuals.reduce((sum, value) => sum + value ** 2, 0) /
+      residuals.length,
+  );
+  const confidence =
+    smoothed.length >= 8 && elapsedDays >= 28 && variability <= 0.5
+      ? 'high'
+      : smoothed.length >= 5 && variability <= 0.8
+        ? 'moderate'
+        : 'low';
+
+  if (Math.abs(distance) < 0.1) {
+    return { status: 'reached' as const, weeklyChange, confidence };
+  }
+  if (Math.abs(weeklyChange) < 0.05) {
+    return { status: 'maintaining' as const, weeklyChange, confidence };
+  }
+  if (!movingTowardTarget || Math.abs(weeklyChange) > 2) {
+    return { status: 'away' as const, weeklyChange, confidence };
+  }
+
+  const daysRemaining = distance / dailyChange;
+  if (
+    !Number.isFinite(daysRemaining) ||
+    daysRemaining <= 0 ||
+    daysRemaining > 730
+  ) {
+    return { status: 'unreliable' as const, weeklyChange, confidence };
+  }
+  const projectedDate = parseLocalDate(
+    smoothed[smoothed.length - 1].recorded_on,
+  );
+  projectedDate.setDate(projectedDate.getDate() + Math.ceil(daysRemaining));
+  return {
+    status: 'projected' as const,
+    weeklyChange,
+    confidence,
+    projectedDate,
+  };
+}
+
+function WeightChart({
+  entries,
+  isLoading,
+}: {
+  entries: WeightLogItem[];
+  isLoading: boolean;
+}) {
   const width = 360;
   const height = 210;
   const left = 45;
@@ -48,10 +177,9 @@ function WeightChart({ entries }: { entries: WeightLogItem[] }) {
     if (entries.length === 0) {
       return { points: [], yTicks: [], xLabels: [] };
     }
-    const values = entries.map((_, index) => {
-      const window = entries.slice(Math.max(0, index - 2), index + 1);
-      return window.reduce((sum, item) => sum + item.weight_kg, 0) / window.length;
-    });
+    const values = smoothedWeights(entries).map(
+      (entry) => entry.smoothed_weight_kg,
+    );
     const rawMin = Math.min(...values);
     const rawMax = Math.max(...values);
     const rawRange = Math.max(rawMax - rawMin, 1);
@@ -97,14 +225,20 @@ function WeightChart({ entries }: { entries: WeightLogItem[] }) {
 
   if (chart.points.length === 0) {
     return (
-      <View className="h-40 items-center justify-center">
-        <Text className="text-sm text-white/40">Add a weight to start the chart.</Text>
+      <View className="h-[234px] items-center justify-center overflow-hidden rounded-2xl bg-[#181818]">
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <Text className="text-sm text-white/40">
+            Add a weight to start the chart.
+          </Text>
+        )}
       </View>
     );
   }
 
   return (
-    <View className="items-center overflow-hidden rounded-2xl bg-[#181818] py-3">
+    <View className="h-[234px] items-center overflow-hidden rounded-2xl bg-[#181818] py-3">
       <Svg height={height} viewBox={`0 0 ${width} ${height}`} width="100%">
         {chart.yTicks.map((tick) => (
           <Fragment key={tick.value}>
@@ -177,24 +311,10 @@ export function WeightTrackerScreen() {
   const change = data?.change_kg;
   const TrendIcon = (change ?? 0) <= 0 ? TrendingDown : TrendingUp;
   const { profile } = useProfile();
-  const projection = useMemo(() => {
-    const target = profile?.target_weight_kg;
-    if (!target || entries.length < 2) return null;
-    const first = entries[0];
-    const last = entries[entries.length - 1];
-    const elapsedDays = Math.max(
-      1,
-      (new Date(last.recorded_on).getTime() -
-        new Date(first.recorded_on).getTime()) /
-        86_400_000,
-    );
-    const dailyChange = (last.weight_kg - first.weight_kg) / elapsedDays;
-    const daysRemaining = (target - last.weight_kg) / dailyChange;
-    if (!Number.isFinite(daysRemaining) || daysRemaining <= 0) return null;
-    const result = new Date();
-    result.setDate(result.getDate() + Math.ceil(daysRemaining));
-    return result;
-  }, [entries, profile?.target_weight_kg]);
+  const projection = useMemo(
+    () => weightProjection(entries, profile?.target_weight_kg),
+    [entries, profile?.target_weight_kg],
+  );
 
   async function submit() {
     const didSave = await save({ weight_kg: weightValue, recorded_on: date });
@@ -221,7 +341,9 @@ export function WeightTrackerScreen() {
           </View>
 
           <View className="gap-4">
-            <AnimatedPresence className="rounded-3xl border border-white/10 bg-[#232220] p-4">
+            <AnimatedPresence
+              animateLayout={false}
+              className="rounded-3xl border border-white/10 bg-[#232220] p-4">
               <View className="flex-row items-end justify-between">
                 <View>
                   <Text className="text-xs font-black uppercase tracking-widest text-white/40">
@@ -246,15 +368,34 @@ export function WeightTrackerScreen() {
                 ) : null}
               </View>
               <View className="mt-4">
-                <WeightChart entries={recentEntries} />
+                <WeightChart entries={recentEntries} isLoading={isLoading} />
               </View>
               <Text className="mt-2 text-xs text-white/40">
-                Trend line uses a rolling three-entry average.
+                Trend line uses a time-weighted seven-day average.
               </Text>
               {projection ? (
-                <Text className="mt-2 text-sm font-bold text-protein">
-                  Current trend reaches your target around{' '}
-                  {projection.toLocaleDateString()}.
+                <View className="mt-2">
+                  <Text className="text-sm font-bold text-protein">
+                    {projection.status === 'projected'
+                      ? `Current trend reaches your target around ${projection.projectedDate.toLocaleDateString()}.`
+                      : projection.status === 'reached'
+                        ? 'Your smoothed trend is at your target.'
+                        : projection.status === 'maintaining'
+                          ? 'Your recent trend is maintaining your current weight.'
+                          : projection.status === 'away'
+                            ? 'Your recent trend is moving away from your target.'
+                            : 'Your recent trend is not stable enough for a target date.'}
+                  </Text>
+                  <Text className="mt-1 text-xs text-white/40">
+                    {projection.weeklyChange > 0 ? '+' : ''}
+                    {projection.weeklyChange.toFixed(2)} kg/week ·{' '}
+                    {projection.confidence} confidence
+                  </Text>
+                </View>
+              ) : profile?.target_weight_kg ? (
+                <Text className="mt-2 text-xs leading-5 text-white/40">
+                  Add at least four weigh-ins across two weeks to estimate a
+                  target date.
                 </Text>
               ) : null}
             </AnimatedPresence>

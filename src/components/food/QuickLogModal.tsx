@@ -1,10 +1,12 @@
 import { Check, Flame, X } from 'lucide-react-native';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
+import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
+import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useQuickLogForm } from '@/src/hooks/useQuickLogForm';
 import type { FoodItem, MealType } from '@/src/types/api';
 
@@ -26,12 +28,13 @@ export function QuickLogModal({
   const form = useQuickLogForm(food);
 
   return (
-    <Modal
-      animationType="slide"
-      onRequestClose={onDismiss}
-      presentationStyle="pageSheet"
-      visible={food !== null}>
-      <View className="flex-1 bg-canvas px-5 pb-8 pt-6">
+    <ModalWrapper
+      isOpen={food !== null}
+      onClose={onDismiss}
+      position="bottom">
+      <ScrollbarContainer
+        contentContainerClassName="bg-canvas px-5 pb-8 pt-6"
+        keyboardShouldPersistTaps="handled">
         <View className="flex-row items-center justify-between">
           <Text className="text-xs font-black uppercase tracking-widest text-accent">
             Quick log
@@ -103,7 +106,7 @@ export function QuickLogModal({
           loading={isSaving}
           onPress={() => void onSave(form.mealType, form.quantityG)}
         />
-      </View>
-    </Modal>
+      </ScrollbarContainer>
+    </ModalWrapper>
   );
 }

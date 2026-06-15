@@ -58,6 +58,7 @@ export type MealLogItem = {
 export type DashboardData = {
   progress: DailyMacroProgress;
   logs: MealLogItem[];
+  logged_dates: string[];
 };
 
 export type MealLogCreate = {
@@ -91,6 +92,22 @@ export type MealAnalysis = {
   total_protein: number;
   total_carbs: number;
   total_fats: number;
+  confidence_explanation: string;
+};
+
+export type NutritionLabelAnalysis = {
+  name: string | null;
+  brand: string | null;
+  serving_size_g: number;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  fiber: number;
+  sugar: number;
+  sodium_mg: number;
+  saturated_fat: number;
+  transcription: string;
   confidence_explanation: string;
 };
 
@@ -156,6 +173,7 @@ export type ProfileUpdate = {
   protein: number;
   carbs: number;
   fats: number;
+  target_weight_kg: number | null;
 };
 
 export type WeightLogItem = {

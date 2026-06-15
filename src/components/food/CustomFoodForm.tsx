@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
-import { Plus, Sparkles, X } from 'lucide-react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { Plus, ScanLine, Sparkles, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -8,7 +9,8 @@ import { InputBox } from '@/src/components/ui/InputBox';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useCustomFoods } from '@/src/hooks/useCustomFoods';
-import type { FoodItem } from '@/src/types/api';
+import { apiRequest } from '@/src/lib/api-client';
+import type { FoodItem, NutritionLabelAnalysis } from '@/src/types/api';
 
 type CustomFoodFormProps = {
   visible: boolean;
@@ -38,6 +40,8 @@ export function CustomFoodForm({
   const [sodium, setSodium] = useState('');
   const [saturatedFat, setSaturatedFat] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isScanningLabel, setIsScanningLabel] = useState(false);
+  const [labelReview, setLabelReview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const requiredNutritionIsValid = [calories, protein, carbs, fats].every(
     (value) => {
@@ -74,7 +78,65 @@ export function CustomFoodForm({
     setSodium(initialFood ? String(initialFood.sodium_mg) : '');
     setSaturatedFat(initialFood ? String(initialFood.saturated_fat) : '');
     setError(null);
+    setLabelReview(null);
   }, [initialFood, visible]);
+
+  async function scanNutritionLabel() {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) {
+      setError('Camera access is required to scan a nutrition label.');
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [3, 4],
+      quality: 0.9,
+      base64: true,
+    });
+    if (result.canceled) return;
+    const asset = result.assets[0];
+    if (!asset.base64) {
+      setError('The nutrition label photo could not be read.');
+      return;
+    }
+    setIsScanningLabel(true);
+    setError(null);
+    setLabelReview(null);
+    try {
+      const analysis = await apiRequest<NutritionLabelAnalysis>(
+        '/ai/analyze-nutrition-label',
+        {
+          method: 'POST',
+          timeoutMs: 90_000,
+          body: {
+            image_base64: asset.base64,
+            media_type: asset.mimeType ?? 'image/jpeg',
+          },
+        },
+      );
+      if (analysis.name) setName(analysis.name);
+      if (analysis.brand) setBrand(analysis.brand);
+      setCalories(String(analysis.calories));
+      setProtein(String(analysis.protein));
+      setCarbs(String(analysis.carbs));
+      setFats(String(analysis.fats));
+      setFiber(String(analysis.fiber));
+      setSugar(String(analysis.sugar));
+      setSodium(String(analysis.sodium_mg));
+      setSaturatedFat(String(analysis.saturated_fat));
+      setLabelReview(
+        `${analysis.confidence_explanation} Values were normalized per 100g from a ${analysis.serving_size_g}g serving. Review every field before saving.`,
+      );
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Unable to read this nutrition label.',
+      );
+    } finally {
+      setIsScanningLabel(false);
+    }
+  }
 
   async function save() {
     if (!formIsValid) return;
@@ -163,6 +225,31 @@ export function CustomFoodForm({
               </View>
 
               <View className="gap-4 px-2 pb-3 pt-4">
+                {!initialFood ? (
+                  <View className="gap-2">
+                    <Button
+                      icon={ScanLine}
+                      iconPosition="left"
+                      label="Scan nutrition label"
+                      loading={isScanningLabel}
+                      variant="outline"
+                      onPress={() => void scanNutritionLabel()}
+                    />
+                    <Text className="text-center text-xs leading-4 text-white/40">
+                      OCR transcribes the label, then AI checks units and likely
+                      digit errors. You must review the result before saving.
+                    </Text>
+                  </View>
+                ) : null}
+
+                {labelReview ? (
+                  <View className="rounded-2xl border border-protein/30 bg-protein/10 p-3">
+                    <Text className="text-sm font-semibold leading-5 text-protein">
+                      {labelReview}
+                    </Text>
+                  </View>
+                ) : null}
+
                 <View className="gap-2">
                   <View className="flex-row items-center gap-2">
                     <Sparkles color="#FF5A16" size={16} />

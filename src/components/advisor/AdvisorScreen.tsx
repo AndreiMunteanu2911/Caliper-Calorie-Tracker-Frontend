@@ -216,10 +216,14 @@ export function AdvisorScreen() {
               left: historyMenuPosition.left,
               overflow: 'hidden',
               position: 'absolute',
-              shadowColor: '#000000',
-              shadowOffset: { width: 0, height: 16 },
-              shadowOpacity: 0.32,
-              shadowRadius: 28,
+              ...(Platform.OS === 'web'
+                ? { boxShadow: '0 16px 28px rgba(0, 0, 0, 0.32)' }
+                : {
+                    shadowColor: '#000000',
+                    shadowOffset: { width: 0, height: 16 },
+                    shadowOpacity: 0.32,
+                    shadowRadius: 28,
+                  }),
               top: historyMenuPosition.top,
               width: Math.min(288, windowWidth - 24),
             }}>
