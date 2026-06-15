@@ -2,15 +2,16 @@ import { Camera, ImagePlus, Sparkles, Trash2 } from 'lucide-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
-import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
 import { apiRequest } from '@/src/lib/api-client';
 import { localNoonIso } from '@/src/lib/dates';
+import { motion } from '@/src/lib/motion';
 import type {
   EstimatedFood,
   FoodItem,
@@ -137,12 +138,20 @@ export function MealAnalysisPanel() {
         />
       </View>
       {analysis.error ? (
-        <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+        <Animated.View
+          className="rounded-2xl bg-dangerSoft p-4"
+          entering={motion.enter}
+          exiting={motion.exit}
+          layout={motion.layout}>
           <Text className="font-semibold text-danger">{analysis.error}</Text>
-        </AnimatedPresence>
+        </Animated.View>
       ) : null}
       {analysis.isAnalyzing ? (
-        <AnimatedPresence className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10 shadow-card">
+        <Animated.View
+          className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10 shadow-card"
+          entering={motion.enter}
+          exiting={motion.exit}
+          layout={motion.layout}>
           <LoadingSpinner size="large" />
           <Text className="mt-3 text-center text-base font-black text-white">
             Analyzing your meal
@@ -150,10 +159,14 @@ export function MealAnalysisPanel() {
           <Text className="mt-1.5 text-center text-sm leading-5 text-white/45">
             Estimating foods, portions, macros, and micronutrients...
           </Text>
-        </AnimatedPresence>
+        </Animated.View>
       ) : null}
       {analysis.analysis ? (
-        <AnimatedPresence className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-card">
+        <Animated.View
+          className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-card"
+          entering={motion.enter}
+          exiting={motion.exit}
+          layout={motion.layout}>
           <View>
             <Text className="text-xl font-black text-white">
               Review detected foods
@@ -224,7 +237,7 @@ export function MealAnalysisPanel() {
             }
             onPress={() => void logMeal()}
           />
-        </AnimatedPresence>
+        </Animated.View>
       ) : null}
     </View>
   );

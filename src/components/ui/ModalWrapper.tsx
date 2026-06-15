@@ -9,6 +9,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Animated, {
+  Easing,
+  ReduceMotion,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -37,7 +39,8 @@ export function ModalWrapper({
   const modalMaxHeight = Math.min(height * 0.9, 760);
   const [isMounted, setIsMounted] = useState(isOpen);
   const backdropOpacity = useSharedValue(0);
-  const translateY = useSharedValue(height);
+  const translateY = useSharedValue(isBottom ? 24 : 8);
+  const scale = useSharedValue(isBottom ? 1 : 0.985);
 
   useEffect(() => {
     if (isOpen) setIsMounted(true);
@@ -48,25 +51,54 @@ export function ModalWrapper({
 
     if (isOpen) {
       backdropOpacity.value = 0;
-      translateY.value = height;
+      translateY.value = isBottom ? 24 : 8;
+      scale.value = isBottom ? 1 : 0.985;
       const frame = requestAnimationFrame(() => {
-        backdropOpacity.value = withTiming(1, { duration: 180 });
-        translateY.value = withTiming(0, { duration: 260 });
+        backdropOpacity.value = withTiming(1, {
+          duration: 140,
+          easing: Easing.out(Easing.cubic),
+          reduceMotion: ReduceMotion.System,
+        });
+        translateY.value = withTiming(0, {
+          duration: 170,
+          easing: Easing.out(Easing.cubic),
+          reduceMotion: ReduceMotion.System,
+        });
+        scale.value = withTiming(1, {
+          duration: 170,
+          easing: Easing.out(Easing.cubic),
+          reduceMotion: ReduceMotion.System,
+        });
       });
       return () => cancelAnimationFrame(frame);
     }
 
-    backdropOpacity.value = withTiming(0, { duration: 180 });
-    translateY.value = withTiming(height, { duration: 230 }, (finished) => {
-      if (finished) runOnJS(setIsMounted)(false);
+    backdropOpacity.value = withTiming(0, {
+      duration: 100,
+      reduceMotion: ReduceMotion.System,
     });
-  }, [backdropOpacity, height, isMounted, isOpen, translateY]);
+    scale.value = withTiming(isBottom ? 1 : 0.99, {
+      duration: 120,
+      reduceMotion: ReduceMotion.System,
+    });
+    translateY.value = withTiming(
+      isBottom ? 18 : 6,
+      {
+        duration: 120,
+        easing: Easing.in(Easing.cubic),
+        reduceMotion: ReduceMotion.System,
+      },
+      (finished) => {
+        if (finished) runOnJS(setIsMounted)(false);
+      },
+    );
+  }, [backdropOpacity, isBottom, isMounted, isOpen, scale, translateY]);
 
   const backdropStyle = useAnimatedStyle(() => ({
     opacity: backdropOpacity.value,
   }));
   const containerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
+    transform: [{ translateY: translateY.value }, { scale: scale.value }],
   }));
 
   return (

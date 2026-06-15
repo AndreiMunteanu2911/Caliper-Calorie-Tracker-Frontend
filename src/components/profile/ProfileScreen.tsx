@@ -5,11 +5,11 @@ import {
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
 import { TdeeCalculatorModal } from '@/src/components/profile/TdeeCalculatorModal';
-import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
@@ -20,6 +20,7 @@ import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useProfile } from '@/src/hooks/useProfile';
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
+import { motion } from '@/src/lib/motion';
 import type { Profile, TdeeCalculationResponse } from '@/src/types/api';
 
 type TargetMode = 'grams' | 'percentages';
@@ -311,14 +312,22 @@ export function ProfileScreen() {
               />
 
               {error && !openModal ? (
-                <AnimatedPresence className="rounded-2xl bg-dangerSoft p-3.5">
+                <Animated.View
+                  className="rounded-2xl bg-dangerSoft p-3.5"
+                  entering={motion.enter}
+                  exiting={motion.exit}
+                  layout={motion.layout}>
                   <Text className="font-semibold text-danger">{error}</Text>
-                </AnimatedPresence>
+                </Animated.View>
               ) : null}
               {saved ? (
-                <AnimatedPresence className="rounded-2xl bg-successSoft p-3.5">
+                <Animated.View
+                  className="rounded-2xl bg-successSoft p-3.5"
+                  entering={motion.enter}
+                  exiting={motion.exit}
+                  layout={motion.layout}>
                   <Text className="font-semibold text-brand">Profile saved.</Text>
-                </AnimatedPresence>
+                </Animated.View>
               ) : null}
             </View>
           )}
@@ -352,9 +361,13 @@ export function ProfileScreen() {
             </View>
           </View>
           {error ? (
-            <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+            <Animated.View
+              className="rounded-2xl bg-dangerSoft p-4"
+              entering={motion.enter}
+              exiting={motion.exit}
+              layout={motion.layout}>
               <Text className="font-semibold text-danger">{error}</Text>
-            </AnimatedPresence>
+            </Animated.View>
           ) : null}
           <View className="gap-3">
             <Button
@@ -423,9 +436,13 @@ export function ProfileScreen() {
             </Text>
           </View>
           {error ? (
-            <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+            <Animated.View
+              className="rounded-2xl bg-dangerSoft p-4"
+              entering={motion.enter}
+              exiting={motion.exit}
+              layout={motion.layout}>
               <Text className="font-semibold text-danger">{error}</Text>
-            </AnimatedPresence>
+            </Animated.View>
           ) : null}
           <View className="gap-3">
             <Button
@@ -545,9 +562,13 @@ export function ProfileScreen() {
             </Text>
           ) : null}
           {error ? (
-            <AnimatedPresence className="rounded-2xl bg-dangerSoft p-4">
+            <Animated.View
+              className="rounded-2xl bg-dangerSoft p-4"
+              entering={motion.enter}
+              exiting={motion.exit}
+              layout={motion.layout}>
               <Text className="font-semibold text-danger">{error}</Text>
-            </AnimatedPresence>
+            </Animated.View>
           ) : null}
           <View className="gap-3">
             <Button

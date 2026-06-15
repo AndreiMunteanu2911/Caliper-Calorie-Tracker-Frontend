@@ -1,9 +1,10 @@
 import { Trash2 } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import Animated from 'react-native-reanimated';
 
-import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
+import { motion } from '@/src/lib/motion';
 import type { MealLogItem } from '@/src/types/api';
 
 type MealLogCardProps = {
@@ -46,7 +47,11 @@ export function MealLogCard({
   }
 
   return (
-    <AnimatedPresence className="rounded-2xl border border-white/10 bg-[#292929]">
+    <Animated.View
+      className="rounded-2xl border border-white/10 bg-[#292929]"
+      entering={motion.enter}
+      exiting={motion.exit}
+      layout={motion.layout}>
       <View className="flex-row items-start gap-2.5 py-2">
         <View className="w-1 self-stretch rounded-full bg-accent" />
         <Pressable
@@ -84,6 +89,6 @@ export function MealLogCard({
           </Pressable>
         )}
       </View>
-    </AnimatedPresence>
+    </Animated.View>
   );
 }

@@ -5,13 +5,13 @@ import Animated, {
   FadeInRight,
 } from 'react-native-reanimated';
 
-import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { apiRequest } from '@/src/lib/api-client';
+import { motion } from '@/src/lib/motion';
 import type {
   TdeeCalculationRequest,
   TdeeCalculationResponse,
@@ -350,11 +350,12 @@ export function TdeeCalculatorModal({
         </Animated.View>
 
         {error ? (
-          <AnimatedPresence
-            animateLayout={false}
-            className="rounded-2xl bg-dangerSoft p-3">
+          <Animated.View
+            className="rounded-2xl bg-dangerSoft p-3"
+            entering={motion.enter}
+            exiting={motion.exit}>
             <Text className="font-semibold text-danger">{error}</Text>
-          </AnimatedPresence>
+          </Animated.View>
         ) : null}
 
         <View className="flex-row gap-3">

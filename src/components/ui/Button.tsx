@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, Text, type PressableProps, View } from 'react-native';
 import Animated, {
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -69,11 +70,17 @@ export function Button({
         } ${isDisabled ? 'opacity-40' : ''}`}
         disabled={isDisabled}
         onPressIn={(event) => {
-          scale.value = withTiming(0.985, { duration: 80 });
+          scale.value = withTiming(0.98, {
+            duration: 70,
+            reduceMotion: ReduceMotion.System,
+          });
           onPressIn?.(event);
         }}
         onPressOut={(event) => {
-          scale.value = withTiming(1, { duration: 110 });
+          scale.value = withTiming(1, {
+            duration: 100,
+            reduceMotion: ReduceMotion.System,
+          });
           onPressOut?.(event);
         }}>
         {loading ? (
