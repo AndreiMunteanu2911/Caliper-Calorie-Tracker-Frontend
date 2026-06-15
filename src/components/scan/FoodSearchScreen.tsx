@@ -1,10 +1,11 @@
-import { ChevronLeft, Plus, Search } from 'lucide-react-native';
+import { Plus, Search } from 'lucide-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { CustomFoodForm } from '@/src/components/food/CustomFoodForm';
 import { AppPage } from '@/src/components/layout/AppPage';
+import { BackButton } from '@/src/components/ui/BackButton';
 import { Dropdown } from '@/src/components/ui/Dropdown';
 import { DropdownItem } from '@/src/components/ui/DropdownItem';
 import { InputBox } from '@/src/components/ui/InputBox';
@@ -58,12 +59,7 @@ export function FoodSearchScreen() {
         keyboardShouldPersistTaps="handled">
         <AppPage>
           <View className="flex-row items-center gap-3">
-            <Pressable
-              accessibilityLabel="Go back"
-              className="h-10 w-10 items-center justify-center rounded-xl bg-[#232220]"
-              onPress={() => router.back()}>
-              <ChevronLeft color="#FFFFFF" size={19} />
-            </Pressable>
+            <BackButton onPress={() => router.back()} />
             <View className="min-w-0 flex-1">
               <Text className="text-xl font-black text-white">Search foods</Text>
               <Text className="text-sm text-white/45">

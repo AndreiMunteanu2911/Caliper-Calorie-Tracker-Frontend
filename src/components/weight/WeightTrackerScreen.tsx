@@ -1,12 +1,11 @@
 import { useRouter } from 'expo-router';
 import {
   Check,
-  ChevronLeft,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react-native';
 import { Fragment, useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Svg, {
   Circle,
   Line,
@@ -15,6 +14,7 @@ import Svg, {
 } from 'react-native-svg';
 
 import { AppPage } from '@/src/components/layout/AppPage';
+import { BackButton } from '@/src/components/ui/BackButton';
 import { DeleteIconButton } from '@/src/components/ui/DeleteIconButton';
 import { Button } from '@/src/components/ui/Button';
 import { CalendarPicker } from '@/src/components/ui/CalendarPicker';
@@ -342,12 +342,7 @@ export function WeightTrackerScreen() {
         contentContainerClassName="pb-8 pt-4">
         <AppPage>
           <View className="mb-4 flex-row items-center gap-3">
-            <Pressable
-              accessibilityLabel="Go back"
-              className="h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-[#232323]"
-              onPress={() => router.back()}>
-              <ChevronLeft color="#FFFFFF" size={20} />
-            </Pressable>
+            <BackButton onPress={() => router.back()} />
             <View>
               <Text className="text-xl font-black text-white">Weight tracker</Text>
               <Text className="text-sm text-white/45">Log consistently to see the trend.</Text>

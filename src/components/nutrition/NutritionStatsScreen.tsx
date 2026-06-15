@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
-import { ChevronLeft } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { AppPage } from '@/src/components/layout/AppPage';
+import { BackButton } from '@/src/components/ui/BackButton';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import {
   type Period,
@@ -336,12 +336,7 @@ export function NutritionStatsScreen() {
         contentContainerClassName="pb-8 pt-4">
         <AppPage>
           <View className="mb-4 flex-row items-center gap-3">
-            <Pressable
-              accessibilityLabel="Go back"
-              className="h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-[#232323]"
-              onPress={() => router.back()}>
-              <ChevronLeft color="#FFFFFF" size={20} />
-            </Pressable>
+            <BackButton onPress={() => router.back()} />
             <Text className="text-xl font-black text-white">Nutrition stats</Text>
           </View>
 

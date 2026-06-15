@@ -1,10 +1,11 @@
 import { CameraView } from 'expo-camera';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Barcode, ChevronLeft, RefreshCcw } from 'lucide-react-native';
+import { Barcode, RefreshCcw } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/src/components/ui/Button';
+import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useBarcodeLookup } from '@/src/hooks/useBarcodeLookup';
 import { useBarcodeScanner } from '@/src/hooks/useBarcodeScanner';
@@ -91,12 +92,10 @@ export function BarcodeScannerScreen() {
         <View
           className="absolute inset-x-0 top-0 flex-row items-center px-5"
           style={{ paddingTop: insets.top + 12 }}>
-          <Pressable
+          <BackButton
             accessibilityLabel="Close barcode scanner"
-            className="h-11 w-11 items-center justify-center rounded-full bg-black/55"
-            onPress={() => router.back()}>
-            <ChevronLeft color="#FFFFFF" size={22} />
-          </Pressable>
+            onPress={() => router.back()}
+          />
           <Text className="ml-4 text-lg font-black text-white">Barcode scanner</Text>
         </View>
 

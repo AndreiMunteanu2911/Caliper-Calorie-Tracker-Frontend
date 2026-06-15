@@ -1,9 +1,10 @@
 import { Redirect, useRouter } from 'expo-router';
-import { ArrowLeft, ArrowRight } from 'lucide-react-native';
+import { ArrowRight } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppPage } from '@/src/components/layout/AppPage';
+import { BackButton } from '@/src/components/ui/BackButton';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
@@ -38,12 +39,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
         contentContainerClassName="grow justify-center py-5">
         <AppPage className="py-2">
           {!isSignIn ? (
-            <Pressable
-              accessibilityLabel="Back"
-              className="mb-4 h-10 w-10 items-center justify-center rounded-full bg-[#242424]"
-              onPress={() => router.back()}>
-              <ArrowLeft color="#FFFFFF" size={18} />
-            </Pressable>
+            <BackButton className="mb-4" onPress={() => router.back()} />
           ) : null}
 
           <Text className="text-2xl font-black tracking-tighter text-white">

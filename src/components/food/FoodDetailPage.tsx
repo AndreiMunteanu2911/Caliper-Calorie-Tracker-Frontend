@@ -1,12 +1,13 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Check, ChevronLeft, Flame, Scale, Utensils } from 'lucide-react-native';
+import { Check, Flame, Scale, Utensils } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MacroDonut } from '@/src/components/food/MacroDonut';
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
 import { AppPage } from '@/src/components/layout/AppPage';
+import { BackButton } from '@/src/components/ui/BackButton';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
@@ -122,12 +123,7 @@ export function FoodDetailPage() {
         contentContainerClassName="pb-8 pt-3">
         <AppPage>
           <View className="mb-4 flex-row items-center justify-between">
-            <Pressable
-              accessibilityLabel="Go back"
-              className="h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-[#232323]"
-              onPress={() => router.back()}>
-              <ChevronLeft color="#FFFFFF" size={20} />
-            </Pressable>
+            <BackButton onPress={() => router.back()} />
             <Text className="text-xs font-black uppercase tracking-widest text-white/45">
               {isEditing ? 'Edit diary item' : 'Food details'}
             </Text>
