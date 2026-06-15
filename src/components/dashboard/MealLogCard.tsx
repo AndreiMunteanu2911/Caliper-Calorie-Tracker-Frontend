@@ -56,13 +56,13 @@ export function MealLogCard({
           </Text>
           <View className="mt-2 flex-row gap-1.5">
             <View className="rounded-lg bg-protein/15 px-2 py-0.5">
-              <Text className="text-[10px] font-bold text-protein">{log.protein.toFixed(1)}g P</Text>
+              <Text className="text-xs font-bold text-protein">{log.protein.toFixed(1)}g P</Text>
             </View>
             <View className="rounded-lg bg-carbs/15 px-2 py-0.5">
-              <Text className="text-[10px] font-bold text-carbs">{log.carbs.toFixed(1)}g C</Text>
+              <Text className="text-xs font-bold text-carbs">{log.carbs.toFixed(1)}g C</Text>
             </View>
             <View className="rounded-lg bg-fats/15 px-2 py-0.5">
-              <Text className="text-[10px] font-bold text-fats">{log.fats.toFixed(1)}g F</Text>
+              <Text className="text-xs font-bold text-fats">{log.fats.toFixed(1)}g F</Text>
             </View>
           </View>
         </Pressable>

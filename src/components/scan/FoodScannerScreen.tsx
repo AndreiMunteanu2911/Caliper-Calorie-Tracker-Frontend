@@ -99,7 +99,7 @@ export function FoodScannerScreen() {
 
             <Pressable
               accessibilityRole="button"
-              className="flex-row items-center rounded-[24px] bg-accent p-4"
+              className="flex-row items-center rounded-3xl bg-accent p-4"
               onPress={() => router.push('/barcode-camera')}>
               <View className="h-12 w-12 items-center justify-center rounded-full bg-white/20">
                 <Barcode color="#FFFFFF" size={22} />
@@ -115,7 +115,7 @@ export function FoodScannerScreen() {
 
             <Pressable
               accessibilityRole="button"
-              className="flex-row items-center gap-3 rounded-[24px] border border-accent bg-brand p-4"
+              className="flex-row items-center gap-3 rounded-3xl border border-accent bg-brand p-4"
               onPress={() => setShowCustomFoodForm(true)}>
               <View className="h-12 w-12 items-center justify-center rounded-full border border-accent bg-brand">
                 <Plus color="#FF5A16" size={22} strokeWidth={2.5} />
@@ -129,13 +129,13 @@ export function FoodScannerScreen() {
               <ChevronRight color="#FF5A16" size={20} />
             </Pressable>
 
-            <View className="overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card sm:p-3.5">
-              <View className="relative overflow-hidden rounded-[24px] border border-white/30 bg-fats px-4 py-5 shadow-soft sm:px-6">
-                <View className="absolute -right-8 -top-10 h-28 w-28 rounded-full border-[18px] border-white/20" />
-                <Text className="text-[10px] font-black uppercase tracking-[1.2px] text-brand/55">
+            <View className="overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card sm:p-3.5">
+              <View className="relative overflow-hidden rounded-3xl border border-white/30 bg-fats px-4 py-5 shadow-soft sm:px-6">
+                <View className="absolute -right-8 -top-10 h-28 w-28 rounded-full border-8 border-white/20" />
+                <Text className="text-xs font-black uppercase tracking-widest text-brand/55">
                   Add to your day
                 </Text>
-                <Text className="mt-1 text-2xl font-black tracking-[-1.2px] text-brand">
+                <Text className="mt-1 text-2xl font-black tracking-tighter text-brand">
                   Search or photograph
                 </Text>
                 <Text className="mt-1 text-sm leading-5 text-brand/65">
@@ -143,8 +143,8 @@ export function FoodScannerScreen() {
                 </Text>
               </View>
 
-              <View className="mt-2.5 gap-5 rounded-[24px] border border-white/10 bg-[#141414] p-3.5 shadow-card sm:p-5">
-                <View className="flex-row rounded-[20px] border border-white/10 bg-[#242424] p-1 shadow-inner">
+              <View className="mt-2.5 gap-5 rounded-3xl border border-white/10 bg-[#141414] p-3.5 shadow-card sm:p-5">
+                <View className="flex-row rounded-2xl border border-white/10 bg-[#242424] p-1 shadow-inner">
                   {MODES.map((item) => {
                     const ModeIcon = item.icon;
                     const selected = state.mode === item.value;
@@ -188,7 +188,7 @@ export function FoodScannerScreen() {
                         value={state.query}
                       />
                       {search.isLoading ? (
-                        <View className="mt-3 items-center rounded-[24px] border border-white/10 bg-[#1C1C1C] py-6">
+                        <View className="mt-3 items-center rounded-3xl border border-white/10 bg-[#1C1C1C] py-6">
                           <LoadingSpinner />
                           <Text className="mt-2 text-sm font-semibold text-white/40">
                             Searching database...
@@ -201,7 +201,7 @@ export function FoodScannerScreen() {
                         </AnimatedPresence>
                       ) : null}
                       {!hasQuery ? (
-                        <View className="mt-3 items-center rounded-[24px] border border-white/10 bg-[#242424] p-6">
+                        <View className="mt-3 items-center rounded-3xl border border-white/10 bg-[#242424] p-6">
                           <View className="mb-3 h-12 w-12 items-center justify-center rounded-2xl bg-fats">
                             <Search color="#101010" size={20} strokeWidth={2.5} />
                           </View>
@@ -215,7 +215,7 @@ export function FoodScannerScreen() {
                         </View>
                       ) : null}
                       {showEmptyState ? (
-                        <View className="mt-3 items-center rounded-[24px] border border-white/10 bg-[#242424] p-6">
+                        <View className="mt-3 items-center rounded-3xl border border-white/10 bg-[#242424] p-6">
                           <View className="mb-3 h-12 w-12 items-center justify-center rounded-2xl bg-accentSoft">
                             <Search color="#FF5A16" size={20} strokeWidth={2.5} />
                           </View>

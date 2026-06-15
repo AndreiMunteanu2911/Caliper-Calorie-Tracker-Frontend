@@ -27,7 +27,7 @@ export function DropdownItem({
   return (
     <Pressable
       accessibilityRole="button"
-      className={`rounded-[16px] border border-white/[0.06] bg-[#232323] px-3.5 py-3 active:bg-white/[0.06] ${
+      className={`rounded-2xl border border-white/[0.06] bg-[#232323] px-3.5 py-3 active:bg-white/[0.06] ${
         isLast ? '' : 'mb-1.5'
       } ${className}`}
       onPress={onPress}>
@@ -45,17 +45,17 @@ export function DropdownItem({
           <View className="flex-row items-center gap-1.5">
             <Text className="text-xs font-bold text-white">
               {Math.round(calories)}
-              <Text className="text-[10px] font-bold text-white/40"> kcal</Text>
+              <Text className="text-xs font-bold text-white/40"> kcal</Text>
             </Text>
-            <Text className="text-[10px] text-white/20">·</Text>
+            <Text className="text-xs text-white/20">·</Text>
             <View className="flex-row gap-1.5">
-              <Text className="text-[10px] font-bold text-protein">
+              <Text className="text-xs font-bold text-protein">
                 P {protein.toFixed(1)}g
               </Text>
-              <Text className="text-[10px] font-bold text-carbs">
+              <Text className="text-xs font-bold text-carbs">
                 C {carbs.toFixed(1)}g
               </Text>
-              <Text className="text-[10px] font-bold text-fats">
+              <Text className="text-xs font-bold text-fats">
                 F {fats.toFixed(1)}g
               </Text>
             </View>

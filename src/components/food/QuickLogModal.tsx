@@ -33,7 +33,7 @@ export function QuickLogModal({
       visible={food !== null}>
       <View className="flex-1 bg-canvas px-5 pb-8 pt-6">
         <View className="flex-row items-center justify-between">
-          <Text className="text-xs font-black uppercase tracking-[1.5px] text-accent">
+          <Text className="text-xs font-black uppercase tracking-widest text-accent">
             Quick log
           </Text>
           <Pressable
@@ -62,30 +62,30 @@ export function QuickLogModal({
           />
         </View>
 
-        <View className="my-5 flex-row flex-wrap justify-between gap-3 rounded-[24px] bg-fatsSoft p-4 shadow-soft">
+        <View className="my-5 flex-row flex-wrap justify-between gap-3 rounded-3xl bg-fatsSoft p-4 shadow-soft">
           <View>
             <View className="flex-row items-center gap-1">
               <Flame color="#FF5A16" size={12} strokeWidth={2.5} />
-              <Text className="text-[10px] text-muted">Calories</Text>
+              <Text className="text-xs text-muted">Calories</Text>
             </View>
             <Text className="text-lg font-black text-brand">
               {Math.round(form.macros.calories)}
             </Text>
           </View>
           <View>
-            <Text className="text-[10px] text-muted">Protein</Text>
+            <Text className="text-xs text-muted">Protein</Text>
             <Text className="text-lg font-black text-ink">
               {form.macros.protein.toFixed(1)}g
             </Text>
           </View>
           <View>
-            <Text className="text-[10px] text-muted">Carbs</Text>
+            <Text className="text-xs text-muted">Carbs</Text>
             <Text className="text-lg font-black text-ink">
               {form.macros.carbs.toFixed(1)}g
             </Text>
           </View>
           <View>
-            <Text className="text-[10px] text-muted">Fats</Text>
+            <Text className="text-xs text-muted">Fats</Text>
             <Text className="text-lg font-black text-ink">
               {form.macros.fats.toFixed(1)}g
             </Text>

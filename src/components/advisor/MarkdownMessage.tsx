@@ -174,7 +174,7 @@ export function MarkdownMessage({ content }: MarkdownMessageProps) {
                   <Text className="w-5 font-black text-accent">
                     {block.ordered ? `${itemIndex + 1}.` : '-'}
                   </Text>
-                  <Text className="min-w-0 flex-1 text-[15px] leading-6 text-white/85">
+                  <Text className="min-w-0 flex-1 text-sm leading-6 text-white/85">
                     {inlineText(item)}
                   </Text>
                 </View>
@@ -217,7 +217,7 @@ export function MarkdownMessage({ content }: MarkdownMessageProps) {
           return <View className="h-px bg-white/10" key={key} />;
         }
         return (
-          <Text className="text-[15px] leading-6 text-white/85" key={key}>
+          <Text className="text-sm leading-6 text-white/85" key={key}>
             {inlineText(block.text)}
           </Text>
         );

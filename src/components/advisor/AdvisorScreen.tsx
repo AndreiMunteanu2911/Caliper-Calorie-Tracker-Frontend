@@ -99,10 +99,10 @@ export function AdvisorScreen() {
             </View>
 
             <View
-              className="z-0 min-h-0 flex-1 overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
+              className="z-0 min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
               <ScrollbarContainer
                 ref={listRef}
-                className="min-h-0 flex-1 rounded-[20px] border border-white/10 bg-[#141414] px-3.5 shadow-soft"
+                className="min-h-0 flex-1 rounded-2xl border border-white/10 bg-[#141414] px-3.5 shadow-soft"
                 contentContainerClassName="gap-2.5 py-4"
                 keyboardDismissMode="interactive"
                 keyboardShouldPersistTaps="handled"
@@ -145,7 +145,7 @@ export function AdvisorScreen() {
                       {item.role === 'assistant' ? (
                         <MarkdownMessage content={item.content} />
                       ) : (
-                        <Text className="text-[15px] font-semibold leading-6 text-white">
+                        <Text className="text-sm font-semibold leading-6 text-white">
                           {item.content}
                         </Text>
                       )}

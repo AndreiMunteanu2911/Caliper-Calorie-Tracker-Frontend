@@ -89,10 +89,10 @@ export function DiaryScreen() {
               <View className="absolute -right-8 -top-9 h-28 w-28 rounded-full border-8 border-white/10" />
               <View className="flex-row items-start justify-between">
                 <View>
-                  <Text className="text-[10px] font-black uppercase tracking-[1px] text-white/65">
+                  <Text className="text-xs font-black uppercase tracking-widest text-white/65">
                     Total today
                   </Text>
-                  <Text className="mt-1 text-2xl font-black tracking-[-0.6px] text-white">
+                  <Text className="mt-1 text-2xl font-black tracking-tight text-white">
                     {Math.round(totalCalories)}
                   </Text>
                   <Text className="mt-0.5 text-xs font-bold text-white/65">calories logged</Text>
@@ -108,7 +108,7 @@ export function DiaryScreen() {
                   { label: 'Fat', value: totalFats },
                 ].map((macro) => (
                   <View className="min-w-0 flex-1 rounded-xl bg-black/15 px-2 py-2" key={macro.label}>
-                    <Text className="text-[10px] font-bold text-white/55">{macro.label}</Text>
+                    <Text className="text-xs font-bold text-white/55">{macro.label}</Text>
                     <Text className="mt-0.5 text-xs font-black text-white">
                       {Math.round(macro.value)}g
                     </Text>
@@ -137,7 +137,7 @@ export function DiaryScreen() {
                         <Text className="text-sm font-black text-white">
                           {MEAL_LABELS[mealType]}
                         </Text>
-                        <Text className="text-[10px] font-semibold text-white/40">
+                        <Text className="text-xs font-semibold text-white/40">
                           {logs.length === 0
                             ? 'Nothing logged'
                             : `${logs.length} ${logs.length === 1 ? 'item' : 'items'}`}
@@ -149,7 +149,7 @@ export function DiaryScreen() {
                         {Math.round(calories)} kcal
                       </Text>
                       {logs.length > 0 ? (
-                        <Text className="text-[9px] font-bold text-white/40">
+                        <Text className="text-xs font-bold text-white/40">
                           P {Math.round(protein)} &middot; C {Math.round(carbs)} &middot; F {Math.round(fats)}
                         </Text>
                       ) : null}

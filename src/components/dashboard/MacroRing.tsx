@@ -19,11 +19,11 @@ export function MacroRing({
 
   return (
     <View className={`relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-white/40 p-4 shadow-card ${softColorClass}`}>
-      <View className="absolute -right-5 -top-6 h-20 w-20 rounded-full border-[12px] border-white/20" />
+      <View className="absolute -right-5 -top-6 h-20 w-20 rounded-full border-8 border-white/20" />
       <View className="flex-row items-start justify-between gap-3">
         <View>
           <Text className="text-xs font-black text-brand/60">{label}</Text>
-          <Text className="mt-1 text-2xl font-black tracking-[-1.4px] text-ink">
+          <Text className="mt-1 text-2xl font-black tracking-tighter text-ink">
             {Math.round(consumed)}
             <Text className="text-sm font-bold text-muted">g</Text>
           </Text>
@@ -42,7 +42,7 @@ export function MacroRing({
           style={{ width: barWidth * percentage }}
         />
       </View>
-      <Text className="mt-2 text-[10px] font-semibold text-brand/55">
+      <Text className="mt-2 text-xs font-semibold text-brand/55">
         {Math.round(target - consumed) > 0
           ? `${Math.round(target - consumed)}g left`
           : 'Target reached'}

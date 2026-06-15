@@ -17,10 +17,10 @@ export function SectionHeader({
   return (
     <View className="flex-row items-end justify-between gap-4">
       <View className="flex-1">
-        <Text className="text-[11px] font-black uppercase tracking-[2.2px] text-accent">
+        <Text className="text-xs font-black uppercase tracking-widest text-accent">
           {eyebrow}
         </Text>
-        <Text className="mt-2 text-3xl font-black tracking-[-1.6px] text-white">
+        <Text className="mt-2 text-3xl font-black tracking-tighter text-white">
           {title}
         </Text>
         {description ? (

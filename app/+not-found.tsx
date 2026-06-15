@@ -10,7 +10,7 @@ export default function NotFoundScreen() {
     <>
       <PageHead title="Page Not Found" />
       <PublicShell>
-        <View className="gap-8 rounded-[32px] border border-line bg-surface p-6 sm:p-8">
+        <View className="gap-8 rounded-3xl border border-line bg-surface p-6 sm:p-8">
         <View className="gap-2">
           <View className="mb-3 h-14 w-14 items-center justify-center rounded-2xl bg-fatsSoft">
             <SearchX color="#101010" size={25} strokeWidth={2.5} />

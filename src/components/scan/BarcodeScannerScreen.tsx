@@ -93,12 +93,12 @@ export function BarcodeScannerScreen() {
           <Text className="ml-4 text-lg font-black text-white">Barcode scanner</Text>
         </View>
 
-        <View className="pointer-events-none absolute inset-x-8 top-[28%] h-48 rounded-[30px] border-[3px] border-white">
+        <View className="pointer-events-none absolute inset-x-8 top-[28%] h-48 rounded-3xl border-4 border-white">
           <View className="absolute left-4 right-4 top-1/2 h-0.5 bg-accent" />
         </View>
 
         <View
-          className="absolute inset-x-0 bottom-0 rounded-t-[32px] bg-[#121212] px-5 pt-6"
+          className="absolute inset-x-0 bottom-0 rounded-t-3xl bg-[#121212] px-5 pt-6"
           style={{ paddingBottom: insets.bottom + 20 }}>
           {lookup.isLoading ? (
             <View className="items-center py-5">
@@ -110,7 +110,7 @@ export function BarcodeScannerScreen() {
               <Pressable
                 accessibilityHint="Opens food detail"
                 accessibilityRole="button"
-                className="rounded-[20px] border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
+                className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
                 onPress={() => navigateToFoodDetail(router, lookup.item!)}>
                 <Text className="text-base font-black text-white">{lookup.item.name}</Text>
                 {lookup.item.brand ? (

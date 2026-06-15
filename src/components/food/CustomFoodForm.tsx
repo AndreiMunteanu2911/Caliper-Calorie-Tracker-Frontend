@@ -96,14 +96,14 @@ export function CustomFoodForm({ visible, onDismiss }: CustomFoodFormProps) {
               contentContainerClassName="p-3"
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator>
-              <View className="relative overflow-hidden rounded-[24px] bg-carbs p-4">
-                <View className="absolute -right-8 -top-10 h-24 w-24 rounded-full border-[16px] border-white/25" />
+              <View className="relative overflow-hidden rounded-3xl bg-carbs p-4">
+                <View className="absolute -right-8 -top-10 h-24 w-24 rounded-full border-8 border-white/25" />
                 <View className="flex-row items-start justify-between">
                   <View className="min-w-0 flex-1 pr-4">
-                    <Text className="text-[10px] font-black uppercase tracking-[1.2px] text-brand/50">
+                    <Text className="text-xs font-black uppercase tracking-widest text-brand/50">
                       Your food library
                     </Text>
-                    <Text className="mt-1 text-2xl font-black tracking-[-1px] text-brand">
+                    <Text className="mt-1 text-2xl font-black tracking-tighter text-brand">
                       Create custom food
                     </Text>
                     <Text className="mt-1.5 text-sm leading-5 text-brand/60">

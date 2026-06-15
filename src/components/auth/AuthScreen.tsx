@@ -45,7 +45,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
             </Pressable>
           ) : null}
 
-          <Text className="text-2xl font-black tracking-[-1px] text-white">
+          <Text className="text-2xl font-black tracking-tighter text-white">
             {isSignIn ? 'Welcome Back to Caliper' : 'Create Your Caliper Account'}
           </Text>
           <Text className="mt-1 text-sm text-white/65">

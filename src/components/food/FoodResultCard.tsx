@@ -13,7 +13,7 @@ export function FoodResultCard({ food, onPress }: FoodResultCardProps) {
     <Pressable
       accessibilityHint="Opens quick log options"
       accessibilityRole="button"
-      className="rounded-[20px] border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
+      className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
       onPress={() => onPress(food)}>
       <View className="flex-row items-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded-2xl bg-carbs">

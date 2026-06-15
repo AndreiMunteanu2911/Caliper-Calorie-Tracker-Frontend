@@ -46,7 +46,7 @@ type SettingButtonProps = {
   onPress,
 }: SettingButtonProps) {
   return (
-    <View className="flex-row items-center gap-3 rounded-[20px] border border-white/10 bg-[#232220] p-3.5">
+    <View className="flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[#232220] p-3.5">
       <View className="min-w-0 flex-1">
         <Text className="text-sm font-black text-white">{title}</Text>
         <Text className="mt-0.5 text-sm leading-5 text-white/45">{description}</Text>
@@ -231,7 +231,7 @@ export function ProfileScreen() {
             </View>
           ) : (
             <View className="mt-6 gap-3.5">
-              <View className="items-center rounded-[24px] border border-white/10 bg-[#232220] p-5">
+              <View className="items-center rounded-3xl border border-white/10 bg-[#232220] p-5">
                 <View className="h-16 w-16 items-center justify-center rounded-full bg-fats">
                   <UserRound color="#121212" size={28} />
                 </View>
@@ -295,7 +295,7 @@ export function ProfileScreen() {
           </View>
           <View className="gap-1.5">
             <Text className="pl-2 text-sm font-bold text-white/70">Email</Text>
-            <View className="min-h-14 justify-center rounded-[18px] border border-white/5 bg-[#151515] px-4 opacity-60">
+            <View className="min-h-14 justify-center rounded-2xl border border-white/5 bg-[#151515] px-4 opacity-60">
               <Text className="text-base text-white">{profile?.email}</Text>
             </View>
           </View>
@@ -359,7 +359,7 @@ export function ProfileScreen() {
                   (Auto-calculated from gram values)
                 </Text>
               </View>
-              <View className="relative min-h-14 justify-center rounded-[18px] border border-white/10 bg-[#141414] px-4 pr-14">
+              <View className="relative min-h-14 justify-center rounded-2xl border border-white/10 bg-[#141414] px-4 pr-14">
                 <Text className="text-lg font-black text-white">
                   {Math.round(calculatedCalories)}
                 </Text>

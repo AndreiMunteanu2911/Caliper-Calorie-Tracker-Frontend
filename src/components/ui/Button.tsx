@@ -89,7 +89,7 @@ export function Button({
                 strokeWidth={2.5}
               />
             ) : null}
-            <Text className={`text-sm font-black tracking-[-0.2px] ${TEXT_CLASSES[variant]}`}>
+            <Text className={`text-sm font-black tracking-tight ${TEXT_CLASSES[variant]}`}>
               {label}
             </Text>
             {Icon && iconPosition === 'right' ? (

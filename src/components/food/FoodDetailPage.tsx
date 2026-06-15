@@ -108,21 +108,21 @@ export function FoodDetailPage() {
               onPress={() => router.back()}>
               <ChevronLeft color="#FFFFFF" size={20} />
             </Pressable>
-            <Text className="text-xs font-black uppercase tracking-[1.2px] text-white/45">
+            <Text className="text-xs font-black uppercase tracking-widest text-white/45">
               {isEditing ? 'Edit diary item' : 'Food details'}
             </Text>
             <View className="h-10 w-10" />
           </View>
 
-          <View className="overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
-            <View className="relative overflow-hidden rounded-[24px] bg-accent p-4">
-              <View className="absolute -right-8 -top-8 h-28 w-28 rounded-full border-[18px] border-white/20" />
+          <View className="overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
+            <View className="relative overflow-hidden rounded-3xl bg-accent p-4">
+              <View className="absolute -right-8 -top-8 h-28 w-28 rounded-full border-8 border-white/20" />
               <View className="flex-row items-start justify-between gap-3">
                 <View className="min-w-0 flex-1">
-                  <Text className="text-[10px] font-black text-white/70">
+                  <Text className="text-xs font-black text-white/70">
                     Per 100g
                   </Text>
-                  <Text className="mt-1 text-2xl font-black tracking-[-1px] text-white">
+                  <Text className="mt-1 text-2xl font-black tracking-tighter text-white">
                     {food.name}
                   </Text>
                   {food.brand ? (
@@ -145,7 +145,7 @@ export function FoodDetailPage() {
                   <View className="flex-row items-center gap-2">
                     <Text className="text-xs font-black text-white/75">Calories</Text>
                   </View>
-                  <Text className="mt-1 text-3xl font-black tracking-[-1.5px] text-white">
+                  <Text className="mt-1 text-3xl font-black tracking-tighter text-white">
                     {Math.round(food.calories)}
                   </Text>
                   <Text className="text-sm font-bold text-white/70">kcal</Text>
@@ -159,7 +159,7 @@ export function FoodDetailPage() {
                   className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#292929] px-2.5 py-2.5"
                   key={macro.key}>
                   <View className={`mb-1.5 h-1.5 w-6 rounded-full ${macro.color}`} />
-                  <Text className="text-[10px] font-bold text-white/45">{macro.label}</Text>
+                  <Text className="text-xs font-bold text-white/45">{macro.label}</Text>
                   <Text className={`mt-0.5 text-base font-black ${macro.text}`}>
                     {food[macro.key].toFixed(1)}g
                   </Text>
@@ -168,7 +168,7 @@ export function FoodDetailPage() {
             </View>
           </View>
 
-          <View className="mt-3.5 gap-4 rounded-[24px] border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
+          <View className="mt-3.5 gap-4 rounded-3xl border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
             <View className="gap-2">
               <View className="flex-row items-center gap-2">
                 <Scale color="#FF5A16" size={15} strokeWidth={2.5} />
@@ -182,13 +182,13 @@ export function FoodDetailPage() {
                 selectTextOnFocus
                 value={weight}
               />
-              <Text className="text-[10px] font-semibold text-white/35">
+              <Text className="text-xs font-semibold text-white/35">
                 Enter the portion weight in grams.
               </Text>
             </View>
 
-            <View className="rounded-[20px] bg-accent px-4 py-3.5">
-              <Text className="text-[10px] font-black uppercase tracking-[1px] text-white/60">
+            <View className="rounded-2xl bg-accent px-4 py-3.5">
+              <Text className="text-xs font-black uppercase tracking-widest text-white/60">
                 This portion
               </Text>
               <View className="mt-1.5 flex-row items-end justify-between gap-3">

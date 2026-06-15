@@ -14,11 +14,11 @@ export function MealAnalysisPanel() {
 
   return (
     <View className="gap-4">
-      <View className="rounded-[24px] border border-white/10 bg-[#242424] p-4 shadow-soft">
+      <View className="rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-soft">
         <View className="mb-3 h-10 w-10 items-center justify-center rounded-2xl bg-fats">
           <Sparkles color="#101010" size={19} strokeWidth={2.6} />
         </View>
-        <Text className="text-xl font-black tracking-[-0.6px] text-white">Analyze a meal</Text>
+        <Text className="text-xl font-black tracking-tight text-white">Analyze a meal</Text>
         <Text className="mt-1.5 text-sm leading-5 text-white/55">
           Add optional context, then photograph your meal or choose an existing image.
         </Text>

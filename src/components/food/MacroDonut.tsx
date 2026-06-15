@@ -61,7 +61,7 @@ export function MacroDonut({ protein, carbs, fats, size = VIEWBOX }: MacroDonutP
                     );
                 })}
             </Svg>
-            <Text className="absolute text-[22px] text-white font-black tracking-wider">
+            <Text className="absolute text-xl text-white font-black tracking-wider">
                 {total > 0 ? `${Math.round(total)}g` : '-'}
             </Text>
         </View>

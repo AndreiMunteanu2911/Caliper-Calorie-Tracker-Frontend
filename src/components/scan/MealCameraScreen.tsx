@@ -89,12 +89,12 @@ export function MealCameraScreen() {
           </Pressable>
         </View>
 
-        <View className="pointer-events-none absolute inset-x-10 top-[22%] h-[44%] rounded-[36px] border-[3px] border-white">
+        <View className="pointer-events-none absolute inset-x-10 top-[22%] h-[44%] rounded-3xl border-4 border-white">
           <View className="absolute left-0 right-0 top-1/2 h-px bg-accent" />
         </View>
 
         <View
-          className="absolute inset-x-0 bottom-0 items-center rounded-t-[32px] bg-[#121212] px-6 pt-6"
+          className="absolute inset-x-0 bottom-0 items-center rounded-t-3xl bg-[#121212] px-6 pt-6"
           style={{ paddingBottom: insets.bottom + 20 }}>
           <View className="mb-7 flex-row items-center gap-2 rounded-2xl bg-[#2F2F2F] px-4 py-3">
             <ImageIcon color="#DDC0FF" size={18} />
@@ -105,7 +105,7 @@ export function MealCameraScreen() {
           <Pressable
             accessibilityLabel="Take meal photo"
             accessibilityRole="button"
-            className="h-20 w-20 items-center justify-center rounded-full border-[3px] border-white"
+            className="h-20 w-20 items-center justify-center rounded-full border-4 border-white"
             disabled={isCapturing}
             onPress={() => void capture()}>
             <View className="h-16 w-16 rounded-full bg-white" />

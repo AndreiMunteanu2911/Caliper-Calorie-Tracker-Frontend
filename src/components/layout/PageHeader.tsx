@@ -15,7 +15,7 @@ export function PageHeader({
   return (
     <View className="flex-row items-end justify-between gap-3">
       <View className="min-w-0 flex-1">
-        <Text className="text-xl font-black leading-6 tracking-[-0.4px] text-white sm:text-2xl">
+        <Text className="text-xl font-black leading-6 tracking-tight text-white sm:text-2xl">
           {title}
         </Text>
         <Text className="mt-0.5 max-w-2xl text-sm leading-5 text-white/55">

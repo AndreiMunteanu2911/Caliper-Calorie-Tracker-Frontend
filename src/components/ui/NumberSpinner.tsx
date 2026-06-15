@@ -97,7 +97,7 @@ export function NumberSpinner({
   }, [stopHold]);
 
   return (
-      <View className="min-w-[90px] flex-1 gap-1">
+      <View className="min-w-24 flex-1 gap-1">
         <Text className="pl-2 text-xs font-bold text-white/70">{label}</Text>
         <View
             accessibilityActions={[
@@ -106,7 +106,7 @@ export function NumberSpinner({
             ]}
             accessibilityLabel={`${label}, ${roundedValue} ${suffix}`}
             accessibilityRole="adjustable"
-            className="h-24 overflow-hidden rounded-[16px] border border-white/10 bg-[#141414]"
+            className="h-24 overflow-hidden rounded-2xl border border-white/10 bg-[#141414]"
             onAccessibilityAction={(event) =>
                 update(event.nativeEvent.actionName === 'increment' ? 1 : -1)
             }>
@@ -118,7 +118,7 @@ export function NumberSpinner({
             <View className="flex-1" />
             <ChevronUp color="#FF5A16" size={13} />
             <View className="flex-1 items-start pl-2">
-              <Text className="text-[10px] font-black text-accent">
+              <Text className="text-xs font-black text-accent">
                 {clamp(roundedValue + step, min, max)}
               </Text>
             </View>
@@ -141,7 +141,7 @@ export function NumberSpinner({
                 key={roundedValue}>
               <Text className="text-lg font-black text-white">
                 {roundedValue}
-                <Text className="text-[10px] font-bold text-white/40"> {suffix}</Text>
+                <Text className="text-xs font-bold text-white/40"> {suffix}</Text>
               </Text>
             </Animated.View>
           </View>
@@ -153,7 +153,7 @@ export function NumberSpinner({
             <View className="flex-1" />
             <ChevronDown color="#FF5A16" size={13} />
             <View className="flex-1 items-start pl-2">
-              <Text className="text-[10px] font-black text-accent">
+              <Text className="text-xs font-black text-accent">
                 {clamp(roundedValue - step, min, max)}
               </Text>
             </View>

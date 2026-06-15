@@ -75,7 +75,7 @@ export function DashboardScreen() {
             const isToday = index === mondayOffset;
             return (
               <View className="flex-1 items-center gap-1" key={day}>
-                <Text className="text-[10px] font-semibold text-ink/80">{day}</Text>
+                <Text className="text-xs font-semibold text-ink/80">{day}</Text>
                 <View
                   className={`h-8 w-8 items-center justify-center rounded-full ${
                     isToday ? 'bg-fats' : ''
@@ -87,7 +87,7 @@ export function DashboardScreen() {
           })}
         </View>
 
-        <Text className="mb-3 mt-5 text-base font-black tracking-[-0.3px] text-white sm:text-lg">
+        <Text className="mb-3 mt-5 text-base font-black tracking-tight text-white sm:text-lg">
           Count Your Daily Calories
         </Text>
 
@@ -149,10 +149,10 @@ export function DashboardScreen() {
                 />
               </View>
               <View className="mt-2 flex-row justify-between">
-                <Text className="text-[10px] font-semibold text-ink/60">
+                <Text className="text-xs font-semibold text-ink/60">
                   {Math.round(progress.consumed.calories)} eaten
                 </Text>
-                <Text className="text-[10px] font-semibold text-ink/60">
+                <Text className="text-xs font-semibold text-ink/60">
                   {Math.round(progress.targets.calories)} goal
                 </Text>
               </View>
