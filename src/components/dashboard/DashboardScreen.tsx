@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import { LogOut, ScanLine } from 'lucide-react-native';
+import { useRef, useState } from 'react';
 import { Pressable, RefreshControl, Text, View } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 
 import { MacroRing } from '@/src/components/dashboard/MacroRing';
 import { AppPage } from '@/src/components/layout/AppPage';
@@ -24,6 +26,8 @@ export function DashboardScreen() {
   const caloriePercentage = progress?.targets.calories
     ? Math.min(progress.consumed.calories / progress.targets.calories, 1)
     : 0;
+  const [calorieBarWidth, setCalorieBarWidth] = useState(0);
+  const calorieBarRef = useRef<View>(null);
 
   if (isAuthLoading) {
     return (
@@ -101,17 +105,47 @@ export function DashboardScreen() {
                 <Text className="text-sm font-black text-ink">Calories remaining</Text>
               </View>
               <View className="my-4 items-center">
-                <View className="h-28 w-28 items-center justify-center rounded-full border-8 border-brand">
+                <View className="h-28 w-28 items-center justify-center">
+                  <Svg
+                    className="absolute"
+                    height={112}
+                    viewBox="0 0 112 112"
+                    width={112}>
+                    <Circle
+                      cx={56}
+                      cy={56}
+                      fill="none"
+                      r={48}
+                      stroke="#101010"
+                      strokeOpacity={0.1}
+                      strokeWidth={8}
+                    />
+                    <Circle
+                      cx={56}
+                      cy={56}
+                      fill="none"
+                      r={48}
+                      stroke="#101010"
+                      strokeDasharray={2 * Math.PI * 48}
+                      strokeDashoffset={2 * Math.PI * 48 * (1 - caloriePercentage)}
+                      strokeLinecap="round"
+                      strokeWidth={8}
+                      transform="rotate(-90 56 56)"
+                    />
+                  </Svg>
                   <Text className="text-2xl font-black text-ink">
                     {Math.max(0, Math.round(progress.remaining.calories))}
                   </Text>
                   <Text className="mt-0.5 text-xs text-ink/65">Left</Text>
                 </View>
               </View>
-              <View className="h-1 overflow-hidden rounded-full bg-brand/10">
+              <View
+                className="h-1 overflow-hidden rounded-full bg-brand/10"
+                ref={calorieBarRef}
+                onLayout={(e) => setCalorieBarWidth(e.nativeEvent.layout.width)}>
                 <View
                   className="h-full rounded-full bg-brand"
-                  style={{ width: `${caloriePercentage * 100}%` }}
+                  style={{ width: calorieBarWidth * caloriePercentage }}
                 />
               </View>
               <View className="mt-2 flex-row justify-between">

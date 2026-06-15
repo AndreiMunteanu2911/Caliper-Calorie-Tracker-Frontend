@@ -40,42 +40,44 @@ export function MealLogCard({
   }
 
   return (
-    <AnimatedPresence className="flex-row items-center gap-2.5 rounded-2xl border border-white/10 bg-[#292929] px-3.5 py-3">
-      <View className="h-10 w-1 rounded-full bg-accent" />
-      <Pressable
-        accessibilityHint="Edit this food"
-        accessibilityRole="button"
-        className="min-w-0 flex-1"
-        onPress={navigateToEdit}>
-        <Text className="text-sm font-black text-white" numberOfLines={1}>
-          {log.food_name}
-        </Text>
-        <Text className="mt-0.5 text-xs font-semibold text-white/40">
-          {Math.round(log.quantity_g)}g &middot; {Math.round(log.calories)} kcal
-        </Text>
-        <View className="mt-2 flex-row gap-1.5">
-          <View className="rounded-lg bg-protein/15 px-2 py-0.5">
-            <Text className="text-[10px] font-bold text-protein">{log.protein.toFixed(1)}g P</Text>
-          </View>
-          <View className="rounded-lg bg-carbs/15 px-2 py-0.5">
-            <Text className="text-[10px] font-bold text-carbs">{log.carbs.toFixed(1)}g C</Text>
-          </View>
-          <View className="rounded-lg bg-fats/15 px-2 py-0.5">
-            <Text className="text-[10px] font-bold text-fats">{log.fats.toFixed(1)}g F</Text>
-          </View>
-        </View>
-      </Pressable>
-      {isMutating ? (
-        <LoadingSpinner />
-      ) : (
+    <AnimatedPresence className="rounded-2xl border border-white/10 bg-[#292929]">
+      <View className="flex-row items-start gap-2.5 py-2">
+        <View className="w-1 self-stretch rounded-full bg-accent" />
         <Pressable
-          accessibilityLabel={`Delete ${log.food_name}`}
+          accessibilityHint="Edit this food"
           accessibilityRole="button"
-          className="h-9 w-9 items-center justify-center rounded-xl bg-dangerSoft"
-          onPress={() => void onDelete(log)}>
-          <Trash2 color="#C64035" size={14} strokeWidth={2.4} />
+          className="min-w-0 flex-1"
+          onPress={navigateToEdit}>
+          <Text className="text-sm font-black text-white" numberOfLines={1}>
+            {log.food_name}
+          </Text>
+          <Text className="mt-0.5 text-xs font-semibold text-white/40">
+            {Math.round(log.quantity_g)}g &middot; {Math.round(log.calories)} kcal
+          </Text>
+          <View className="mt-2 flex-row gap-1.5">
+            <View className="rounded-lg bg-protein/15 px-2 py-0.5">
+              <Text className="text-[10px] font-bold text-protein">{log.protein.toFixed(1)}g P</Text>
+            </View>
+            <View className="rounded-lg bg-carbs/15 px-2 py-0.5">
+              <Text className="text-[10px] font-bold text-carbs">{log.carbs.toFixed(1)}g C</Text>
+            </View>
+            <View className="rounded-lg bg-fats/15 px-2 py-0.5">
+              <Text className="text-[10px] font-bold text-fats">{log.fats.toFixed(1)}g F</Text>
+            </View>
+          </View>
         </Pressable>
-      )}
+        {isMutating ? (
+          <LoadingSpinner />
+        ) : (
+          <Pressable
+            accessibilityLabel={`Delete ${log.food_name}`}
+            accessibilityRole="button"
+            className="h-8 w-8 items-center justify-center rounded-lg border border-accent bg-brand"
+            onPress={() => void onDelete(log)}>
+            <Trash2 color="#FF5A16" size={13} strokeWidth={2.4} />
+          </Pressable>
+        )}
+      </View>
     </AnimatedPresence>
   );
 }

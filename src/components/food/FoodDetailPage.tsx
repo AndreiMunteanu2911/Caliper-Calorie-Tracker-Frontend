@@ -83,7 +83,7 @@ export function FoodDetailPage() {
           body: { food, meal_type: mealType, quantity_g: quantity },
         });
       }
-      router.back();
+      router.replace('/diary');
     } catch (requestError) {
       setError(
         requestError instanceof Error

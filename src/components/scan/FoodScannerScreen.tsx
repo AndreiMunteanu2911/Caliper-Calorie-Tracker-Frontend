@@ -113,6 +113,22 @@ export function FoodScannerScreen() {
               <ChevronRight color="#FFFFFF" size={20} />
             </Pressable>
 
+            <Pressable
+              accessibilityRole="button"
+              className="flex-row items-center gap-3 rounded-[24px] border border-accent bg-brand p-4"
+              onPress={() => setShowCustomFoodForm(true)}>
+              <View className="h-12 w-12 items-center justify-center rounded-full border border-accent bg-brand">
+                <Plus color="#FF5A16" size={22} strokeWidth={2.5} />
+              </View>
+              <View className="flex-1">
+                <Text className="text-lg font-black text-accent">Add a custom food</Text>
+                <Text className="mt-0.5 text-sm text-accent/65">
+                  Create your own nutrition entry
+                </Text>
+              </View>
+              <ChevronRight color="#FF5A16" size={20} />
+            </Pressable>
+
             <View className="overflow-hidden rounded-[28px] border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card sm:p-3.5">
               <View className="relative overflow-hidden rounded-[24px] border border-white/30 bg-fats px-4 py-5 shadow-soft sm:px-6">
                 <View className="absolute -right-8 -top-10 h-28 w-28 rounded-full border-[18px] border-white/20" />

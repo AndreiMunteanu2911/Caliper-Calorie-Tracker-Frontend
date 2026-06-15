@@ -95,7 +95,7 @@ export function DiaryScreen() {
                   <Text className="mt-1 text-2xl font-black tracking-[-0.6px] text-white">
                     {Math.round(totalCalories)}
                   </Text>
-                  <Text className="mt-0.5 text-[10px] font-bold text-white/65">calories logged</Text>
+                  <Text className="mt-0.5 text-xs font-bold text-white/65">calories logged</Text>
                 </View>
                 <View className="h-8 w-8 items-center justify-center rounded-full bg-white/20">
                   <Utensils color="#FFFFFF" size={15} strokeWidth={2} />
@@ -120,6 +120,9 @@ export function DiaryScreen() {
             {MEAL_TYPES.map((mealType) => {
               const logs = data.logs.filter((log) => log.meal_type === mealType);
               const calories = logs.reduce((sum, log) => sum + log.calories, 0);
+              const protein = logs.reduce((sum, log) => sum + log.protein, 0);
+              const carbs = logs.reduce((sum, log) => sum + log.carbs, 0);
+              const fats = logs.reduce((sum, log) => sum + log.fats, 0);
               const { icon: MealIcon, color, background } = MEAL_META[mealType];
               return (
                 <View
@@ -141,9 +144,16 @@ export function DiaryScreen() {
                         </Text>
                       </View>
                     </View>
-                    <Text className="text-[10px] font-black text-white/65">
-                      {Math.round(calories)} kcal
-                    </Text>
+                    <View className="items-end gap-0.5">
+                      <Text className="text-xs font-black text-white/65">
+                        {Math.round(calories)} kcal
+                      </Text>
+                      {logs.length > 0 ? (
+                        <Text className="text-[9px] font-bold text-white/40">
+                          P {Math.round(protein)} &middot; C {Math.round(carbs)} &middot; F {Math.round(fats)}
+                        </Text>
+                      ) : null}
+                    </View>
                   </View>
                   {logs.length > 0 ? (
                     <View className="mt-1.5 gap-1.5">

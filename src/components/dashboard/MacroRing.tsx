@@ -1,10 +1,5 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 
 type MacroRingProps = {
   label: string;
@@ -20,14 +15,7 @@ export function MacroRing({
   softColorClass,
 }: MacroRingProps) {
   const percentage = target > 0 ? Math.min(consumed / target, 1) : 0;
-  const progress = useSharedValue(0);
-  const progressStyle = useAnimatedStyle(() => ({
-    width: `${progress.value * 100}%`,
-  }));
-
-  useEffect(() => {
-    progress.value = withTiming(percentage, { duration: 240 });
-  }, [percentage, progress]);
+  const [barWidth, setBarWidth] = useState(0);
 
   return (
     <View className={`relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-white/40 p-4 shadow-card ${softColorClass}`}>
@@ -46,10 +34,12 @@ export function MacroRing({
           </Text>
         </View>
       </View>
-      <View className="mt-5 h-1.5 overflow-hidden rounded-full bg-brand/10">
-        <Animated.View
+      <View
+        className="mt-5 h-1.5 overflow-hidden rounded-full bg-brand/10"
+        onLayout={(e) => setBarWidth(e.nativeEvent.layout.width)}>
+        <View
           className="h-full rounded-full bg-brand"
-          style={progressStyle}
+          style={{ width: barWidth * percentage }}
         />
       </View>
       <Text className="mt-2 text-[10px] font-semibold text-brand/55">
