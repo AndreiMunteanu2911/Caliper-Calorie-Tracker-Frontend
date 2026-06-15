@@ -1,4 +1,4 @@
-import { ChevronLeft, Pencil, Plus, Search, Star, Trash2 } from 'lucide-react-native';
+import { ChevronLeft, Pencil, Plus, Search, Star } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -6,6 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 import { CustomFoodForm } from '@/src/components/food/CustomFoodForm';
 import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
+import { DeleteIconButton } from '@/src/components/ui/DeleteIconButton';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
@@ -132,16 +133,14 @@ export function CustomFoodLibraryScreen() {
                     onPress={() => openEdit(food)}>
                     <Pencil color="#FFFFFF" size={15} />
                   </Pressable>
-                  <Pressable
+                  <DeleteIconButton
                     accessibilityLabel={`Delete ${food.name}`}
-                    className="h-9 w-9 items-center justify-center rounded-xl bg-white/5"
                     onPress={() =>
                       void remove(food.external_id).catch(() =>
                         setError('Unable to delete custom food.'),
                       )
-                    }>
-                    <Trash2 color="#C64035" size={15} />
-                  </Pressable>
+                    }
+                  />
                 </View>
               ))}
             </View>

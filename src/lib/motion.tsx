@@ -114,7 +114,10 @@ export function MotionPressable({
           {...props}
           className={className}
           disabled={disabled}
-          style={[fill ? { flex: 1 } : null, props.style]}
+          style={(state) => [
+            fill ? { flex: 1 } : null,
+            typeof props.style === 'function' ? props.style(state) : props.style,
+          ]}
           onPressIn={(event) => {
             setPressed(true);
             onPressIn?.(event);

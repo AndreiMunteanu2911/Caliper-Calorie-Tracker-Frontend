@@ -91,7 +91,9 @@ export function DashboardScreen() {
                     <MotionFade
                       className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-accent"
                       distance={2}>
-                      <Check color="#FFFFFF" size={10} strokeWidth={3} />
+                      <View className="h-4 w-full items-center justify-center">
+                        <Check color="#FFFFFF" size={10} strokeWidth={3} />
+                      </View>
                     </MotionFade>
                   ) : null}
                 </View>

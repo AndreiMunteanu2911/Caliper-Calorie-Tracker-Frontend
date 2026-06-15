@@ -1,7 +1,7 @@
-import { Trash2 } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
+import { DeleteIconButton } from '@/src/components/ui/DeleteIconButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import type { MealLogItem } from '@/src/types/api';
 
@@ -46,7 +46,7 @@ export function MealLogCard({
 
   return (
     <View className="rounded-2xl border border-white/10 bg-[#292929]">
-      <View className="flex-row items-start gap-2.5 py-2">
+      <View className="flex-row items-center gap-2.5 py-2 pr-3">
         <View className="w-1 self-stretch rounded-full bg-accent" />
         <Pressable
           accessibilityHint="Edit this food"
@@ -74,13 +74,10 @@ export function MealLogCard({
         {isMutating ? (
           <LoadingSpinner />
         ) : (
-          <Pressable
+          <DeleteIconButton
             accessibilityLabel={`Delete ${log.food_name}`}
-            accessibilityRole="button"
-            className="h-8 w-8 items-center justify-center rounded-lg border border-accent bg-brand"
-            onPress={() => void onDelete(log)}>
-            <Trash2 color="#FF5A16" size={13} strokeWidth={2.4} />
-          </Pressable>
+            onPress={() => void onDelete(log)}
+          />
         )}
       </View>
     </View>

@@ -2,7 +2,6 @@ import { useRouter } from 'expo-router';
 import {
   Check,
   ChevronLeft,
-  Trash2,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react-native';
@@ -16,6 +15,7 @@ import Svg, {
 } from 'react-native-svg';
 
 import { AppPage } from '@/src/components/layout/AppPage';
+import { DeleteIconButton } from '@/src/components/ui/DeleteIconButton';
 import { Button } from '@/src/components/ui/Button';
 import { CalendarPicker } from '@/src/components/ui/CalendarPicker';
 import { InputBox } from '@/src/components/ui/InputBox';
@@ -486,12 +486,10 @@ export function WeightTrackerScreen() {
                         </Text>
                         <Text className="text-xs text-white/40">{entry.recorded_on}</Text>
                       </View>
-                      <Pressable
+                      <DeleteIconButton
                         accessibilityLabel={`Delete weight from ${entry.recorded_on}`}
-                        className="h-9 w-9 items-center justify-center rounded-full bg-white/5"
-                        onPress={() => void remove(entry.id)}>
-                        <Trash2 color="#C64035" size={16} />
-                      </Pressable>
+                        onPress={() => void remove(entry.id)}
+                      />
                     </View>
                   ))}
                 </View>

@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import Svg from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 
 import { MotionPop } from '@/src/lib/motion';
 

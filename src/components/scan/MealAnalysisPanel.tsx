@@ -1,10 +1,11 @@
-import { Camera, ImagePlus, Sparkles, Trash2 } from 'lucide-react-native';
+import { Camera, ImagePlus, Sparkles } from 'lucide-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
 import { Button } from '@/src/components/ui/Button';
+import { DeleteIconButton } from '@/src/components/ui/DeleteIconButton';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
@@ -187,12 +188,10 @@ export function MealAnalysisPanel() {
                       {(food.fats * ratio).toFixed(1)}g
                     </Text>
                   </View>
-                  <Pressable
+                  <DeleteIconButton
                     accessibilityLabel={`Remove ${food.name}`}
-                    className="h-9 w-9 items-center justify-center rounded-xl bg-white/5"
-                    onPress={() => removeFood(food.id)}>
-                    <Trash2 color="#C64035" size={16} />
-                  </Pressable>
+                    onPress={() => removeFood(food.id)}
+                  />
                 </View>
                 <View className="mt-3 flex-row items-center gap-2">
                   <View className="min-w-0 flex-1">
