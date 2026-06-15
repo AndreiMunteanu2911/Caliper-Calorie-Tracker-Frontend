@@ -11,7 +11,6 @@ import {
   View,
 } from 'react-native';
 import { useRef, useState } from 'react';
-import Animated from 'react-native-reanimated';
 
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
@@ -21,7 +20,7 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAdvisorChat } from '@/src/hooks/useAdvisorChat';
-import { motion } from '@/src/lib/motion';
+import { MotionFade } from '@/src/lib/motion';
 import type { AdvisorMessage } from '@/src/types/api';
 
 const SUGGESTIONS = [
@@ -135,14 +134,12 @@ export function AdvisorScreen() {
                   </View>
                 ) : (
                   messages.map((item: AdvisorMessage) => (
-                    <Animated.View
+                    <MotionFade
                       className={`rounded-3xl ${
                         item.role === 'user'
                           ? 'max-w-[82%] self-end rounded-br-lg bg-accent px-4 py-3'
                           : 'w-full max-w-[96%] self-start rounded-bl-lg border border-white/10 bg-[#252525] px-5 py-4'
                       }`}
-                      entering={motion.enter}
-                      exiting={motion.exit}
                       key={item.id}>
                       {item.role === 'assistant' ? (
                         <MarkdownMessage content={item.content} />
@@ -151,30 +148,23 @@ export function AdvisorScreen() {
                           {item.content}
                         </Text>
                       )}
-                    </Animated.View>
+                    </MotionFade>
                   ))
                 )}
                 {isSending &&
                 !messages.some((item) => item.id.startsWith('streaming-')) ? (
-                  <Animated.View
-                    className="self-start rounded-3xl rounded-bl-lg border border-white/10 bg-[#252525] px-4 py-3"
-                    entering={motion.soft}
-                    exiting={motion.exit}>
+                  <MotionFade className="self-start rounded-3xl rounded-bl-lg border border-white/10 bg-[#252525] px-4 py-3">
                     <Text className="text-sm font-semibold text-white/55">
                       Thinking...
                     </Text>
-                  </Animated.View>
+                  </MotionFade>
                 ) : null}
               </ScrollbarContainer>
               <View className="mt-2.5 gap-2">
                 {error ? (
-                  <Animated.View
-                    className="rounded-2xl bg-dangerSoft p-2.5"
-                    entering={motion.enter}
-                    exiting={motion.exit}
-                    layout={motion.layout}>
+                  <MotionFade className="rounded-2xl bg-dangerSoft p-2.5">
                     <Text className="font-semibold text-danger">{error}</Text>
-                  </Animated.View>
+                  </MotionFade>
                 ) : null}
                 <View className="flex-row items-center gap-2">
                   <InputBox

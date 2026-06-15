@@ -1,6 +1,5 @@
 import { Check, Flame, X } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
 import { Button } from '@/src/components/ui/Button';
@@ -8,7 +7,7 @@ import { InputBox } from '@/src/components/ui/InputBox';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useQuickLogForm } from '@/src/hooks/useQuickLogForm';
-import { motion } from '@/src/lib/motion';
+import { MotionFade } from '@/src/lib/motion';
 import type { FoodItem, MealType } from '@/src/types/api';
 
 type QuickLogModalProps = {
@@ -96,13 +95,9 @@ export function QuickLogModal({
           </View>
         </View>
         {error ? (
-          <Animated.View
-            className="mb-3 rounded-2xl bg-dangerSoft p-2.5"
-            entering={motion.enter}
-            exiting={motion.exit}
-            layout={motion.layout}>
+          <MotionFade className="mb-3 rounded-2xl bg-dangerSoft p-2.5">
             <Text className="font-semibold text-danger">{error}</Text>
-          </Animated.View>
+          </MotionFade>
         ) : null}
         <Button
           label="Add to today"

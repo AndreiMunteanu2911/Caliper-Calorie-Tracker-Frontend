@@ -1,3 +1,4 @@
+import { Motion } from '@legendapp/motion';
 import { Tabs } from 'expo-router';
 import {
     ChartNoAxesCombined,
@@ -14,14 +15,10 @@ import {
     useWindowDimensions,
     View,
 } from 'react-native';
+import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, {
-    Easing,
-    ReduceMotion,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
-} from 'react-native-reanimated';
+
+import { motionTransition } from '@/src/lib/motion';
 
 const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
     dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
@@ -48,31 +45,7 @@ function DockItem({
                       onPress,
                       width,
                   }: DockItemProps) {
-    const pressedScale = useSharedValue(1);
-    const animatedStyle = useAnimatedStyle(() => ({
-        width: withTiming(width, {
-            duration: 160,
-            easing: Easing.out(Easing.cubic),
-            reduceMotion: ReduceMotion.System,
-        }),
-        transform: [{ scale: pressedScale.value }],
-    }), [width]);
-
-    const labelStyle = useAnimatedStyle(() => ({
-        opacity: withTiming(focused ? 1 : 0, {
-            duration: focused ? 130 : 80,
-            reduceMotion: ReduceMotion.System,
-        }),
-        transform: [
-            {
-                translateX: withTiming(focused ? 0 : -4, {
-                    duration: 130,
-                    easing: Easing.out(Easing.cubic),
-                    reduceMotion: ReduceMotion.System,
-                }),
-            },
-        ],
-    }), [focused]);
+    const [isPressed, setIsPressed] = useState(false);
 
     return (
         <Pressable
@@ -81,40 +54,32 @@ function DockItem({
             accessibilityState={{ selected: focused }}
             onLongPress={onLongPress}
             onPress={onPress}
-            onPressIn={() => {
-                pressedScale.value = withTiming(0.96, {
-                    duration: 60,
-                    reduceMotion: ReduceMotion.System,
-                });
-            }}
-            onPressOut={() => {
-                pressedScale.value = withTiming(1, {
-                    duration: 90,
-                    reduceMotion: ReduceMotion.System,
-                });
-            }}>
-            <Animated.View
-                style={[
-                    {
-                        alignItems: 'center',
-                        backgroundColor: focused ? '#FF5A16' : '#3B3B3B',
-                        borderColor: focused ? '#FF7B59' : '#525252',
-                        borderRadius: 999,
-                        borderWidth: 1,
-                        flexDirection: 'row',
-                        height: 48,
-                        justifyContent: 'center',
-                        overflow: 'hidden',
-                    },
-                    animatedStyle,
-                ]}>
+            onPressIn={() => setIsPressed(true)}
+            onPressOut={() => setIsPressed(false)}>
+            <Motion.View
+                animate={{ scale: isPressed ? 0.96 : 1, width }}
+                style={{
+                    alignItems: 'center',
+                    backgroundColor: focused ? '#FF5A16' : '#3B3B3B',
+                    borderColor: focused ? '#FF7B59' : '#525252',
+                    borderRadius: 999,
+                    borderWidth: 1,
+                    flexDirection: 'row',
+                    height: 48,
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                }}
+                transition={motionTransition.standard}>
                 <Icon color="#FFFFFF" size={21} strokeWidth={2.35} />
                 {focused ? (
-                    <Animated.View className="ml-1.5" style={labelStyle}>
-                        <Text className="text-xs font-bold text-white">{label}</Text>
-                    </Animated.View>
+                    <Motion.View
+                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, x: -4 }}
+                        transition={motionTransition.quick}>
+                        <Text className="ml-1.5 text-xs font-bold text-white">{label}</Text>
+                    </Motion.View>
                 ) : null}
-            </Animated.View>
+            </Motion.View>
         </Pressable>
     );
 }

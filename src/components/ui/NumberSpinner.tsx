@@ -1,3 +1,4 @@
+import { Motion } from '@legendapp/motion';
 import { ChevronDown, ChevronUp } from 'lucide-react-native';
 import { useCallback, useEffect, useRef } from 'react';
 import {
@@ -5,12 +6,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-  FadeOutDown,
-  FadeOutUp,
-} from 'react-native-reanimated';
+
+import { motionTransition } from '@/src/lib/motion';
 
 type NumberSpinnerProps = {
   label: string;
@@ -124,26 +121,29 @@ export function NumberSpinner({
             </View>
           </Pressable>
           <View className="relative flex-1 items-center justify-center overflow-hidden border-y border-white/5">
-            <Animated.View
-                className="absolute h-full w-full items-center justify-center"
-                entering={
-                  direction > 0
-                      ? FadeInUp.duration(150)
-                      : FadeInDown.duration(150)
-                }
-                exiting={
+            <Motion.View
+                animate={{ opacity: 1, y: 0 }}
+                initial={
                   closing
-                      ? undefined
-                      : direction > 0
-                          ? FadeOutUp.duration(150)
-                          : FadeOutDown.duration(150)
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: direction > 0 ? 6 : -6 }
                 }
-                key={roundedValue}>
+                key={roundedValue}
+                style={{
+                  alignItems: 'center',
+                  bottom: 0,
+                  justifyContent: 'center',
+                  left: 0,
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                }}
+                transition={motionTransition.quick}>
               <Text className="text-lg font-black text-white">
                 {roundedValue}
                 <Text className="text-xs font-bold text-white/40"> {suffix}</Text>
               </Text>
-            </Animated.View>
+            </Motion.View>
           </View>
           <Pressable
               accessibilityLabel={`Decrease ${label}`}

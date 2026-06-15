@@ -1,3 +1,4 @@
+import { Motion } from '@legendapp/motion';
 import type { PropsWithChildren } from 'react';
 import { useEffect, useState } from 'react';
 import {
@@ -8,14 +9,8 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import Animated, {
-  Easing,
-  ReduceMotion,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+
+import { motionTransition } from '@/src/lib/motion';
 
 type ModalWrapperProps = PropsWithChildren<{
   isOpen: boolean;
@@ -38,68 +33,16 @@ export function ModalWrapper({
   const modalWidth = Math.min(width * 0.9, 560);
   const modalMaxHeight = Math.min(height * 0.9, 760);
   const [isMounted, setIsMounted] = useState(isOpen);
-  const backdropOpacity = useSharedValue(0);
-  const translateY = useSharedValue(isBottom ? 24 : 8);
-  const scale = useSharedValue(isBottom ? 1 : 0.985);
 
   useEffect(() => {
     if (isOpen) setIsMounted(true);
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isMounted) return;
-
-    if (isOpen) {
-      backdropOpacity.value = 0;
-      translateY.value = isBottom ? 24 : 8;
-      scale.value = isBottom ? 1 : 0.985;
-      const frame = requestAnimationFrame(() => {
-        backdropOpacity.value = withTiming(1, {
-          duration: 140,
-          easing: Easing.out(Easing.cubic),
-          reduceMotion: ReduceMotion.System,
-        });
-        translateY.value = withTiming(0, {
-          duration: 170,
-          easing: Easing.out(Easing.cubic),
-          reduceMotion: ReduceMotion.System,
-        });
-        scale.value = withTiming(1, {
-          duration: 170,
-          easing: Easing.out(Easing.cubic),
-          reduceMotion: ReduceMotion.System,
-        });
-      });
-      return () => cancelAnimationFrame(frame);
-    }
-
-    backdropOpacity.value = withTiming(0, {
-      duration: 100,
-      reduceMotion: ReduceMotion.System,
-    });
-    scale.value = withTiming(isBottom ? 1 : 0.99, {
-      duration: 120,
-      reduceMotion: ReduceMotion.System,
-    });
-    translateY.value = withTiming(
-      isBottom ? 18 : 6,
-      {
-        duration: 120,
-        easing: Easing.in(Easing.cubic),
-        reduceMotion: ReduceMotion.System,
-      },
-      (finished) => {
-        if (finished) runOnJS(setIsMounted)(false);
-      },
-    );
-  }, [backdropOpacity, isBottom, isMounted, isOpen, scale, translateY]);
-
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: backdropOpacity.value,
-  }));
-  const containerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }, { scale: scale.value }],
-  }));
+    if (!isMounted || isOpen) return;
+    const timer = setTimeout(() => setIsMounted(false), 170);
+    return () => clearTimeout(timer);
+  }, [isMounted, isOpen]);
 
   return (
     <Modal
@@ -111,11 +54,12 @@ export function ModalWrapper({
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={[StyleSheet.absoluteFill, { height, width }]}>
-        <Animated.View
+        <Motion.View
+          animate={{ opacity: isOpen ? 1 : 0 }}
           className={className}
+          initial={{ opacity: 0 }}
           style={[
             StyleSheet.absoluteFill,
-            backdropStyle,
             {
               alignItems: 'center',
               backgroundColor: 'rgba(0, 0, 0, 0.82)',
@@ -123,17 +67,25 @@ export function ModalWrapper({
               paddingHorizontal: 16,
               paddingVertical: 24,
             },
-          ]}>
+          ]}
+          transition={motionTransition.quick}>
           <Pressable
             accessibilityLabel="Close modal"
             onPress={onClose}
             style={StyleSheet.absoluteFill}
           />
-          <Animated.View
+          <Motion.View
             accessibilityViewIsModal
+            animate={{
+              scale: isOpen || isBottom ? 1 : 0.99,
+              y: isOpen ? 0 : isBottom ? 18 : 6,
+            }}
             className={containerClassName}
+            initial={{
+              scale: isBottom ? 1 : 0.985,
+              y: isBottom ? 24 : 8,
+            }}
             style={[
-              containerStyle,
               {
                 backgroundColor: '#202020',
                 borderColor: 'rgba(255, 255, 255, 0.14)',
@@ -143,10 +95,11 @@ export function ModalWrapper({
                 overflow: 'hidden',
                 width: modalWidth,
               },
-            ]}>
+            ]}
+            transition={motionTransition.standard}>
             {children}
-          </Animated.View>
-        </Animated.View>
+          </Motion.View>
+        </Motion.View>
       </KeyboardAvoidingView>
     </Modal>
   );

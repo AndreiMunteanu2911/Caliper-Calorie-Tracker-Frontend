@@ -11,7 +11,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import 'react-native-reanimated';
 import '../global.css';
 
 import { AuthProvider } from '@/src/hooks/useAuth';

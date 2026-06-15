@@ -2,7 +2,6 @@ import { Redirect, useRouter } from 'expo-router';
 import { ArrowLeft, ArrowRight } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
 
 import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
@@ -11,7 +10,7 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAuth } from '@/src/hooks/useAuth';
 import { type AuthMode, useAuthForm } from '@/src/hooks/useAuthForm';
-import { motion } from '@/src/lib/motion';
+import { MotionFade } from '@/src/lib/motion';
 
 type AuthScreenProps = {
   mode: AuthMode;
@@ -97,22 +96,14 @@ export function AuthScreen({ mode }: AuthScreenProps) {
             </View>
 
             {form.error ? (
-              <Animated.View
-                className="rounded-2xl bg-dangerSoft p-3.5"
-                entering={motion.enter}
-                exiting={motion.exit}
-                layout={motion.layout}>
+              <MotionFade className="rounded-2xl bg-dangerSoft p-3.5">
                 <Text className="font-semibold text-danger">{form.error}</Text>
-              </Animated.View>
+              </MotionFade>
             ) : null}
             {form.message ? (
-              <Animated.View
-                className="rounded-2xl bg-successSoft p-3.5"
-                entering={motion.enter}
-                exiting={motion.exit}
-                layout={motion.layout}>
+              <MotionFade className="rounded-2xl bg-successSoft p-3.5">
                 <Text className="font-semibold text-white">{form.message}</Text>
-              </Animated.View>
+              </MotionFade>
             ) : null}
           </View>
 

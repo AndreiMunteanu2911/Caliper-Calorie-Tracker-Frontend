@@ -13,7 +13,6 @@ import Svg, {
   Polyline,
   Text as SvgText,
 } from 'react-native-svg';
-import Animated from 'react-native-reanimated';
 
 import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
@@ -23,7 +22,7 @@ import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
 import { useProfile } from '@/src/hooks/useProfile';
-import { motion } from '@/src/lib/motion';
+import { MotionFade } from '@/src/lib/motion';
 import type { WeightLogItem } from '@/src/types/api';
 import {
   isLocalDateString,
@@ -343,9 +342,7 @@ export function WeightTrackerScreen() {
           </View>
 
           <View className="gap-4">
-            <Animated.View
-              className="rounded-3xl border border-white/10 bg-[#232220] p-4"
-              entering={motion.soft}>
+            <MotionFade className="rounded-3xl border border-white/10 bg-[#232220] p-4">
               <View className="flex-row items-end justify-between">
                 <View>
                   <Text className="text-xs font-black uppercase tracking-widest text-white/40">
@@ -400,7 +397,7 @@ export function WeightTrackerScreen() {
                   target date.
                 </Text>
               ) : null}
-            </Animated.View>
+            </MotionFade>
 
             <View className="rounded-3xl border border-white/10 bg-[#232220] p-4">
               <Text className="text-base font-black text-white">Log weight</Text>
@@ -435,13 +432,9 @@ export function WeightTrackerScreen() {
             </View>
 
             {error ? (
-              <Animated.View
-                className="rounded-2xl bg-dangerSoft p-3.5"
-                entering={motion.enter}
-                exiting={motion.exit}
-                layout={motion.layout}>
+              <MotionFade className="rounded-2xl bg-dangerSoft p-3.5">
                 <Text className="font-semibold text-danger">{error}</Text>
-              </Animated.View>
+              </MotionFade>
             ) : null}
 
             <View className="rounded-3xl border border-white/10 bg-[#232220] p-4">

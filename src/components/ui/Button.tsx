@@ -1,13 +1,10 @@
+import { Motion } from '@legendapp/motion';
 import type { LucideIcon } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, Text, type PressableProps, View } from 'react-native';
-import Animated, {
-  ReduceMotion,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
+import { motionTransition } from '@/src/lib/motion';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline';
 type ButtonSize = 'default' | 'compact';
@@ -52,14 +49,13 @@ export function Button({
   onPressOut,
   ...pressableProps
 }: ButtonProps) {
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const [isPressed, setIsPressed] = useState(false);
   const isDisabled = disabled || loading;
 
   return (
-    <Animated.View style={animatedStyle}>
+    <Motion.View
+      animate={{ scale: isPressed && !isDisabled ? 0.98 : 1 }}
+      transition={motionTransition.quick}>
       <Pressable
         {...pressableProps}
         accessibilityLabel={pressableProps.accessibilityLabel ?? label}
@@ -70,17 +66,11 @@ export function Button({
         } ${isDisabled ? 'opacity-40' : ''}`}
         disabled={isDisabled}
         onPressIn={(event) => {
-          scale.value = withTiming(0.98, {
-            duration: 70,
-            reduceMotion: ReduceMotion.System,
-          });
+          setIsPressed(true);
           onPressIn?.(event);
         }}
         onPressOut={(event) => {
-          scale.value = withTiming(1, {
-            duration: 100,
-            reduceMotion: ReduceMotion.System,
-          });
+          setIsPressed(false);
           onPressOut?.(event);
         }}>
         {loading ? (
@@ -109,6 +99,6 @@ export function Button({
           </>
         )}
       </Pressable>
-    </Animated.View>
+    </Motion.View>
   );
 }

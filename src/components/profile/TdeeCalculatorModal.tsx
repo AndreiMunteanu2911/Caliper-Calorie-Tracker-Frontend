@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  FadeInLeft,
-  FadeInRight,
-} from 'react-native-reanimated';
 
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
@@ -11,7 +7,7 @@ import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { apiRequest } from '@/src/lib/api-client';
-import { motion } from '@/src/lib/motion';
+import { MotionFade } from '@/src/lib/motion';
 import type {
   TdeeCalculationRequest,
   TdeeCalculationResponse,
@@ -206,13 +202,11 @@ export function TdeeCalculatorModal({
         keyboardShouldPersistTaps="handled">
         <StepIndicator step={step} />
 
-        <Animated.View
-          entering={
-            direction > 0
-              ? FadeInRight.duration(180)
-              : FadeInLeft.duration(180)
-          }
-          key={step}>
+        <MotionFade
+          distance={8}
+          horizontal
+          key={step}
+          reverse={direction < 0}>
           {step === 1 ? (
             <View className="gap-5">
               <View className="gap-2">
@@ -347,15 +341,12 @@ export function TdeeCalculatorModal({
               </Text>
             </View>
           ) : null}
-        </Animated.View>
+        </MotionFade>
 
         {error ? (
-          <Animated.View
-            className="rounded-2xl bg-dangerSoft p-3"
-            entering={motion.enter}
-            exiting={motion.exit}>
+          <MotionFade className="rounded-2xl bg-dangerSoft p-3">
             <Text className="font-semibold text-danger">{error}</Text>
-          </Animated.View>
+          </MotionFade>
         ) : null}
 
         <View className="flex-row gap-3">
