@@ -75,7 +75,7 @@ export function DiaryScreen() {
   return (
     <ScrollbarContainer
       className="flex-1 bg-brand"
-      contentContainerClassName="px-3 xs:px-4 pb-16 pt-4 sm:px-5 sm:pb-20 sm:pt-5"
+      contentContainerClassName="pb-32 pt-4 sm:pt-5"
       refreshControl={
         <RefreshControl
           refreshing={isLoading}

@@ -85,8 +85,8 @@ function RootLayoutNav() {
             card: '#101010',
           },
         }}>
-        <View className="bg-brand" style={{ height: '100%', overflow: 'hidden' }}>
-          <Stack screenOptions={{ contentStyle: { backgroundColor: '#101010', overflow: 'hidden' } }}>
+        <View className="min-h-0 flex-1 bg-brand">
+          <Stack screenOptions={{ contentStyle: { backgroundColor: '#101010' } }}>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="sign-in" options={{ headerShown: false }} />
             <Stack.Screen name="sign-up" options={{ headerShown: false }} />

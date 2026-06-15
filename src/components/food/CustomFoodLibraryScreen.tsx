@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { CustomFoodForm } from '@/src/components/food/CustomFoodForm';
+import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
@@ -52,8 +53,8 @@ export function CustomFoodLibraryScreen() {
     <>
       <ScrollbarContainer
         className="flex-1 bg-brand"
-        contentContainerClassName="px-4 pb-20 pt-5">
-        <View className="w-full max-w-lg self-center">
+        contentContainerClassName="pb-8 pt-5">
+        <AppPage>
           <View className="flex-row items-center gap-3">
             <Pressable
               accessibilityLabel="Go back"
@@ -145,7 +146,7 @@ export function CustomFoodLibraryScreen() {
               ))}
             </View>
           )}
-        </View>
+        </AppPage>
       </ScrollbarContainer>
 
       <CustomFoodForm

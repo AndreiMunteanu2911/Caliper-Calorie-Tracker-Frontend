@@ -2,6 +2,7 @@ import { ChevronLeft } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
+import { AppPage } from '@/src/components/layout/AppPage';
 import { MealAnalysisPanel } from '@/src/components/scan/MealAnalysisPanel';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 
@@ -11,8 +12,8 @@ export function MealAnalysisScreen() {
   return (
     <ScrollbarContainer
       className="flex-1 bg-brand"
-      contentContainerClassName="px-4 pb-20 pt-5">
-      <View className="w-full max-w-lg self-center">
+      contentContainerClassName="pb-8 pt-5">
+      <AppPage>
         <View className="mb-5 flex-row items-center gap-3">
           <Pressable
             accessibilityLabel="Go back"
@@ -29,7 +30,7 @@ export function MealAnalysisScreen() {
         </View>
 
         <MealAnalysisPanel />
-      </View>
+      </AppPage>
     </ScrollbarContainer>
   );
 }

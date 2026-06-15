@@ -24,7 +24,7 @@ export default function WelcomeRoute() {
     <>
       <PageHead title="Nutrition Tracker" />
       <PublicShell>
-        <View className="w-full max-w-md flex-1 self-center justify-between">
+        <View className="min-w-0 flex-1 justify-between">
           <View className="flex-1 items-center justify-center py-8">
             <Text className="text-4xl font-black tracking-tighter text-white">
               Cali<Text className="text-accent">per</Text>

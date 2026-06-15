@@ -10,7 +10,7 @@ export default function NotFoundScreen() {
     <>
       <PageHead title="Page Not Found" />
       <PublicShell>
-        <View className="w-full max-w-md flex-1 self-center justify-center py-6">
+        <View className="min-w-0 flex-1 justify-center py-6">
           <View className="gap-7 rounded-3xl border border-white/10 bg-[#232220] p-6 shadow-card">
             <View>
               <View className="mb-5 h-14 w-14 items-center justify-center rounded-2xl bg-accent">

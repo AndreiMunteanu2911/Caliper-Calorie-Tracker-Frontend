@@ -66,7 +66,7 @@ export function MealCameraScreen() {
     <View className="flex-1 items-center bg-brand">
       <View
         className="relative h-full w-full overflow-hidden bg-brand shadow-card"
-        style={{ maxWidth: 480 }}>
+        style={{ maxWidth: 448 }}>
         <CameraView ref={cameraRef} className="flex-1" facing={facing} />
         <View className="pointer-events-none absolute inset-0 bg-black/10" />
         <View

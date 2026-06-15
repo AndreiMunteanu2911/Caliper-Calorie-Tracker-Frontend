@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
@@ -115,8 +116,8 @@ export default function OnboardingRoute() {
   return (
     <ScrollbarContainer
       className="flex-1 bg-brand"
-      contentContainerClassName="px-5 pb-12 pt-8">
-      <View className="w-full max-w-lg self-center">
+      contentContainerClassName="pb-8 pt-8">
+      <AppPage>
         <Text className="text-xs font-black uppercase tracking-widest text-accent">
           {stepContent.eyebrow}
         </Text>
@@ -247,7 +248,7 @@ export default function OnboardingRoute() {
             onPress={() => void skip()}
           />
         </View>
-      </View>
+      </AppPage>
     </ScrollbarContainer>
   );
 }

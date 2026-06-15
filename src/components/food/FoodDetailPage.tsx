@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MacroDonut } from '@/src/components/food/MacroDonut';
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
+import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
@@ -115,8 +116,8 @@ export function FoodDetailPage() {
     <View className="flex-1 bg-brand" style={{ paddingTop: insets.top }}>
       <ScrollbarContainer
         className="flex-1"
-        contentContainerClassName="px-4 pb-20 pt-3 sm:px-6">
-        <View className="w-full max-w-lg self-center">
+        contentContainerClassName="pb-8 pt-3">
+        <AppPage>
           <View className="mb-4 flex-row items-center justify-between">
             <Pressable
               accessibilityLabel="Go back"
@@ -236,7 +237,7 @@ export function FoodDetailPage() {
               onPress={() => void save()}
             />
           </View>
-        </View>
+        </AppPage>
       </ScrollbarContainer>
     </View>
   );

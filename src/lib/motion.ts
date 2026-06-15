@@ -1,7 +1,6 @@
 import {
   FadeIn,
   FadeInDown,
-  FadeInUp,
   FadeOut,
   LinearTransition,
   ReduceMotion,
@@ -13,8 +12,5 @@ export const motion = {
     .reduceMotion(ReduceMotion.System),
   exit: FadeOut.duration(90).reduceMotion(ReduceMotion.System),
   layout: LinearTransition.duration(150).reduceMotion(ReduceMotion.System),
-  page: FadeInUp.duration(180)
-    .withInitialValues({ opacity: 0, transform: [{ translateY: 8 }] })
-    .reduceMotion(ReduceMotion.System),
   soft: FadeIn.duration(130).reduceMotion(ReduceMotion.System),
 } as const;

@@ -51,7 +51,7 @@ export function AddFoodScreen() {
     <>
       <ScrollbarContainer
         className="flex-1 bg-brand"
-        contentContainerClassName="px-4 pb-20 pt-5 sm:px-6 sm:pt-8">
+        contentContainerClassName="pb-32 pt-5 sm:pt-8">
         <AppPage>
           <View className="gap-4">
             <PageHeader

@@ -76,7 +76,7 @@ export function BarcodeScannerScreen() {
       <View className="flex-1 items-center bg-brand">
         <View
           className="relative h-full w-full overflow-hidden bg-brand shadow-card"
-          style={{ maxWidth: 480 }}>
+          style={{ maxWidth: 448 }}>
         <CameraView
           barcodeScannerSettings={{
             barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e'],

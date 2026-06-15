@@ -15,6 +15,7 @@ import Svg, {
 } from 'react-native-svg';
 import Animated from 'react-native-reanimated';
 
+import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
 import { CalendarPicker } from '@/src/components/ui/CalendarPicker';
 import { InputBox } from '@/src/components/ui/InputBox';
@@ -326,8 +327,8 @@ export function WeightTrackerScreen() {
     <View className="flex-1 bg-brand">
       <ScrollbarContainer
         className="flex-1"
-        contentContainerClassName="px-4 pb-20 pt-4 sm:px-6">
-        <View className="w-full max-w-lg self-center">
+        contentContainerClassName="pb-8 pt-4">
+        <AppPage>
           <View className="mb-4 flex-row items-center gap-3">
             <Pressable
               accessibilityLabel="Go back"
@@ -477,7 +478,7 @@ export function WeightTrackerScreen() {
               )}
             </View>
           </View>
-        </View>
+        </AppPage>
       </ScrollbarContainer>
     </View>
   );

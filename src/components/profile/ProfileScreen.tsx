@@ -236,7 +236,7 @@ export function ProfileScreen() {
     <>
       <ScrollbarContainer
         className="flex-1 bg-brand"
-        contentContainerClassName="px-5 pb-20 pt-5">
+        contentContainerClassName="pb-32 pt-5">
         <AppPage>
           <PageHeader
             title="Profile"

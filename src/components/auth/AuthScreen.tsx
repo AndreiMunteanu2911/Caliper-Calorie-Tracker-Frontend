@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 
+import { AppPage } from '@/src/components/layout/AppPage';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
@@ -35,8 +36,8 @@ export function AuthScreen({ mode }: AuthScreenProps) {
     <SafeAreaView className="flex-1 bg-brand">
       <ScrollbarContainer
         className="bg-brand"
-        contentContainerClassName="grow justify-center px-5 py-5">
-        <View className="w-full max-w-md self-center py-2">
+        contentContainerClassName="grow justify-center py-5">
+        <AppPage className="py-2">
           {!isSignIn ? (
             <Pressable
               accessibilityLabel="Back"
@@ -136,7 +137,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
               </Text>
             </Pressable>
           </View>
-        </View>
+        </AppPage>
       </ScrollbarContainer>
     </SafeAreaView>
   );

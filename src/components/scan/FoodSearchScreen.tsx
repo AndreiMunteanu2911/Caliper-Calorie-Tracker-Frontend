@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { CustomFoodForm } from '@/src/components/food/CustomFoodForm';
+import { AppPage } from '@/src/components/layout/AppPage';
 import { Dropdown } from '@/src/components/ui/Dropdown';
 import { DropdownItem } from '@/src/components/ui/DropdownItem';
 import { InputBox } from '@/src/components/ui/InputBox';
@@ -52,9 +53,9 @@ export function FoodSearchScreen() {
     <>
       <ScrollbarContainer
         className="flex-1 bg-brand"
-        contentContainerClassName="px-4 pb-20 pt-5"
+        contentContainerClassName="pb-8 pt-5"
         keyboardShouldPersistTaps="handled">
-        <View className="w-full max-w-lg self-center">
+        <AppPage>
           <View className="flex-row items-center gap-3">
             <Pressable
               accessibilityLabel="Go back"
@@ -150,7 +151,7 @@ export function FoodSearchScreen() {
               <Text className="font-bold text-accent">Create custom food</Text>
             </Pressable>
           ) : null}
-        </View>
+        </AppPage>
       </ScrollbarContainer>
 
       <CustomFoodForm

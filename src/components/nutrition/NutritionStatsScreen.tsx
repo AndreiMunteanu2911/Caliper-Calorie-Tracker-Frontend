@@ -3,6 +3,7 @@ import { ChevronLeft } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { AppPage } from '@/src/components/layout/AppPage';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import {
@@ -325,8 +326,8 @@ export function NutritionStatsScreen() {
     <View className="flex-1 bg-brand">
       <ScrollbarContainer
         className="flex-1"
-        contentContainerClassName="px-4 pb-20 pt-4 sm:px-6">
-        <View className="w-full max-w-lg self-center">
+        contentContainerClassName="pb-8 pt-4">
+        <AppPage>
           <View className="mb-4 flex-row items-center gap-3">
             <Pressable
               accessibilityLabel="Go back"
@@ -444,7 +445,7 @@ export function NutritionStatsScreen() {
               </View>
             </View>
           )}
-        </View>
+        </AppPage>
       </ScrollbarContainer>
     </View>
   );

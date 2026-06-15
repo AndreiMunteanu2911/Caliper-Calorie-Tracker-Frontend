@@ -7,7 +7,13 @@ import {
     MessageCircleMore,
     UserRound,
 } from 'lucide-react-native';
-import { Platform, Pressable, Text, View } from 'react-native';
+import {
+    Platform,
+    Pressable,
+    Text,
+    useWindowDimensions,
+    View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
     Easing,
@@ -31,6 +37,7 @@ type DockItemProps = {
     label: string;
     onLongPress: () => void;
     onPress: () => void;
+    width: number;
 };
 
 function DockItem({
@@ -39,16 +46,17 @@ function DockItem({
                       label,
                       onLongPress,
                       onPress,
+                      width,
                   }: DockItemProps) {
     const pressedScale = useSharedValue(1);
     const animatedStyle = useAnimatedStyle(() => ({
-        width: withTiming(focused ? 96 : 48, {
+        width: withTiming(width, {
             duration: 160,
             easing: Easing.out(Easing.cubic),
             reduceMotion: ReduceMotion.System,
         }),
         transform: [{ scale: pressedScale.value }],
-    }), [focused]);
+    }), [width]);
 
     const labelStyle = useAnimatedStyle(() => ({
         opacity: withTiming(focused ? 1 : 0, {
@@ -119,6 +127,14 @@ type TabBarProps = {
 
 function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
     const insets = useSafeAreaInsets();
+    const { width: windowWidth } = useWindowDimensions();
+    const dockGapWidth = 24;
+    const dockPaddingWidth = 14;
+    const itemWidth = Math.max(
+        34,
+        Math.min(48, Math.floor((windowWidth - dockGapWidth - dockPaddingWidth) / 6)),
+    );
+    const focusedItemWidth = itemWidth * 2;
 
     return (
         <View
@@ -136,6 +152,8 @@ function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
                     borderColor: '#383838',
                     borderRadius: 999,
                     borderWidth: 1,
+                    maxWidth: Math.max(0, windowWidth - 16),
+                    overflow: 'hidden',
                     padding: 7,
                     elevation: 18,
                     ...(Platform.OS === 'web'
@@ -183,6 +201,7 @@ function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
                                 }
                                 onLongPress={onLongPress}
                                 onPress={onPress}
+                                width={focused ? focusedItemWidth : itemWidth}
                             />
                         );
                     })}
