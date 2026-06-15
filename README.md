@@ -22,6 +22,8 @@ The visual design is inspired by
 - AI meal analysis from a camera or library image
 - Context-aware AI diet advisor chat
 - Persistent advisor conversations using today and 30-day nutrition context
+- Weight logging with a visual history chart
+- TDEE calculator that can apply calorie and macro goals
 - iOS, Android, and web support
 
 ## Technology
@@ -285,6 +287,10 @@ GET    /api/v1/food/search
 POST   /api/v1/ai/analyze-plate
 GET    /api/v1/ai/chat
 POST   /api/v1/ai/chat
+GET    /api/v1/weight-logs
+POST   /api/v1/weight-logs
+DELETE /api/v1/weight-logs/{log_id}
+POST   /api/v1/profile/tdee
 ```
 
 ## Troubleshooting

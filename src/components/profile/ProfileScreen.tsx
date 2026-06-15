@@ -2,26 +2,28 @@ import { useRouter } from 'expo-router';
 import {
   LogOut,
   UserRound,
-  X,
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { AppPage } from '@/src/components/layout/AppPage';
 import { PageHeader } from '@/src/components/layout/PageHeader';
+import { TdeeCalculatorModal } from '@/src/components/profile/TdeeCalculatorModal';
 import { AnimatedPresence } from '@/src/components/ui/AnimatedPresence';
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
+import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { NumberSpinner } from '@/src/components/ui/NumberSpinner';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useProfile } from '@/src/hooks/useProfile';
-import type { Profile } from '@/src/types/api';
+import { useWeightLogs } from '@/src/hooks/useWeightLogs';
+import type { Profile, TdeeCalculationResponse } from '@/src/types/api';
 
 type TargetMode = 'grams' | 'percentages';
-type OpenModal = 'details' | 'goals' | null;
+type OpenModal = 'details' | 'goals' | 'tdee' | null;
 type MacroKey = 'protein' | 'carbs' | 'fats';
 
 const CALORIES_PER_GRAM: Record<MacroKey, number> = {
@@ -59,35 +61,11 @@ type SettingButtonProps = {
   );
 }
 
-  function ModalHeader({
-  title,
-  description,
-  onClose,
-}: {
-  title: string;
-  description: string;
-  onClose: () => void;
-}) {
-  return (
-    <View className="flex-row items-start gap-3 border-b border-white/10 px-4 py-4">
-      <View className="min-w-0 flex-1">
-        <Text className="text-xl font-black text-white">{title}</Text>
-        <Text className="mt-0.5 text-sm leading-5 text-white/50">{description}</Text>
-      </View>
-      <Pressable
-        accessibilityLabel="Close"
-        className="h-9 w-9 items-center justify-center rounded-full bg-white/5"
-        onPress={onClose}>
-        <X color="#FFFFFF" size={16} />
-      </Pressable>
-    </View>
-  );
-}
-
 export function ProfileScreen() {
   const router = useRouter();
   const { signOut } = useAuth();
   const { profile, isLoading, isSaving, error, save } = useProfile();
+  const { data: weightData } = useWeightLogs();
   const [openModal, setOpenModal] = useState<OpenModal>(null);
   const [displayName, setDisplayName] = useState('');
   const [calories, setCalories] = useState('');
@@ -262,6 +240,18 @@ export function ProfileScreen() {
                 onPress={openGoals}
               />
               <SettingButton
+                title="TDEE calculator"
+                description="Estimate maintenance calories and apply automatic macro goals."
+                buttonLabel="Calculate"
+                onPress={() => setOpenModal('tdee')}
+              />
+              <SettingButton
+                title="Weight tracker"
+                description="Log weigh-ins and follow your progress over time."
+                buttonLabel="Open"
+                onPress={() => router.push('/weight')}
+              />
+              <SettingButton
                 title="Nutrition"
                 description="View your calorie and macro stats over time."
                 buttonLabel="View"
@@ -330,6 +320,28 @@ export function ProfileScreen() {
           </View>
         </View>
       </ModalWrapper>
+
+      <TdeeCalculatorModal
+        initialWeightKg={weightData?.latest_weight_kg}
+        isOpen={openModal === 'tdee'}
+        onClose={closeModal}
+        onApply={async (result: TdeeCalculationResponse) => {
+          if (!profile) return false;
+          const didSave = await save({
+            display_name:
+              profile.display_name?.trim() ||
+              profile.email.split('@')[0] ||
+              'Caliper user',
+            daily_calorie_target: result.daily_calorie_target,
+            target_mode: 'grams',
+            protein: result.daily_protein_target,
+            carbs: result.daily_carbs_target,
+            fats: result.daily_fats_target,
+          });
+          if (didSave) setSaved(true);
+          return didSave;
+        }}
+      />
 
       <ModalWrapper
         isOpen={openModal === 'goals'}

@@ -11,10 +11,9 @@ import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-
-import {ScrollbarContainer} from "@/src/components/ui/ScrollbarContainer";
 
 const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
   dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
@@ -39,8 +38,10 @@ function DockItem({
   onLongPress,
   onPress,
 }: DockItemProps) {
+  const pressedScale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
-    width: withTiming(focused ? 80 : 40, { duration: 220 }),
+    width: withTiming(focused ? 96 : 48, { duration: 220 }),
+    transform: [{ scale: pressedScale.value }],
   }), [focused]);
 
   const labelStyle = useAnimatedStyle(() => ({
@@ -56,7 +57,13 @@ function DockItem({
       accessibilityRole="tab"
       accessibilityState={{ selected: focused }}
       onLongPress={onLongPress}
-      onPress={onPress}>
+      onPress={onPress}
+      onPressIn={() => {
+        pressedScale.value = withTiming(0.94, { duration: 70 });
+      }}
+      onPressOut={() => {
+        pressedScale.value = withTiming(1, { duration: 120 });
+      }}>
       <Animated.View
         style={[
           {
@@ -66,14 +73,14 @@ function DockItem({
             borderRadius: 999,
             borderWidth: 1,
             flexDirection: 'row',
-            height: 40,
+            height: 48,
             justifyContent: 'center',
             overflow: 'hidden',
           },
           animatedStyle,
         ]}>
-        <Icon color="#FFFFFF" size={19} strokeWidth={2.35} />
-          {focused ? (
+        <Icon color="#FFFFFF" size={21} strokeWidth={2.35} />
+        {focused ? (
           <Animated.View className="ml-1.5" style={labelStyle}>
             <Text className="text-xs font-bold text-white">{label}</Text>
           </Animated.View>
@@ -108,7 +115,7 @@ function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
           borderColor: '#383838',
           borderRadius: 999,
           borderWidth: 1,
-          padding: 6,
+          padding: 7,
           shadowColor: '#000000',
           shadowOffset: { width: 0, height: 12 },
           shadowOpacity: 0.38,

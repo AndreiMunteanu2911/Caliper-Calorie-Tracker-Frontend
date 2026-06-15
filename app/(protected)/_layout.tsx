@@ -38,6 +38,10 @@ export default function ProtectedLayout() {
           name="nutrition"
           options={{ animation: 'slide_from_right' }}
         />
+        <Stack.Screen
+          name="weight"
+          options={{ animation: 'slide_from_right' }}
+        />
       </Stack>
     </MealAnalysisProvider>
   );

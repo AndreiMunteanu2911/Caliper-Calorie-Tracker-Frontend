@@ -126,3 +126,44 @@ export type ProfileUpdate = {
   carbs: number;
   fats: number;
 };
+
+export type WeightLogItem = {
+  id: string;
+  weight_kg: number;
+  recorded_on: string;
+  created_at: string;
+};
+
+export type WeightHistoryResponse = {
+  entries: WeightLogItem[];
+  latest_weight_kg: number | null;
+  change_kg: number | null;
+};
+
+export type WeightLogCreate = {
+  weight_kg: number;
+  recorded_on: string;
+};
+
+export type TdeeCalculationRequest = {
+  sex: 'female' | 'male';
+  age: number;
+  height_cm: number;
+  weight_kg: number;
+  activity_level:
+    | 'sedentary'
+    | 'light'
+    | 'moderate'
+    | 'very_active'
+    | 'extra_active';
+  goal: 'lose' | 'maintain' | 'gain';
+};
+
+export type TdeeCalculationResponse = {
+  bmr: number;
+  tdee: number;
+  daily_calorie_target: number;
+  daily_protein_target: number;
+  daily_carbs_target: number;
+  daily_fats_target: number;
+};
