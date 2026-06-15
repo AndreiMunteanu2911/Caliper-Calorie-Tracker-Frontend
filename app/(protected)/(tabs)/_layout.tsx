@@ -1,10 +1,10 @@
 import { Tabs } from 'expo-router';
 import {
   ChartNoAxesCombined,
+  CirclePlus,
   NotebookTabs,
   type LucideIcon,
   MessageCircleMore,
-  ScanLine,
   UserRound,
 } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
@@ -18,7 +18,7 @@ import Animated, {
 const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
   dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
   diary: { icon: NotebookTabs, label: 'Diary' },
-  scan: { icon: ScanLine, label: 'Scan' },
+  scan: { icon: CirclePlus, label: 'Add Food' },
   chat: { icon: MessageCircleMore, label: 'Advisor' },
   profile: { icon: UserRound, label: 'Profile' },
 };
@@ -186,7 +186,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="scan"
-        options={{ title: 'Meal Analysis', tabBarAccessibilityLabel: 'Scan' }}
+        options={{ title: 'Add Food', tabBarAccessibilityLabel: 'Add Food' }}
       />
       <Tabs.Screen
         name="chat"

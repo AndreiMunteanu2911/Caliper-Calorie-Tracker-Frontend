@@ -12,7 +12,11 @@ import {
 } from '@/src/hooks/useNutritionStats';
 import { useWeightLogs } from '@/src/hooks/useWeightLogs';
 import { localDateString, parseLocalDate, shiftLocalDate } from '@/src/lib/dates';
-import type { MacroHistoryEntry, MacroTotals } from '@/src/types/api';
+import type {
+  MacroHistoryEntry,
+  MacroTotals,
+  WeightLogItem,
+} from '@/src/types/api';
 
 const PERIODS: { value: Period; label: string }[] = [
   { value: 'day', label: 'Day' },
@@ -208,6 +212,76 @@ function correlation(values: [number, number][]): number | null {
   return denominator > 0 ? numerator / denominator : null;
 }
 
+function nearestWeight(
+  entries: WeightLogItem[],
+  targetDate: string,
+): WeightLogItem | null {
+  const targetTime = parseLocalDate(targetDate).getTime();
+  const dayMs = 24 * 60 * 60 * 1000;
+  let nearest: WeightLogItem | null = null;
+  let nearestDistance = Number.POSITIVE_INFINITY;
+
+  entries.forEach((entry) => {
+    const distance = Math.abs(
+      parseLocalDate(entry.recorded_on).getTime() - targetTime,
+    );
+    if (distance <= dayMs && distance < nearestDistance) {
+      nearest = entry;
+      nearestDistance = distance;
+    }
+  });
+
+  return nearest;
+}
+
+function calorieWeightTrend(
+  calorieEntries: MacroHistoryEntry[],
+  weightEntries: WeightLogItem[],
+): { correlation: number | null; samples: number } {
+  const caloriesByDate = new Map(
+    calorieEntries.map((entry) => [entry.date, entry.consumed.calories]),
+  );
+  const today = localDateString();
+  const values: [number, number][] = [];
+  const usedWeightPairs = new Set<string>();
+
+  calorieEntries.forEach((entry) => {
+    const intakeWindow = Array.from({ length: 7 }, (_, index) =>
+      shiftLocalDate(entry.date, index - 6),
+    );
+    const calories = intakeWindow.map((date) => caloriesByDate.get(date) ?? 0);
+    const loggedDays = calories.filter((value) => value > 0).length;
+    const followUpDate = shiftLocalDate(entry.date, 7);
+
+    if (loggedDays < 5 || followUpDate > today) return;
+
+    const startingWeight = nearestWeight(weightEntries, entry.date);
+    const followUpWeight = nearestWeight(weightEntries, followUpDate);
+    if (
+      !startingWeight ||
+      !followUpWeight ||
+      startingWeight.id === followUpWeight.id
+    ) {
+      return;
+    }
+    const pairKey = `${startingWeight.id}:${followUpWeight.id}`;
+    if (usedWeightPairs.has(pairKey)) return;
+    usedWeightPairs.add(pairKey);
+
+    const averageCalories =
+      calories.reduce((sum, value) => sum + value, 0) / calories.length;
+    values.push([
+      averageCalories,
+      followUpWeight.weight_kg - startingWeight.weight_kg,
+    ]);
+  });
+
+  return {
+    correlation: correlation(values),
+    samples: values.length,
+  };
+}
+
 export function NutritionStatsScreen() {
   const router = useRouter();
   const { data, isLoading, error, period, setPeriod } = useNutritionStats();
@@ -242,16 +316,9 @@ export function NutritionStatsScreen() {
           days) *
         100
       : 0;
-  const caloriesByDate = new Map(
-    entries.map((entry) => [entry.date, entry.consumed.calories]),
-  );
-  const weightCorrelation = correlation(
-    (weightData?.entries ?? [])
-      .filter((entry) => caloriesByDate.has(entry.recorded_on))
-      .map((entry) => [
-        caloriesByDate.get(entry.recorded_on) ?? 0,
-        entry.weight_kg,
-      ]),
+  const weightTrend = calorieWeightTrend(
+    entries,
+    weightData?.entries ?? [],
   );
 
   return (
@@ -346,15 +413,19 @@ export function NutritionStatsScreen() {
               </View>
               <View className="rounded-2xl border border-white/10 bg-[#232220] p-4">
                 <Text className="text-xs font-black uppercase tracking-widest text-white/45">
-                  Calories vs weight
+                  Calories vs next-week weight change
                 </Text>
                 <Text className="mt-2 text-lg font-black text-white">
-                  {weightCorrelation === null
-                    ? 'More matching weigh-ins needed'
-                    : `${weightCorrelation >= 0 ? '+' : ''}${weightCorrelation.toFixed(2)} correlation`}
+                  {weightTrend.correlation === null
+                    ? days < 30
+                      ? 'Select 30D or 90D for this trend'
+                      : 'More weekly weigh-ins needed'
+                    : `${weightTrend.correlation >= 0 ? '+' : ''}${weightTrend.correlation.toFixed(2)} correlation`}
                 </Text>
                 <Text className="mt-1 text-xs leading-5 text-white/40">
-                  This is descriptive and does not prove causation.
+                  Compares each 7-day calorie average with weight change over
+                  the following week. Requires 5 logged days and weigh-ins near
+                  both endpoints. {weightTrend.samples} matching samples.
                 </Text>
               </View>
             </View>

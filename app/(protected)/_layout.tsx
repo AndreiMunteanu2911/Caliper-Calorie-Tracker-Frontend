@@ -69,6 +69,14 @@ function ProtectedNavigator() {
             options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen
+            name="food-search"
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="meal-analysis"
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
             name="custom-foods"
             options={{ animation: 'slide_from_right' }}
           />

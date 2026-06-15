@@ -1,11 +1,11 @@
 import { PageHead } from '@/src/components/layout/PageHead';
-import { FoodScannerScreen } from '@/src/components/scan/FoodScannerScreen';
+import { AddFoodScreen } from '@/src/components/scan/AddFoodScreen';
 
-export default function ScanRoute() {
+export default function AddFoodRoute() {
   return (
     <>
       <PageHead title="Add Food" />
-      <FoodScannerScreen />
+      <AddFoodScreen />
     </>
   );
 }

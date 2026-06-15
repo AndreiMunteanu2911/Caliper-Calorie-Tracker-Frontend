@@ -1,18 +1,11 @@
 import { useRouter } from 'expo-router';
 import { Plus, Sparkles, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { Button } from '@/src/components/ui/Button';
 import { InputBox } from '@/src/components/ui/InputBox';
+import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useCustomFoods } from '@/src/hooks/useCustomFoods';
 import type { FoodItem } from '@/src/types/api';
@@ -142,24 +135,10 @@ export function CustomFoodForm({
   }
 
   return (
-    <Modal
-      animationType="fade"
-      onRequestClose={onDismiss}
-      statusBarTranslucent
-      transparent
-      visible={visible}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={StyleSheet.absoluteFill}>
-        <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8">
-          <Pressable onPress={onDismiss} style={StyleSheet.absoluteFill} />
-          <View
-            className="w-full max-w-lg overflow-hidden border border-white/15 bg-[#1C1C1C] shadow-card"
-            style={{ borderRadius: 30, maxHeight: '92%' }}>
-            <ScrollbarContainer
-              className="flex-1"
-              contentContainerClassName="p-3"
-              keyboardShouldPersistTaps="handled">
+    <ModalWrapper isOpen={visible} onClose={onDismiss}>
+      <ScrollbarContainer
+        contentContainerClassName="p-3"
+        keyboardShouldPersistTaps="handled">
               <View className="relative overflow-hidden rounded-3xl bg-carbs p-4">
                 <View className="absolute -right-8 -top-10 h-24 w-24 rounded-full border-8 border-white/25" />
                 <View className="flex-row items-start justify-between">
@@ -274,10 +253,7 @@ export function CustomFoodForm({
                   onPress={() => void save()}
                 />
               </View>
-            </ScrollbarContainer>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
+      </ScrollbarContainer>
+    </ModalWrapper>
   );
 }
