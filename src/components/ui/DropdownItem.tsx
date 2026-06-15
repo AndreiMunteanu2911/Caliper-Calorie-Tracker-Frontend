@@ -35,40 +35,27 @@ export function DropdownItem({
         <View className="h-10 w-10 items-center justify-center rounded-2xl bg-accentSoft">
           <Flame color="#FF5A16" size={17} strokeWidth={2.6} />
         </View>
-        <View className="min-w-0 flex-1">
+        <View className="min-w-0 flex-1 gap-0.5">
           <Text
             className="text-sm font-black text-white"
             numberOfLines={1}
           >
             {label}
           </Text>
-          <Text
-            className="mt-0.5 text-xs text-white/45"
-            numberOfLines={1}
-          >
-            {subtitle || 'Nutrition per 100g'}
-          </Text>
-        </View>
-        <View className="items-end gap-1">
-          <View className="flex-row items-center gap-1 rounded-lg bg-white/[0.06] px-2 py-0.5">
-            <Text className="text-xs font-black text-white">
+          <View className="flex-row items-center gap-1.5">
+            <Text className="text-xs font-bold text-white">
               {Math.round(calories)}
+              <Text className="text-[10px] font-bold text-white/40"> kcal</Text>
             </Text>
-            <Text className="text-[9px] font-bold text-white/40">kcal</Text>
-          </View>
-          <View className="flex-row gap-1">
-            <View className="rounded-md bg-protein/10 px-1.5 py-0.5">
-              <Text className="text-[9px] font-black text-protein">
+            <Text className="text-[10px] text-white/20">·</Text>
+            <View className="flex-row gap-1.5">
+              <Text className="text-[10px] font-bold text-protein">
                 P {protein.toFixed(1)}g
               </Text>
-            </View>
-            <View className="rounded-md bg-carbs/10 px-1.5 py-0.5">
-              <Text className="text-[9px] font-black text-carbs">
+              <Text className="text-[10px] font-bold text-carbs">
                 C {carbs.toFixed(1)}g
               </Text>
-            </View>
-            <View className="rounded-md bg-fats/10 px-1.5 py-0.5">
-              <Text className="text-[9px] font-black text-fats">
+              <Text className="text-[10px] font-bold text-fats">
                 F {fats.toFixed(1)}g
               </Text>
             </View>
