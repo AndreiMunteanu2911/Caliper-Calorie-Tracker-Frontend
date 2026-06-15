@@ -1,92 +1,69 @@
-# Caliper Frontend
+# Caliper App
 
-Cross-platform calorie and macro tracking client built with Expo Router, React
-Native, TypeScript, and NativeWind.
+Caliper is a calorie, macro, meal, weight, and AI nutrition tracking app. This
+repository contains the user-facing app: the screens people open on web, iOS, or
+Android.
 
-[Visit the live site](https://caliperam.vercel.app/)
+[Open the live app](https://caliperam.vercel.app/)
+
+## What You Can Do With Caliper
+
+Caliper is built around everyday nutrition tracking:
+
+- See today's calorie and macro progress at a glance.
+- Log meals under breakfast, lunch, dinner, or snacks.
+- Search for foods by name.
+- Scan packaged-food barcodes.
+- Take or upload a meal photo and ask AI to estimate the food and macros.
+- Chat with an AI nutrition advisor that can use today's food log and recent
+  nutrition history.
+- Keep multiple advisor conversations and return to older chats.
+- Track weight over time.
+- Calculate calorie and macro targets with a TDEE calculator.
+- Use the same app on web, Android, and iOS.
+
+## How The App Feels To Use
+
+The app is organized around a few main areas:
+
+- **Dashboard**: today's calorie and macro status, plus recent meal activity.
+- **Diary**: a day-by-day view of logged foods.
+- **Scan**: barcode scanning, food search, custom foods, and AI meal analysis.
+- **AI Advisor**: a chat-style nutrition assistant with conversation history.
+- **Profile**: personal targets, TDEE calculation, and account controls.
+- **Weight**: weight entries and visual progress history.
+
+You do not need to understand the technical setup to use the app. Sign in, set
+your goals, log food, and Caliper keeps the daily totals current.
 
 ## Design Credit
 
-The visual design is inspired by
+The visual direction is inspired by
 [Nutri AI Food Calorie Tracker App](https://www.figma.com/community/file/1500608399091759099/nutri-ai-food-calorie-tracker-app).
 
-## Features
+## For People Setting It Up
 
-- Supabase email/password authentication
-- Daily calorie and macro dashboard
-- Meal logs grouped by breakfast, lunch, dinner, and snacks
-- Create, edit, and delete meal logs
-- Native barcode scanning with Expo Camera
-- Debounced USDA food search
-- Open Food Facts barcode lookup
-- AI meal analysis from a camera or library image
-- Context-aware AI diet advisor chat
-- Persistent advisor conversations using today and 30-day nutrition context
-- Weight logging with a visual history chart
-- TDEE calculator that can apply calorie and macro goals
-- iOS, Android, and web support
+The app needs a backend service and a Supabase project. Supabase handles user
+accounts. The backend handles food lookup, meal logging, AI features, and saved
+history.
 
-## Technology
+### Requirements
 
-- Expo SDK 56
-- Expo Router
-- React Native 0.85
-- React 19
-- TypeScript
-- NativeWind 4 with Tailwind CSS 3
-- Supabase Auth
-- Expo Camera
-- Expo Image Picker
-
-## Architecture
-
-```text
-app/
-  index.tsx                         Public welcome route
-  sign-in.tsx                       Sign-in route
-  sign-up.tsx                       Registration route
-  (protected)/
-    (tabs)/
-      dashboard.tsx                 Dashboard route
-      scan.tsx                      Barcode, search, and meal analysis route
-      chat.tsx                      Diet advisor route
-
-src/
-  components/
-    advisor/
-    auth/
-    dashboard/
-    food/
-    scan/
-    ui/
-  hooks/             UI state, API calls, and mutations
-  lib/
-    api-client.ts    Authenticated FastAPI client
-    supabase.ts      Supabase browser/native client
-  types/
-    api.ts           Shared frontend API contracts
-```
-
-Route files remain small. Network requests, mutation state, authentication, and
-complex interaction state are implemented in custom hooks.
-
-## Requirements
-
-- Node.js supported by Expo SDK 56
+- Node.js compatible with Expo SDK 56
 - npm
 - A running Caliper backend
-- A Supabase project with the backend migration applied
-- Android Studio, Xcode, or Expo Go for native development
+- A Supabase project configured with the backend database migrations
+- Expo Go, Android Studio, or Xcode for native development
 
-## Environment
+### Environment File
 
-Create an uncommitted `.env.local` for machine-specific values:
+Create a local environment file:
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
-Configure `.env.local`:
+Fill it in:
 
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:8000/api/v1
@@ -94,45 +71,36 @@ EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-`EXPO_PUBLIC_SUPABASE_ANON_KEY` is intentionally public. It is the Supabase
-anonymous client key, not the service-role key. Database security is enforced by
-Supabase authentication and Row Level Security.
+`EXPO_PUBLIC_SUPABASE_ANON_KEY` is safe to use in the app. It is Supabase's
+public anonymous key, not an admin key. Never put a Supabase service-role key in
+the frontend.
 
-Never expose a Supabase service-role key in the frontend.
+### API URL On Phones And Emulators
 
-### API URL On Devices
-
-`localhost` refers to the device itself. Use an address reachable by the target:
+`localhost` means "this device", so the API URL depends on where the app runs:
 
 - Android emulator: `http://10.0.2.2:8000/api/v1`
 - iOS simulator: `http://localhost:8000/api/v1`
-- Physical device: `http://<development-machine-lan-ip>:8000/api/v1`
+- Physical phone: `http://<your-computer-lan-ip>:8000/api/v1`
 
-The backend `CORS_ORIGINS` setting must include the web development origin when
-running Expo Web.
+If you run the web app locally, the backend CORS settings must allow the local
+web address printed by Expo.
 
-## Installation
+## Run The App Locally
+
+Install dependencies:
 
 ```powershell
 npm install
 ```
 
-## Development
-
-Start the backend first from `Caliper-Backend`:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Then start Expo from `Caliper-Frontend`:
+Start the backend first from `Caliper-Backend`, then start Expo here:
 
 ```powershell
 npm start
 ```
 
-Platform-specific commands:
+Platform shortcuts:
 
 ```powershell
 npm run android
@@ -140,62 +108,44 @@ npm run ios
 npm run web
 ```
 
-### Local Test Checklist
-
-1. Open `/` and confirm the welcome page shows separate sign-in and sign-up
-   actions.
-2. Create an account. If Supabase email confirmation is enabled, confirm the
-   email before signing in.
-3. Sign in and confirm the app redirects to `/dashboard`.
-4. Open **Meal Analysis** and test barcode scanning, food search, camera capture,
-   and library image selection.
-5. Log a food, then confirm it appears on the dashboard.
-6. Edit its weight and meal type, then delete it.
-7. Open **AI Advisor**, send a message, and confirm the response uses the current
-   daily macro balance.
-8. Sign out and confirm protected routes redirect to `/`.
-
-For Expo Web, open the URL printed by `npm run web`, normally
+For Expo Web, open the local URL printed in the terminal, usually
 `http://localhost:8081`.
 
-In Supabase **Authentication > URL Configuration**, add the local and production
-auth callback URLs to the redirect allowlist:
+## Quick Manual Check
 
-```text
-http://localhost:8081/**
-https://your-frontend.vercel.app/**
-caliperfrontend:///**
-```
+After setup, a useful manual walkthrough is:
 
-Keep the production frontend as the Supabase Site URL. The app sends an
-environment-specific email redirect when a user registers.
+1. Open the welcome page.
+2. Create an account or sign in.
+3. Confirm the dashboard loads.
+4. Search for a food and log it.
+5. Edit the logged amount or meal type.
+6. Scan a barcode if camera permissions are available.
+7. Try meal photo analysis.
+8. Send a message in AI Advisor and open conversation history.
+9. Add a weight entry.
+10. Sign out and confirm protected pages are no longer accessible.
 
-Create a static web export:
+## Deploying The Web App
 
-```powershell
-npm run build:web
-```
+The frontend and backend are separate Vercel projects. Deploy the backend first,
+because the frontend needs the backend URL during its build.
 
-## Deploying Expo Web To Vercel
+### Vercel Project Settings
 
-The frontend and backend are separate Vercel projects. Deploy the backend first
-because its production URL is required while building the frontend.
-
-### 1. Create The Frontend Project
-
-Import this repository into Vercel and configure:
+Use:
 
 - Root Directory: repository root
 - Framework Preset: Other
+- Install Command: `npm install`
 - Build Command: `npm run build:web`
 - Output Directory: `dist`
-- Install Command: `npm install`
 
-`vercel.json` already contains the build and output settings.
+`vercel.json` already contains the build/output settings.
 
-### 2. Configure Production Variables
+### Production Environment Variables
 
-In Vercel Project Settings, add these variables for Production:
+Set these in Vercel:
 
 ```env
 EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
@@ -203,77 +153,93 @@ EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-Add equivalent values for Preview if preview deployments should work. A preview
-frontend may call the production backend, or a separate staging backend.
+Values beginning with `EXPO_PUBLIC_` are bundled into the app. Do not put
+secrets there.
 
-`EXPO_PUBLIC_` values are embedded into the browser/native JavaScript bundle at
-build time. They must not contain secrets.
+After changing one of these values, redeploy the frontend.
 
-### 3. Deploy
+### Supabase Redirect URLs
 
-Push to the production branch or run:
+In Supabase **Authentication > URL Configuration**, allow local and production
+redirects:
 
-```powershell
-npx vercel --prod
+```text
+http://localhost:8081/**
+https://your-frontend.vercel.app/**
+caliperfrontend:///**
 ```
 
-After changing a Vercel environment variable, redeploy the frontend so Expo can
-embed the new value into the web bundle.
+## How It Works
 
-### Environment File Strategy
-
-Use:
-
-- `.env.local`: uncommitted local API and Supabase values
-- Vercel Environment Variables: Preview and Production values
-- `.env.example`: committed variable-name documentation
-
-A committed `.env.production` is not required. Vercel injects production
-variables during the build. Keeping production configuration in Vercel avoids
-committing credentials and deployment-specific URLs.
-
-## Authentication Flow
-
-The frontend authenticates directly with Supabase. Supabase returns a user JWT,
-which `src/lib/api-client.ts` automatically adds to backend requests:
+The frontend signs users in with Supabase. Supabase returns an access token, and
+the app sends that token to the backend with each protected request:
 
 ```http
 Authorization: Bearer <supabase-access-token>
 ```
 
-FastAPI verifies that token before serving protected routes.
+The backend checks the token before reading or changing any user data.
 
-## Food Logging Flow
+## Main Technologies
 
-1. Scan a barcode or search for a food.
-2. Select a result.
-3. Choose a meal type and weight in grams.
-4. The backend calculates nutrient totals from per-100 g values.
-5. Returning to the dashboard refreshes server-aggregated daily totals.
+- Expo SDK 56
+- Expo Router
+- React Native 0.85
+- React 19
+- TypeScript
+- NativeWind and Tailwind CSS
+- Supabase Auth
+- Expo Camera
+- Expo Image Picker
 
-Meal-log edits use optimistic UI updates and refresh the authoritative dashboard
-state after the server accepts the change.
+## Project Map
 
-## Camera And Images
+```text
+app/
+  index.tsx                         Welcome page
+  sign-in.tsx                       Sign-in page
+  sign-up.tsx                       Account creation page
+  (protected)/
+    (tabs)/
+      dashboard.tsx                 Dashboard tab
+      scan.tsx                      Food search, barcode scan, meal analysis
+      chat.tsx                      AI Advisor tab
 
-Barcode scanning requires camera permission. Meal analysis can capture a new
-camera photo or use the image library, then sends a compressed base64 image to
-the backend.
+src/
+  components/                       Reusable screen and UI components
+  hooks/                            App state, API calls, and mutations
+  lib/
+    api-client.ts                   Backend client with auth token handling
+    supabase.ts                     Supabase client
+  types/
+    api.ts                          Shared API data shapes
+```
 
-Camera and photo permissions are configured in `app.json`. Native permission
-changes require rebuilding the native application.
+Route files stay small. Most fetching, form state, and interaction logic lives
+in custom hooks.
 
-## Main Hooks
+## Important App Flows
 
-- `useAuth`: Supabase session lifecycle
-- `useAuthForm`: sign-in and registration state
-- `useDashboardData`: dashboard fetching and meal-log mutations
-- `useFoodSearch`: debounced, cancellable USDA search
-- `useBarcodeScanner`: camera permission and scan state
-- `useBarcodeLookup`: Open Food Facts lookup
-- `useMealLogs`: quick-log creation
-- `useMealAnalysis`: camera/library selection and AI meal analysis
-- `useAdvisorChat`: persisted advisor history loading and messaging
+### Food Logging
+
+1. Search, scan, or select a food.
+2. Choose a meal type and amount in grams.
+3. The backend calculates nutrients for that amount.
+4. The dashboard refreshes with updated daily totals.
+
+### Meal Photo Analysis
+
+The app asks for camera or library permission, sends a compressed image to the
+backend, and receives estimated foods, calories, and macros.
+
+### AI Advisor
+
+The advisor can use today's food log, remaining macros, and recent nutrition
+history. Conversations are saved so users can return to older chats.
+
+### Weight Tracking
+
+Users can add dated weight entries and view their progress history.
 
 ## Required Backend Routes
 
@@ -287,6 +253,7 @@ GET    /api/v1/food/search
 POST   /api/v1/ai/analyze-plate
 GET    /api/v1/ai/chat
 POST   /api/v1/ai/chat
+GET    /api/v1/ai/conversations
 GET    /api/v1/weight-logs
 POST   /api/v1/weight-logs
 DELETE /api/v1/weight-logs/{log_id}
@@ -295,24 +262,22 @@ POST   /api/v1/profile/tdee
 
 ## Troubleshooting
 
-### Missing environment configuration
+### The app says configuration is missing
 
-The application intentionally fails during startup when the API URL or Supabase
-public credentials are absent. Confirm `.env` exists and restart Expo after
-changing it.
+Check `.env.local`, then restart Expo. Expo reads public environment values when
+the app starts.
 
-### Camera does not open
+### The camera does not open
 
-Confirm camera permission is granted. If `app.json` permission settings changed,
-rebuild the native application.
+Grant camera permission. If native permission text changed in `app.json`,
+rebuild the native app.
 
-### A physical device cannot reach FastAPI
+### A phone cannot reach the backend
 
-Use the development machine's LAN address instead of `localhost`, ensure both
-devices are on the same network, and allow the backend port through the local
-firewall.
+Use your computer's LAN IP address instead of `localhost`, keep both devices on
+the same network, and allow the backend port through your firewall.
 
-### Dashboard is empty
+### The dashboard is empty
 
-Confirm the user is authenticated, the Supabase migration is applied, and the
-backend can connect to the same Supabase PostgreSQL database.
+Confirm the user is signed in, the backend is running, and the Supabase database
+migrations were applied to the same project configured in `.env.local`.
