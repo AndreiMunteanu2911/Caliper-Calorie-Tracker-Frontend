@@ -39,6 +39,12 @@ jobs:
           java-version: 21
           cache: gradle
 
+      - name: Verify Java runtime
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
+          javac -version
+
       - name: Install dependencies
         run: npm ci
 
@@ -53,8 +59,10 @@ jobs:
 
       - name: Build debug APK
         run: |
+          echo "org.gradle.java.home=$JAVA_HOME" >> android/gradle.properties
           chmod +x android/gradlew
           cd android
+          ./gradlew --version
           ./gradlew assembleDebug
 
       - name: Rename APK
