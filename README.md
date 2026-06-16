@@ -212,10 +212,15 @@ The repository includes a GitHub Actions workflow at
 Capacitor, builds an installable debug APK, and uploads it as a workflow
 artifact.
 
-Before running it, add this GitHub repository secret:
+Before running it, add the public Expo values in GitHub under
+**Settings > Secrets and variables > Actions**. Repository variables are enough
+because `EXPO_PUBLIC_` values are bundled into the app, but repository secrets
+also work:
 
 ```text
 EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
+EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 Every push to `master` will produce an APK artifact and update the
