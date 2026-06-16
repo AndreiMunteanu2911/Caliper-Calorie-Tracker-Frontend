@@ -9,6 +9,7 @@ import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useBarcodeLookup } from '@/src/hooks/useBarcodeLookup';
 import { useBarcodeScanner } from '@/src/hooks/useBarcodeScanner';
+import { isNativeCapacitor } from '@/src/lib/capacitor';
 import { shadows } from '@/src/lib/shadows';
 
 function navigateToFoodDetail(
@@ -43,13 +44,14 @@ export function BarcodeScannerScreen() {
   const insets = useSafeAreaInsets();
   const lookup = useBarcodeLookup();
   const scanner = useBarcodeScanner((value) => void lookup.lookup(value));
+  const shouldUsePermissionGate = !isNativeCapacitor();
 
   function resume() {
     lookup.reset();
     scanner.resume();
   }
 
-  if (!scanner.permission) {
+  if (shouldUsePermissionGate && !scanner.permission) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
         <LoadingSpinner />
@@ -57,7 +59,7 @@ export function BarcodeScannerScreen() {
     );
   }
 
-  if (!scanner.permission.granted) {
+  if (shouldUsePermissionGate && !scanner.permission?.granted) {
     return (
       <View className="flex-1 items-center justify-center gap-5 bg-brand px-8">
         <View className="h-16 w-16 items-center justify-center rounded-full bg-carbs">

@@ -10,6 +10,7 @@ import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useCustomFoods } from '@/src/hooks/useCustomFoods';
 import { apiRequest } from '@/src/lib/api-client';
+import { isNativeCapacitor } from '@/src/lib/capacitor';
 import type { FoodItem, NutritionLabelAnalysis } from '@/src/types/api';
 
 type CustomFoodFormProps = {
@@ -82,10 +83,12 @@ export function CustomFoodForm({
   }, [initialFood, visible]);
 
   async function scanNutritionLabel() {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-    if (!permission.granted) {
-      setError('Camera access is required to scan a nutrition label.');
-      return;
+    if (!isNativeCapacitor()) {
+      const permission = await ImagePicker.requestCameraPermissionsAsync();
+      if (!permission.granted) {
+        setError('Camera access is required to scan a nutrition label.');
+        return;
+      }
     }
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,

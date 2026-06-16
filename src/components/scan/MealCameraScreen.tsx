@@ -9,6 +9,7 @@ import { Button } from '@/src/components/ui/Button';
 import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
+import { isNativeCapacitor } from '@/src/lib/capacitor';
 import { shadows } from '@/src/lib/shadows';
 
 export function MealCameraScreen() {
@@ -19,6 +20,7 @@ export function MealCameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<'back' | 'front'>('back');
   const [isCapturing, setIsCapturing] = useState(false);
+  const shouldUsePermissionGate = !isNativeCapacitor();
 
   async function capture() {
     if (!cameraRef.current || isCapturing) return;
@@ -40,7 +42,7 @@ export function MealCameraScreen() {
     }
   }
 
-  if (!permission) {
+  if (shouldUsePermissionGate && !permission) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
         <LoadingSpinner />
@@ -48,7 +50,7 @@ export function MealCameraScreen() {
     );
   }
 
-  if (!permission.granted) {
+  if (shouldUsePermissionGate && !permission?.granted) {
     return (
       <View className="flex-1 items-center justify-center gap-5 bg-brand px-8">
         <View className="h-16 w-16 items-center justify-center rounded-full bg-fats">
