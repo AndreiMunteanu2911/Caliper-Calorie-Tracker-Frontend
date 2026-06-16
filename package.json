@@ -46,10 +46,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "web:clear": "expo start --web --clear",
-    "build:web": "npx expo export --platform web",
-    "cap:build": "npm run build:web && npx cap sync android",
+    "build:web": "npx expo export --platform web --clear",
+    "cap:check-env": "node scripts/check-capacitor-env.js",
+    "cap:build": "npm run cap:check-env && npm run build:web && npx cap sync android",
     "cap:open": "npx cap open android",
-    "cap:run": "npm run build:web && npx cap run android"
+    "cap:run": "npm run cap:check-env && npm run build:web && npx cap run android"
   },
   "private": true
 }
