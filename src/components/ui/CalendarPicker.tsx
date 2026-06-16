@@ -10,6 +10,7 @@ import { ModalHeader } from '@/src/components/ui/ModalHeader';
 import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { localDateString, parseLocalDate } from '@/src/lib/dates';
 import { MotionFade, MotionPressable } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -82,7 +83,8 @@ export function CalendarPicker({
       <Pressable
         accessibilityLabel={label}
         accessibilityRole="button"
-        className="min-h-10 flex-row items-center justify-between rounded-lg border border-white/10 bg-[#141414] px-3 shadow-soft"
+        className="min-h-10 flex-row items-center justify-between rounded-lg border border-white/10 bg-[#141414] px-3"
+        style={shadows.soft}
         onPress={() => setIsOpen(true)}>
         <Text className="text-sm font-bold text-white">
           {displayValue ?? value}

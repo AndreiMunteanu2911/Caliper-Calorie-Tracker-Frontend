@@ -12,6 +12,7 @@ import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
 import { apiRequest } from '@/src/lib/api-client';
 import { localNoonIso } from '@/src/lib/dates';
 import { MotionFade, MotionStagger } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 import type {
   EstimatedFood,
   FoodItem,
@@ -105,7 +106,9 @@ export function MealAnalysisPanel() {
 
   return (
     <View className="gap-4">
-      <View className="rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-soft">
+      <View
+        className="rounded-3xl border border-white/10 bg-[#242424] p-4"
+        style={shadows.soft}>
         <View className="mb-3 h-10 w-10 items-center justify-center rounded-2xl bg-fats">
           <Sparkles color="#101010" size={19} strokeWidth={2.6} />
         </View>
@@ -144,7 +147,9 @@ export function MealAnalysisPanel() {
       ) : null}
       {analysis.isAnalyzing ? (
         <MotionFade>
-          <View className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10 shadow-card">
+          <View
+            className="items-center rounded-3xl border border-white/10 bg-[#242424] px-6 py-10"
+            style={shadows.card}>
             <LoadingSpinner size="large" />
             <Text className="mt-3 text-center text-base font-black text-white">
               Analyzing your meal
@@ -157,7 +162,9 @@ export function MealAnalysisPanel() {
       ) : null}
       {analysis.analysis ? (
         <MotionFade>
-          <View className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-4 shadow-card">
+          <View
+            className="gap-4 rounded-3xl border border-white/10 bg-[#242424] p-4"
+            style={shadows.card}>
             <View>
             <Text className="text-xl font-black text-white">
               Review detected foods

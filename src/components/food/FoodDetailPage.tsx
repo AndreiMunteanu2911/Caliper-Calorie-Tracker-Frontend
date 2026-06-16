@@ -14,6 +14,7 @@ import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { apiRequest } from '@/src/lib/api-client';
 import { localNoonIso } from '@/src/lib/dates';
 import { MotionFade, MotionPop } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 import type { FoodItem, MealLogItem, MealType } from '@/src/types/api';
 
 const MACROS = [
@@ -130,7 +131,9 @@ export function FoodDetailPage() {
             <View className="h-10 w-10" />
           </View>
 
-          <View className="overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-2.5 shadow-card">
+          <View
+            className="overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-2.5"
+            style={shadows.card}>
             <View className="relative overflow-hidden rounded-3xl bg-accent p-4">
               <View className="absolute -right-8 -top-8 h-28 w-28 rounded-full border-8 border-white/20" />
               <View className="flex-row items-start justify-between gap-3">
@@ -184,7 +187,9 @@ export function FoodDetailPage() {
             </View>
           </View>
 
-          <View className="mt-3.5 gap-4 rounded-3xl border border-white/10 bg-[#1C1C1C] p-4 shadow-card">
+          <View
+            className="mt-3.5 gap-4 rounded-3xl border border-white/10 bg-[#1C1C1C] p-4"
+            style={shadows.card}>
             <View className="gap-2">
               <View className="flex-row items-center gap-2">
                 <Scale color="#FF5A16" size={15} strokeWidth={2.5} />

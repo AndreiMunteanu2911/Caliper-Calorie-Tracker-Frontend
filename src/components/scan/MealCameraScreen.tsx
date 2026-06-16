@@ -9,6 +9,7 @@ import { Button } from '@/src/components/ui/Button';
 import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
+import { shadows } from '@/src/lib/shadows';
 
 export function MealCameraScreen() {
   const router = useRouter();
@@ -66,8 +67,8 @@ export function MealCameraScreen() {
   return (
     <View className="flex-1 items-center bg-brand">
       <View
-        className="relative h-full w-full overflow-hidden bg-brand shadow-card"
-        style={{ maxWidth: 448 }}>
+        className="relative h-full w-full overflow-hidden bg-brand"
+        style={[{ maxWidth: 448 }, shadows.card]}>
         <CameraView ref={cameraRef} className="flex-1" facing={facing} />
         <View className="pointer-events-none absolute inset-0 bg-black/10" />
         <View

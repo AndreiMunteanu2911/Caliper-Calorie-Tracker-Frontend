@@ -8,6 +8,8 @@ import {
   View,
 } from 'react-native';
 
+import { shadows } from '@/src/lib/shadows';
+
 type InputBoxProps = TextInputProps & {
   compact?: boolean;
   dense?: boolean;
@@ -40,9 +42,10 @@ export const InputBox = forwardRef<TextInput, InputBoxProps>(function InputBox(
           : 'min-h-11 rounded-lg p-1 pl-3'
       } ${
         isFocused
-          ? 'border-accent shadow-glow'
-          : 'border-white/10 shadow-soft'
-      } ${containerClassName}`}>
+          ? 'border-accent'
+          : 'border-white/10'
+      } ${containerClassName}`}
+      style={isFocused ? shadows.glow : shadows.soft}>
       <TextInput
         {...textInputProps}
         ref={ref}

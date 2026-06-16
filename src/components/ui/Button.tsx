@@ -5,6 +5,7 @@ import { Pressable, Text, type PressableProps, View } from 'react-native';
 
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { motionTransition } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline';
 type ButtonSize = 'default' | 'compact';
@@ -20,8 +21,8 @@ type ButtonProps = Omit<PressableProps, 'children' | 'disabled'> & {
 };
 
 const CONTAINER_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'border border-accent bg-accent shadow-glow',
-  secondary: 'border border-white bg-white shadow-soft',
+  primary: 'border border-accent bg-accent',
+  secondary: 'border border-white bg-white',
   outline: 'border border-accent bg-brand',
 };
 
@@ -61,10 +62,14 @@ export function Button({
         accessibilityLabel={pressableProps.accessibilityLabel ?? label}
         accessibilityRole="button"
         accessibilityState={{ disabled: isDisabled, busy: loading }}
-        className={`${CONTAINER_CLASSES[variant]} flex-row items-center justify-center gap-2 rounded-xl px-3.5 shadow-soft ${
+        className={`${CONTAINER_CLASSES[variant]} flex-row items-center justify-center gap-2 rounded-xl px-3.5 ${
           size === 'compact' ? 'min-h-9' : 'min-h-11'
         } ${isDisabled ? 'opacity-40' : ''}`}
         disabled={isDisabled}
+        style={[
+          variant === 'primary' ? shadows.glow : shadows.soft,
+          pressableProps.style as never,
+        ]}
         onPressIn={(event) => {
           setIsPressed(true);
           onPressIn?.(event);

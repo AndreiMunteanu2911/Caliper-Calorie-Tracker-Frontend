@@ -158,6 +158,36 @@ secrets there.
 
 After changing one of these values, redeploy the frontend.
 
+## Build An Android APK
+
+Use EAS for Android builds:
+
+```powershell
+eas build:configure
+```
+
+Add an Android package in `app.json`, for example
+`com.andreimunteanu.caliper`. For preview APK builds, set `eas.json` like this:
+
+```json
+"preview": {
+  "distribution": "internal",
+  "environment": "preview",
+  "android": {
+    "buildType": "apk"
+  }
+}
+```
+
+Set `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL`, and
+`EXPO_PUBLIC_SUPABASE_ANON_KEY` in EAS for the `preview` environment.
+Use plaintext for `EXPO_PUBLIC_API_URL`; it is bundled into the app. The API URL
+must be a deployed backend URL, not `localhost`.
+
+```powershell
+eas build -p android --profile preview
+```
+
 ### Supabase Redirect URLs
 
 In Supabase **Authentication > URL Configuration**, allow local and production

@@ -1,6 +1,7 @@
 import { ChevronRight, Flame, Utensils } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 
+import { shadows } from '@/src/lib/shadows';
 import type { FoodItem } from '@/src/types/api';
 
 type FoodResultCardProps = {
@@ -13,7 +14,8 @@ export function FoodResultCard({ food, onPress }: FoodResultCardProps) {
     <Pressable
       accessibilityHint="Opens quick log options"
       accessibilityRole="button"
-      className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
+      className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 active:scale-[0.99] active:opacity-80"
+      style={shadows.card}
       onPress={() => onPress(food)}>
       <View className="flex-row items-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded-2xl bg-carbs">

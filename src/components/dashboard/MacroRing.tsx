@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { MotionProgress } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 
 type MacroRingProps = {
   label: string;
@@ -20,7 +21,9 @@ export function MacroRing({
   const [barWidth, setBarWidth] = useState(0);
 
   return (
-    <View className={`relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-white/40 p-4 shadow-card ${softColorClass}`}>
+    <View
+      className={`relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-white/40 p-4 ${softColorClass}`}
+      style={shadows.card}>
       <View className="absolute -right-5 -top-6 h-20 w-20 rounded-full border-8 border-white/20" />
       <View className="flex-row items-start justify-between gap-3">
         <View>

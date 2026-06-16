@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 
 import { PageHead } from '@/src/components/layout/PageHead';
 import { PublicShell } from '@/src/components/layout/PublicShell';
+import { shadows } from '@/src/lib/shadows';
 
 export default function NotFoundScreen() {
   return (
@@ -11,7 +12,9 @@ export default function NotFoundScreen() {
       <PageHead title="Page Not Found" />
       <PublicShell>
         <View className="min-w-0 flex-1 justify-center py-6">
-          <View className="gap-7 rounded-3xl border border-white/10 bg-[#232220] p-6 shadow-card">
+          <View
+            className="gap-7 rounded-3xl border border-white/10 bg-[#232220] p-6"
+            style={shadows.card}>
             <View>
               <View className="mb-5 h-14 w-14 items-center justify-center rounded-2xl bg-accent">
                 <SearchX color="#FFFFFF" size={25} strokeWidth={2.5} />

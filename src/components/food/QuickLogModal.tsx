@@ -8,6 +8,7 @@ import { ModalWrapper } from '@/src/components/ui/ModalWrapper';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useQuickLogForm } from '@/src/hooks/useQuickLogForm';
 import { MotionFade } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 import type { FoodItem, MealType } from '@/src/types/api';
 
 type QuickLogModalProps = {
@@ -65,7 +66,9 @@ export function QuickLogModal({
           />
         </View>
 
-        <View className="my-5 flex-row flex-wrap justify-between gap-3 rounded-3xl bg-fatsSoft p-4 shadow-soft">
+        <View
+          className="my-5 flex-row flex-wrap justify-between gap-3 rounded-3xl bg-fatsSoft p-4"
+          style={shadows.soft}>
           <View>
             <View className="flex-row items-center gap-1">
               <Flame color="#FF5A16" size={12} strokeWidth={2.5} />

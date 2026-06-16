@@ -32,6 +32,7 @@ import {
   MotionStagger,
   PageSkeleton,
 } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 
 const MEAL_LABELS: Record<MealType, string> = {
   breakfast: 'Breakfast',
@@ -151,7 +152,9 @@ export function DiaryScreen() {
           <PageSkeleton />
         ) : (
           <View className="mt-5 gap-4" key={selectedDate}>
-            <View className="overflow-hidden rounded-2xl bg-accent p-3.5 shadow-glow">
+            <View
+              className="overflow-hidden rounded-2xl bg-accent p-3.5"
+              style={shadows.glow}>
               <View className="absolute -right-8 -top-9 h-28 w-28 rounded-full border-8 border-white/10" />
               <View className="flex-row items-start justify-between">
                 <View>
@@ -193,7 +196,9 @@ export function DiaryScreen() {
               const collapsed = collapsedMeals[mealType] ?? false;
               return (
                 <MotionStagger index={mealIndex} key={mealType}>
-                <View className="overflow-hidden rounded-2xl border border-white/10 bg-[#1D1D1D] p-2 shadow-card">
+                <View
+                  className="overflow-hidden rounded-2xl border border-white/10 bg-[#1D1D1D] p-2"
+                  style={shadows.card}>
                   <MotionPressable
                     accessibilityLabel={`${collapsed ? 'Expand' : 'Collapse'} ${MEAL_LABELS[mealType]}`}
                     className="flex-row items-center justify-between px-1 py-1"

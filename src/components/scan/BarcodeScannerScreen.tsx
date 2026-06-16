@@ -9,6 +9,7 @@ import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useBarcodeLookup } from '@/src/hooks/useBarcodeLookup';
 import { useBarcodeScanner } from '@/src/hooks/useBarcodeScanner';
+import { shadows } from '@/src/lib/shadows';
 
 function navigateToFoodDetail(
   router: ReturnType<typeof useRouter>,
@@ -76,8 +77,8 @@ export function BarcodeScannerScreen() {
     <>
       <View className="flex-1 items-center bg-brand">
         <View
-          className="relative h-full w-full overflow-hidden bg-brand shadow-card"
-          style={{ maxWidth: 448 }}>
+          className="relative h-full w-full overflow-hidden bg-brand"
+          style={[{ maxWidth: 448 }, shadows.card]}>
         <CameraView
           barcodeScannerSettings={{
             barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e'],
@@ -116,7 +117,8 @@ export function BarcodeScannerScreen() {
               <Pressable
                 accessibilityHint="Opens food detail"
                 accessibilityRole="button"
-                className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 shadow-card active:scale-[0.99] active:opacity-80"
+                className="rounded-2xl border border-white/10 bg-[#242424] p-3.5 active:scale-[0.99] active:opacity-80"
+                style={shadows.card}
                 onPress={() => navigateToFoodDetail(router, lookup.item!, date)}>
                 <Text className="text-base font-black text-white">{lookup.item.name}</Text>
                 {lookup.item.brand ? (

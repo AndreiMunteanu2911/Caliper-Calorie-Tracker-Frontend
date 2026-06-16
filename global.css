@@ -87,7 +87,6 @@
     outline: 0 !important;
     outline-color: transparent !important;
     outline-offset: 0 !important;
-    box-shadow: none !important;
     -webkit-appearance: none;
   }
 
@@ -97,8 +96,6 @@
   .caliper-input:-moz-autofill:focus,
   .caliper-input:autofill,
   .caliper-input:autofill:focus {
-    -webkit-box-shadow: 0 0 0 100px #141414 inset !important;
-    box-shadow: 0 0 0 100px #141414 inset !important;
     -webkit-text-fill-color: #ffffff !important;
     caret-color: #ffffff !important;
     border: 0 !important;

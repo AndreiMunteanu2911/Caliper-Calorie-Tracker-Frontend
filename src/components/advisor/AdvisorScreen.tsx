@@ -26,6 +26,7 @@ import { InputBox } from '@/src/components/ui/InputBox';
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { useAdvisorChat } from '@/src/hooks/useAdvisorChat';
 import { MotionFade, MotionStagger } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 import type { AdvisorMessage } from '@/src/types/api';
 
 const HISTORY_MENU_MAX_WIDTH = 320;
@@ -125,10 +126,10 @@ export function AdvisorScreen() {
             </View>
 
             <View
-              className="z-0 min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-3 shadow-card">
+              className="z-0 min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] p-3">
               <ScrollbarContainer
                 ref={listRef}
-                className="min-h-0 flex-1 rounded-2xl border border-white/10 bg-[#141414] px-3.5 shadow-soft"
+                className="min-h-0 flex-1 rounded-2xl border border-white/10 bg-[#141414] px-3.5"
                 contentContainerClassName="gap-3 py-3.5"
                 keyboardDismissMode="interactive"
                 keyboardShouldPersistTaps="handled"
@@ -169,10 +170,11 @@ export function AdvisorScreen() {
                     <MotionFade
                       className={`${
                         item.role === 'user'
-                          ? 'max-w-[82%] self-end rounded-3xl rounded-br-lg bg-accent px-4 py-3 shadow-glow'
+                          ? 'max-w-[82%] self-end rounded-3xl rounded-br-lg bg-accent px-4 py-3'
                           : 'w-full max-w-[96%] self-start rounded-3xl rounded-bl-lg border border-white/10 bg-[#232220] px-5 py-4'
                       }`}
-                      key={item.id}>
+                      key={item.id}
+                      style={item.role === 'user' ? shadows.glow : undefined}>
                       {item.role === 'assistant' ? (
                         <View className="gap-3">
                           <View className="flex-row items-center gap-2">

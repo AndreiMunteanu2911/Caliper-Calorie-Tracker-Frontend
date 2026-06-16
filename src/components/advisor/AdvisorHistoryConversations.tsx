@@ -11,6 +11,7 @@ import {
 import { ScrollbarContainer } from '@/src/components/ui/ScrollbarContainer';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { MotionFade, MotionPressable, MotionStagger } from '@/src/lib/motion';
+import { shadows } from '@/src/lib/shadows';
 
 type ConversationSummary = {
   id: string;
@@ -60,15 +61,18 @@ export function AdvisorHistoryConversations({
         <MotionFade
           distance={3}
           scaleFrom={0.98}
-          style={{
-            left,
-            position: 'absolute',
-            top,
-            width,
-            zIndex: 50,
-          }}>
+          style={[
+            shadows.card,
+            {
+              left,
+              position: 'absolute',
+              top,
+              width,
+              zIndex: 50,
+            },
+          ]}>
           <View
-            className="overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C] shadow-card"
+            className="overflow-hidden rounded-3xl border border-white/10 bg-[#1C1C1C]"
             style={{
               elevation: 40,
               ...(Platform.OS === 'web'

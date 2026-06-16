@@ -35,13 +35,10 @@ module.exports = {
         dangerSoft: '#FCE6E2',
         successSoft: '#DDF7EB',
       },
-      boxShadow: {
-        card: '0 22px 60px rgba(16, 16, 16, 0.16)',
-        soft: '0 8px 24px rgba(16, 16, 16, 0.08)',
-        glow: '0 12px 34px rgba(255, 90, 47, 0.24)',
-        inset: 'inset 0 1px 0 rgba(255, 255, 255, 0.14)',
-      },
     },
+  },
+  corePlugins: {
+    aspectRatio: false,
   },
   plugins: [],
 }
