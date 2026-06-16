@@ -218,7 +218,7 @@ Before running it, add this GitHub repository secret:
 EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
 ```
 
-Every push to `main` will produce an APK artifact and update the
+Every push to `master` will produce an APK artifact and update the
 `Latest Android APK` GitHub Release. The workflow moves the fixed
 `android-latest` tag forward and replaces the APK asset.
 

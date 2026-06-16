@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
     tags:
       - 'v*'
 
@@ -65,18 +65,18 @@ jobs:
           path: android/app/build/outputs/apk/debug/Caliper.apk
 
       - name: Move latest Android release tag
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: |
           git tag -f android-latest "$GITHUB_SHA"
           git push -f origin android-latest
 
       - name: Publish APK to latest GitHub Release
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-latest
           name: Latest Android APK
-          body: Latest debug APK built from main.
+          body: Latest debug APK built from master.
           make_latest: true
           overwrite_files: true
           files: android/app/build/outputs/apk/debug/Caliper.apk
