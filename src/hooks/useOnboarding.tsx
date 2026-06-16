@@ -2,8 +2,10 @@ import {
   createContext,
   type PropsWithChildren,
   useContext,
+  useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -23,20 +25,36 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
 export function OnboardingProvider({ children }: PropsWithChildren) {
   const { session } = useAuth();
+  const userId = session?.user.id ?? null;
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const sessionRef = useRef(session);
+  const profileRef = useRef(profile);
 
-  async function refresh() {
-    if (!session) {
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
+
+  useEffect(() => {
+    profileRef.current = profile;
+  }, [profile]);
+
+  const refresh = useCallback(async () => {
+    const currentSession = sessionRef.current;
+
+    if (!currentSession) {
+      profileRef.current = null;
       setProfile(null);
       setIsLoading(false);
       return;
     }
-    setIsLoading(true);
+    setIsLoading(!profileRef.current);
     setError(null);
     try {
-      setProfile(await apiRequest<Profile>('/profile'));
+      const nextProfile = await apiRequest<Profile>('/profile');
+      profileRef.current = nextProfile;
+      setProfile(nextProfile);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -46,11 +64,27 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
+
+  const resolve = useCallback((nextProfile: Profile) => {
+    profileRef.current = nextProfile;
+    setProfile(nextProfile);
+  }, []);
 
   useEffect(() => {
+    profileRef.current = null;
+    setProfile(null);
+    setIsLoading(true);
+  }, [userId]);
+
+  useEffect(() => {
+    if (!userId) {
+      setProfile(null);
+      setIsLoading(false);
+      return;
+    }
     void refresh();
-  }, [session]);
+  }, [refresh, userId]);
 
   const value = useMemo(
     () => ({
@@ -58,9 +92,9 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
       isLoading,
       error,
       refresh,
-      resolve: setProfile,
+      resolve,
     }),
-    [error, isLoading, profile],
+    [error, isLoading, profile, refresh, resolve],
   );
 
   return (

@@ -2,5 +2,11 @@
   "buildCommand": "npm run build:web",
   "outputDirectory": "dist",
   "framework": null,
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/:path((?!assets/|_expo/|favicon\\.svg|favicon\\.png).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

@@ -31,7 +31,8 @@ export const ScrollbarContainer = forwardRef<
   const { style: incomingStyle, ...otherScrollViewProps } = scrollViewProps;
   const base = horizontal
     ? 'caliper-scrollbar flex-row'
-    : 'caliper-scrollbar flex-1 min-h-0';
+    : 'caliper-scrollbar min-h-0';
+  const contentStyle = scrollViewProps.contentContainerStyle;
 
   return (
     <ScrollView
@@ -39,6 +40,10 @@ export const ScrollbarContainer = forwardRef<
       ref={ref}
       className={`${base} ${className}`}
       contentContainerClassName={contentContainerClassName}
+      contentContainerStyle={[
+        !horizontal ? { flexGrow: 1, alignSelf: 'stretch' } : null,
+        contentStyle,
+      ]}
       horizontal={horizontal}
       showsHorizontalScrollIndicator={horizontal}
       showsVerticalScrollIndicator={!horizontal}
@@ -51,7 +56,17 @@ export const ScrollbarContainer = forwardRef<
               } as never,
               incomingStyle,
             ]
-          : incomingStyle
+          : [
+              !horizontal
+                ? {
+                    alignSelf: 'stretch',
+                    flexGrow: 0,
+                    flexShrink: 1,
+                    width: '100%',
+                  }
+                : null,
+              incomingStyle,
+            ]
       }>
       {children}
     </ScrollView>

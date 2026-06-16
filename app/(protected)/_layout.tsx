@@ -32,7 +32,7 @@ export default function ProtectedLayout() {
 function ProtectedNavigator() {
   const { profile, isLoading, error } = useOnboarding();
 
-  if (isLoading) {
+  if (isLoading && !profile) {
     return (
       <View className="flex-1 items-center justify-center bg-brand">
         <LoadingSpinner size="large" />

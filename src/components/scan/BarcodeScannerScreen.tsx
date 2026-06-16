@@ -1,7 +1,7 @@
 import { CameraView } from 'expo-camera';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Barcode, RefreshCcw } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/src/components/ui/Button';
@@ -78,16 +78,16 @@ export function BarcodeScannerScreen() {
       <View className="flex-1 items-center bg-brand">
         <View
           className="relative h-full w-full overflow-hidden bg-brand"
-          style={[{ maxWidth: 448 }, shadows.card]}>
+          style={[{ flex: 1, maxWidth: 448, width: '100%' }, shadows.card]}>
         <CameraView
           barcodeScannerSettings={{
             barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e'],
           }}
-          className="flex-1"
           facing="back"
           onBarcodeScanned={
             scanner.enabled ? scanner.handleBarcodeScanned : undefined
           }
+          style={StyleSheet.absoluteFill}
         />
         <View className="pointer-events-none absolute inset-0 bg-black/25" />
         <View

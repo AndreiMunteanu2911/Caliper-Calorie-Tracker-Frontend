@@ -1,7 +1,16 @@
 import { useRouter } from 'expo-router';
 import { Check, ScanLine } from 'lucide-react-native';
-import { useRef, useState } from 'react';
-import { Pressable, RefreshControl, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import { MacroRing } from '@/src/components/dashboard/MacroRing';
@@ -21,6 +30,11 @@ import {
 } from '@/src/lib/motion';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+const CALORIE_RING_RADIUS = 48;
+const CALORIE_RING_CIRCUMFERENCE = 2 * Math.PI * CALORIE_RING_RADIUS;
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const isNative = Platform.OS !== 'web';
+const RING_ANIMATION_DURATION_MS = 450;
 
 export function DashboardScreen() {
   const router = useRouter();
@@ -40,7 +54,52 @@ export function DashboardScreen() {
     ? Math.min(progress.consumed.calories / progress.targets.calories, 1)
     : 0;
   const [calorieBarWidth, setCalorieBarWidth] = useState(0);
+  const [webCalorieRingPercentage, setWebCalorieRingPercentage] = useState(0);
   const calorieBarRef = useRef<View>(null);
+  const calorieRingProgress = useRef(new Animated.Value(0)).current;
+  const webCalorieRingPercentageRef = useRef(0);
+  const calorieRingDashOffset = calorieRingProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [
+      CALORIE_RING_CIRCUMFERENCE,
+      CALORIE_RING_CIRCUMFERENCE * (1 - caloriePercentage),
+    ],
+  });
+
+  useEffect(() => {
+    Animated.timing(calorieRingProgress, {
+      duration: RING_ANIMATION_DURATION_MS,
+      easing: Easing.out(Easing.cubic),
+      toValue: caloriePercentage,
+      useNativeDriver: false,
+    }).start();
+  }, [caloriePercentage, calorieRingProgress]);
+
+  useEffect(() => {
+    if (isNative) return;
+
+    let animationFrame = 0;
+    let startTime = 0;
+    const startValue = webCalorieRingPercentageRef.current;
+    const change = caloriePercentage - startValue;
+
+    function animate(timestamp: number) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / RING_ANIMATION_DURATION_MS, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      const nextValue = startValue + change * eased;
+      webCalorieRingPercentageRef.current = nextValue;
+      setWebCalorieRingPercentage(nextValue);
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    }
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [caloriePercentage]);
 
   if (isAuthLoading) {
     return (
@@ -122,31 +181,49 @@ export function DashboardScreen() {
               <View className="my-4 items-center">
                 <View className="h-28 w-28 items-center justify-center">
                   <Svg
-                    className="absolute"
                     height={112}
+                    style={StyleSheet.absoluteFill}
                     viewBox="0 0 112 112"
                     width={112}>
                     <Circle
                       cx={56}
                       cy={56}
                       fill="none"
-                      r={48}
+                      r={CALORIE_RING_RADIUS}
                       stroke="#101010"
                       strokeOpacity={0.1}
                       strokeWidth={8}
                     />
-                    <Circle
-                      cx={56}
-                      cy={56}
-                      fill="none"
-                      r={48}
-                      stroke="#101010"
-                      strokeDasharray={2 * Math.PI * 48}
-                      strokeDashoffset={2 * Math.PI * 48 * (1 - caloriePercentage)}
-                      strokeLinecap="round"
-                      strokeWidth={8}
-                      transform="rotate(-90 56 56)"
-                    />
+                    {isNative ? (
+                      <AnimatedCircle
+                        cx={56}
+                        cy={56}
+                        fill="none"
+                        r={CALORIE_RING_RADIUS}
+                        stroke="#101010"
+                        strokeDasharray={CALORIE_RING_CIRCUMFERENCE}
+                        strokeDashoffset={calorieRingDashOffset as unknown as number}
+                        strokeLinecap="round"
+                        strokeWidth={8}
+                        transform="rotate(-90 56 56)"
+                      />
+                    ) : (
+                      <Circle
+                        cx={56}
+                        cy={56}
+                        fill="none"
+                        r={CALORIE_RING_RADIUS}
+                        stroke="#101010"
+                        strokeDasharray={CALORIE_RING_CIRCUMFERENCE}
+                        strokeDashoffset={
+                          CALORIE_RING_CIRCUMFERENCE *
+                          (1 - webCalorieRingPercentage)
+                        }
+                        strokeLinecap="round"
+                        strokeWidth={8}
+                        transform="rotate(-90 56 56)"
+                      />
+                    )}
                   </Svg>
                   <Text className="text-2xl font-black text-ink">
                     {Math.max(0, Math.round(progress.remaining.calories))}

@@ -8,6 +8,7 @@ export function PublicShell({ children }: PropsWithChildren) {
   return (
     <SafeAreaView className="flex-1 bg-brand">
       <ScrollbarContainer
+        className="flex-1"
         contentContainerClassName="grow py-5 sm:py-6"
         keyboardShouldPersistTaps="handled">
         <AppPage className="flex-1">{children}</AppPage>

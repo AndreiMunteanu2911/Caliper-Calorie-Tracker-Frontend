@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { Camera, Image as ImageIcon, RotateCcw } from 'lucide-react-native';
 import { useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/src/components/ui/Button';
@@ -29,7 +29,7 @@ export function MealCameraScreen() {
         quality: 0.82,
       });
       if (!picture) return;
-      router.back();
+      router.replace('/meal-analysis');
       await analysis.analyzeAsset({
         uri: picture.uri,
         base64: picture.base64 ?? null,
@@ -68,8 +68,8 @@ export function MealCameraScreen() {
     <View className="flex-1 items-center bg-brand">
       <View
         className="relative h-full w-full overflow-hidden bg-brand"
-        style={[{ maxWidth: 448 }, shadows.card]}>
-        <CameraView ref={cameraRef} className="flex-1" facing={facing} />
+        style={[{ flex: 1, maxWidth: 448, width: '100%' }, shadows.card]}>
+        <CameraView ref={cameraRef} facing={facing} style={StyleSheet.absoluteFill} />
         <View className="pointer-events-none absolute inset-0 bg-black/10" />
         <View
           className="absolute inset-x-0 top-0 flex-row items-center justify-between px-5"

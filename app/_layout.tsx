@@ -11,6 +11,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { Text, TextInput, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import '../global.css';
 
 import { AuthProvider } from '@/src/hooks/useAuth';
@@ -75,25 +76,27 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <AuthProvider>
-      <ThemeProvider
-        value={{
-          ...DarkTheme,
-          colors: {
-            ...DarkTheme.colors,
-            background: '#101010',
-            card: '#101010',
-          },
-        }}>
-        <View className="min-h-0 flex-1 bg-brand">
-          <Stack screenOptions={{ contentStyle: { backgroundColor: '#101010' } }}>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-            <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-          </Stack>
-          <StatusBar style="light" />
-        </View>
-      </ThemeProvider>
+      <SafeAreaProvider>
+        <ThemeProvider
+          value={{
+            ...DarkTheme,
+            colors: {
+              ...DarkTheme.colors,
+              background: '#101010',
+              card: '#101010',
+            },
+          }}>
+          <View className="min-h-0 flex-1 bg-brand">
+            <Stack screenOptions={{ contentStyle: { backgroundColor: '#101010' } }}>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+              <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+              <Stack.Screen name="(protected)" options={{ headerShown: false }} />
+            </Stack>
+            <StatusBar style="light" />
+          </View>
+        </ThemeProvider>
+      </SafeAreaProvider>
     </AuthProvider>
   );
 }

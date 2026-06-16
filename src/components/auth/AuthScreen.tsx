@@ -35,7 +35,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
   return (
     <SafeAreaView className="flex-1 bg-brand">
       <ScrollbarContainer
-        className="bg-brand"
+        className="flex-1 bg-brand"
         contentContainerClassName="grow justify-center py-5">
         <AppPage className="py-2">
           {!isSignIn ? (

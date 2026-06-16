@@ -2,7 +2,7 @@ import { Motion } from '@legendapp/motion';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
-import { Pressable, View } from 'react-native';
+import { Animated, Easing, Pressable, View } from 'react-native';
 
 export const motionTransition = {
   instant: { type: 'timing' as const, duration: 80 },
@@ -144,26 +144,39 @@ export function MotionProgress({
   progress: number;
   style?: StyleProp<ViewStyle>;
 }) {
+  const animated = useState(() => new Animated.Value(0))[0];
+  const clampedProgress = Math.max(0, Math.min(progress, 1));
+
+  useEffect(() => {
+    Animated.timing(animated, {
+      duration: motionTransition.standard.duration,
+      easing: Easing.out(Easing.cubic),
+      toValue: clampedProgress,
+      useNativeDriver: false,
+    }).start();
+  }, [animated, clampedProgress]);
+
   return (
-    <Motion.View
-      animate={
-        vertical
-          ? { scaleY: Math.max(0, Math.min(progress, 1)) }
-          : { scaleX: Math.max(0, Math.min(progress, 1)) }
-      }
-      initial={vertical ? { scaleY: 0 } : { scaleX: 0 }}
+    <Animated.View
       style={[
         {
-          height: '100%',
-          width: '100%',
+          alignSelf: vertical ? 'center' : 'flex-start',
+          height: vertical
+            ? animated.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0%', '100%'],
+              })
+            : '100%',
+          marginTop: vertical ? 'auto' : undefined,
+          width: vertical
+            ? '100%'
+            : animated.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0%', '100%'],
+              }),
         } as ViewStyle,
         style,
       ]}
-      transformOrigin={{
-        x: vertical ? '50%' : '0%',
-        y: vertical ? '100%' : '50%',
-      }}
-      transition={motionTransition.standard}
     />
   );
 }
