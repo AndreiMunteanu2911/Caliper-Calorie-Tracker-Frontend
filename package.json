@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo-google-fonts/manrope": "^0.4.2",
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
     "@legendapp/motion": "^2.5.3",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/bottom-tabs": "^7.18.0",
@@ -32,6 +34,7 @@
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^7.4.4",
     "@types/react": "~19.2.2",
     "react-native-svg-transformer": "^1.5.3",
     "typescript": "~6.0.3"
@@ -43,7 +46,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "web:clear": "expo start --web --clear",
-    "build:web": "npx expo export --platform web"
+    "build:web": "npx expo export --platform web",
+    "cap:build": "npm run build:web && npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:run": "npm run build:web && npx cap run android"
   },
   "private": true
 }

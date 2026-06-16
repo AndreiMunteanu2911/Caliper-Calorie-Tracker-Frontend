@@ -55,7 +55,7 @@ history.
 - npm
 - A running Caliper backend
 - A Supabase project configured with the backend database migrations
-- Expo Go, Android Studio, or Xcode for native development
+- Android Studio for Capacitor Android builds
 
 ### Environment File
 
@@ -102,11 +102,9 @@ Start the backend first from `Caliper-Backend`, then start Expo here:
 npm start
 ```
 
-Platform shortcuts:
+Development shortcuts:
 
 ```powershell
-npm run android
-npm run ios
 npm run web
 ```
 
@@ -160,35 +158,52 @@ secrets there.
 
 After changing one of these values, redeploy the frontend.
 
-## Build An Android APK
+## Build An Android App With Capacitor
 
-Use EAS for Android builds:
+Capacitor packages the exported web app from `dist` into an Android WebView.
+Expo is still used to build the web bundle.
 
-```powershell
-eas build:configure
-```
-
-Add an Android package in `app.json`, for example
-`com.andreimunteanu.caliper`. For preview APK builds, set `eas.json` like this:
-
-```json
-"preview": {
-  "distribution": "internal",
-  "environment": "preview",
-  "android": {
-    "buildType": "apk"
-  }
-}
-```
-
-Set `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL`, and
-`EXPO_PUBLIC_SUPABASE_ANON_KEY` in EAS for the `preview` environment.
-Use plaintext for `EXPO_PUBLIC_API_URL`; it is bundled into the app. The API URL
-must be a deployed backend URL, not `localhost`.
+Install dependencies:
 
 ```powershell
-eas build -p android --profile preview
+npm install
 ```
+
+The Capacitor config is committed in `capacitor.config.ts`. Create the native
+Android project once if the `android/` directory has not been created. Build
+the web app first because Capacitor expects `dist/index.html` when Android is
+added:
+
+```powershell
+npm run build:web
+npx cap add android
+```
+
+After Android exists, build the web app and sync it into Android:
+
+```powershell
+npm run cap:build
+```
+
+Open the Android project:
+
+```powershell
+npm run cap:open
+```
+
+Build or run the app from Android Studio. For command-line runs:
+
+```powershell
+npm run cap:run
+```
+
+Use a deployed backend URL for packaged Android builds, for example:
+
+```env
+EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
+```
+
+Do not use `localhost` for packaged phone builds.
 
 ### Supabase Redirect URLs
 
@@ -198,7 +213,6 @@ redirects:
 ```text
 http://localhost:8081/**
 https://your-frontend.vercel.app/**
-caliperfrontend:///**
 ```
 
 ## How It Works
@@ -301,8 +315,8 @@ the app starts.
 
 ### The camera does not open
 
-Grant camera permission. If native permission text changed in `app.json`,
-rebuild the native app.
+Grant camera permission. Capacitor Android camera behavior may need a dedicated
+Capacitor Camera integration if browser camera APIs are not enough.
 
 ### A phone cannot reach the backend
 
