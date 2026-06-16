@@ -6,6 +6,8 @@ Android.
 
 [Open the live app](https://caliperam.vercel.app/)
 
+[Download Android APKs](https://github.com/AndreiMunteanu2911/Caliper-Calorie-Tracker-Frontend/releases)
+
 ## What You Can Do With Caliper
 
 Caliper is built around everyday nutrition tracking:
