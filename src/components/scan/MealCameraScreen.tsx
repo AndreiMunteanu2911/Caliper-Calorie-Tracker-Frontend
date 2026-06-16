@@ -9,6 +9,7 @@ import { Button } from '@/src/components/ui/Button';
 import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useMealAnalysis } from '@/src/hooks/useMealAnalysis';
+import { BLACK_CAMERA_POSTER } from '@/src/lib/camera';
 import { isNativeCapacitor } from '@/src/lib/capacitor';
 import { shadows } from '@/src/lib/shadows';
 
@@ -71,7 +72,12 @@ export function MealCameraScreen() {
       <View
         className="relative h-full w-full overflow-hidden bg-brand"
         style={[{ flex: 1, maxWidth: 448, width: '100%' }, shadows.card]}>
-        <CameraView ref={cameraRef} facing={facing} style={StyleSheet.absoluteFill} />
+        <CameraView
+          ref={cameraRef}
+          facing={facing}
+          poster={BLACK_CAMERA_POSTER}
+          style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}
+        />
         <View className="pointer-events-none absolute inset-0 bg-black/10" />
         <View
           className="absolute inset-x-0 top-0 flex-row items-center justify-between px-5"

@@ -205,6 +205,30 @@ EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
 
 Do not use `localhost` for packaged phone builds.
 
+### Automatic GitHub APK Builds
+
+The repository includes a GitHub Actions workflow at
+`.github/workflows/android-apk.yml`. It builds the exported web app, syncs
+Capacitor, builds an installable debug APK, and uploads it as a workflow
+artifact.
+
+Before running it, add this GitHub repository secret:
+
+```text
+EXPO_PUBLIC_API_URL=https://your-backend.vercel.app/api/v1
+```
+
+Every push to `main` will produce an APK artifact and update the
+`Latest Android APK` GitHub Release. The workflow moves the fixed
+`android-latest` tag forward and replaces the APK asset.
+
+To also create a versioned GitHub Release, push a version tag:
+
+```powershell
+git tag v1.0.1
+git push origin v1.0.1
+```
+
 ### Supabase Redirect URLs
 
 In Supabase **Authentication > URL Configuration**, allow local and production

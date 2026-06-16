@@ -9,6 +9,7 @@ import { BackButton } from '@/src/components/ui/BackButton';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useBarcodeLookup } from '@/src/hooks/useBarcodeLookup';
 import { useBarcodeScanner } from '@/src/hooks/useBarcodeScanner';
+import { BLACK_CAMERA_POSTER } from '@/src/lib/camera';
 import { isNativeCapacitor } from '@/src/lib/capacitor';
 import { shadows } from '@/src/lib/shadows';
 
@@ -89,7 +90,8 @@ export function BarcodeScannerScreen() {
           onBarcodeScanned={
             scanner.enabled ? scanner.handleBarcodeScanned : undefined
           }
-          style={StyleSheet.absoluteFill}
+          poster={BLACK_CAMERA_POSTER}
+          style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}
         />
         <View className="pointer-events-none absolute inset-0 bg-black/25" />
         <View
