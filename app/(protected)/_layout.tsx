@@ -1,5 +1,5 @@
 import { Redirect, Stack } from 'expo-router';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { useAuth } from '@/src/hooks/useAuth';
@@ -30,7 +30,7 @@ export default function ProtectedLayout() {
 }
 
 function ProtectedNavigator() {
-  const { profile, isLoading, error } = useOnboarding();
+  const { profile, isLoading, error, refresh } = useOnboarding();
 
   if (isLoading && !profile) {
     return (
@@ -42,7 +42,18 @@ function ProtectedNavigator() {
   if (error && !profile) {
     return (
       <View className="flex-1 items-center justify-center bg-brand px-6">
-        <LoadingSpinner size="large" />
+        <Text className="text-center text-xl font-black text-white">
+          Unable to load profile
+        </Text>
+        <Text className="mt-2 text-center text-sm leading-5 text-white/55">
+          {error}
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          className="mt-5 rounded-2xl bg-accent px-5 py-3"
+          onPress={() => void refresh()}>
+          <Text className="font-black text-white">Try again</Text>
+        </Pressable>
       </View>
     );
   }

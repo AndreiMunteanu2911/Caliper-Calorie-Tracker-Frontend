@@ -1,5 +1,5 @@
 import { Motion } from '@legendapp/motion';
-import { Tabs, type Href, useRouter } from 'expo-router';
+import { Tabs } from 'expo-router';
 import {
     ChartNoAxesCombined,
     CirclePlus,
@@ -20,12 +20,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { motionTransition } from '@/src/lib/motion';
 
-const TAB_DETAILS: Record<string, { href: Href; icon: LucideIcon; label: string }> = {
-    dashboard: { href: '/dashboard', icon: ChartNoAxesCombined, label: 'Today' },
-    diary: { href: '/diary', icon: NotebookTabs, label: 'Diary' },
-    scan: { href: '/scan', icon: CirclePlus, label: 'Add Food' },
-    chat: { href: '/chat', icon: MessageCircleMore, label: 'Advisor' },
-    profile: { href: '/profile', icon: UserRound, label: 'Profile' },
+const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
+    dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
+    diary: { icon: NotebookTabs, label: 'Diary' },
+    scan: { icon: CirclePlus, label: 'Add Food' },
+    chat: { icon: MessageCircleMore, label: 'Advisor' },
+    profile: { icon: UserRound, label: 'Profile' },
 };
 
 type DockItemProps = {
@@ -94,7 +94,6 @@ type TabBarProps = {
 };
 
 function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
-    const router = useRouter();
     const insets = useSafeAreaInsets();
     const { width: windowWidth } = useWindowDimensions();
     const dockGapWidth = 24;
@@ -148,7 +147,7 @@ function AnimatedTabDock({ state, descriptors, navigation }: TabBarProps) {
                             });
 
                             if (!focused && !event.defaultPrevented) {
-                                router.replace(details.href);
+                                navigation.navigate(route.name, route.params);
                             }
                         };
 

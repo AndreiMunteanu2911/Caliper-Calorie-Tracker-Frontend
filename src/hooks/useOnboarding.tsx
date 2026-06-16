@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { Platform } from 'react-native';
 
 import { useAuth } from '@/src/hooks/useAuth';
 import { apiRequest } from '@/src/lib/api-client';
@@ -49,7 +50,7 @@ export function OnboardingProvider({ children }: PropsWithChildren) {
       setIsLoading(false);
       return;
     }
-    setIsLoading(!profileRef.current);
+    setIsLoading(Platform.OS === 'web' ? !profileRef.current : true);
     setError(null);
     try {
       const nextProfile = await apiRequest<Profile>('/profile');

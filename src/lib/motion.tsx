@@ -2,7 +2,7 @@ import { Motion } from '@legendapp/motion';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
-import { Animated, Easing, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 export const motionTransition = {
   instant: { type: 'timing' as const, duration: 80 },
@@ -144,36 +144,42 @@ export function MotionProgress({
   progress: number;
   style?: StyleProp<ViewStyle>;
 }) {
-  const animated = useState(() => new Animated.Value(0))[0];
+  const [displayProgress, setDisplayProgress] = useState(0);
   const clampedProgress = Math.max(0, Math.min(progress, 1));
 
   useEffect(() => {
-    Animated.timing(animated, {
-      duration: motionTransition.standard.duration,
-      easing: Easing.out(Easing.cubic),
-      toValue: clampedProgress,
-      useNativeDriver: false,
-    }).start();
-  }, [animated, clampedProgress]);
+    let animationFrame = 0;
+    let startTime = 0;
+    const startValue = displayProgress;
+    const change = clampedProgress - startValue;
+
+    function animate(timestamp: number) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const animationProgress = Math.min(
+        elapsed / motionTransition.standard.duration,
+        1,
+      );
+      const eased = 1 - (1 - animationProgress) ** 3;
+      setDisplayProgress(startValue + change * eased);
+
+      if (animationProgress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    }
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [clampedProgress]);
 
   return (
-    <Animated.View
+    <View
       style={[
         {
           alignSelf: vertical ? 'center' : 'flex-start',
-          height: vertical
-            ? animated.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '100%'],
-              })
-            : '100%',
+          height: vertical ? `${displayProgress * 100}%` : '100%',
           marginTop: vertical ? 'auto' : undefined,
-          width: vertical
-            ? '100%'
-            : animated.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '100%'],
-              }),
+          width: vertical ? '100%' : `${displayProgress * 100}%`,
         } as ViewStyle,
         style,
       ]}
