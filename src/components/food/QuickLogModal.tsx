@@ -1,4 +1,4 @@
-import { Check, Flame, X } from 'lucide-react-native';
+import { CheckIcon, FlameIcon, XIcon } from 'phosphor-react-native';
 import { Pressable, Text, View } from 'react-native';
 
 import { MealTypeSelector } from '@/src/components/food/MealTypeSelector';
@@ -45,7 +45,7 @@ export function QuickLogModal({
             accessibilityRole="button"
             className="h-10 w-10 items-center justify-center rounded-2xl bg-raised"
             onPress={onDismiss}>
-            <X color="#101010" size={18} strokeWidth={2.6} />
+            <XIcon color="#101010" size={18} weight="bold" />
           </Pressable>
         </View>
         <Text className="mt-2 text-2xl font-black text-ink">{food?.name}</Text>
@@ -71,7 +71,7 @@ export function QuickLogModal({
           style={shadows.soft}>
           <View>
             <View className="flex-row items-center gap-1">
-              <Flame color="#FF5A16" size={12} strokeWidth={2.5} />
+              <FlameIcon color="#FF5A16" size={12} weight="bold" />
               <Text className="text-xs text-muted">Calories</Text>
             </View>
             <Text className="text-lg font-black text-brand">
@@ -104,7 +104,7 @@ export function QuickLogModal({
         ) : null}
         <Button
           label="Add to today"
-          icon={Check}
+          icon={CheckIcon}
           disabled={!form.isValid}
           loading={isSaving}
           onPress={() => void onSave(form.mealType, form.quantityG)}

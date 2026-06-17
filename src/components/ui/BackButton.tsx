@@ -1,5 +1,5 @@
 import { Motion } from '@legendapp/motion';
-import { ChevronLeft } from 'lucide-react-native';
+import { CaretLeftIcon } from 'phosphor-react-native';
 import { useState } from 'react';
 import { Pressable, type PressableProps } from 'react-native';
 
@@ -35,7 +35,7 @@ export function BackButton({
           setIsPressed(false);
           onPressOut?.(event);
         }}>
-        <ChevronLeft color="#FFFFFF" size={20} strokeWidth={2.5} />
+        <CaretLeftIcon color="#FFFFFF" size={20} weight="bold" />
       </Pressable>
     </Motion.View>
   );

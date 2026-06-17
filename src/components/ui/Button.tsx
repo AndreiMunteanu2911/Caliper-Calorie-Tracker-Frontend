@@ -1,5 +1,5 @@
 import { Motion } from '@legendapp/motion';
-import type { LucideIcon } from 'lucide-react-native';
+import type { Icon } from 'phosphor-react-native';
 import { useState } from 'react';
 import { Pressable, Text, type PressableProps, View } from 'react-native';
 
@@ -16,7 +16,7 @@ type ButtonProps = Omit<PressableProps, 'children' | 'disabled'> & {
   loading?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  icon?: LucideIcon;
+  icon?: Icon;
   iconPosition?: 'left' | 'right';
 };
 
@@ -88,7 +88,7 @@ export function Button({
               <Icon
                 color={ICON_COLORS[variant]}
                 size={16}
-                strokeWidth={2.5}
+                weight="bold"
               />
             ) : null}
             <Text className={`text-sm font-black tracking-tight ${TEXT_CLASSES[variant]}`}>
@@ -98,7 +98,7 @@ export function Button({
               <Icon
                 color={ICON_COLORS[variant]}
                 size={16}
-                strokeWidth={2.5}
+                weight="bold"
               />
             ) : null}
           </>

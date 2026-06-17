@@ -1,5 +1,5 @@
 import { Motion } from '@legendapp/motion';
-import { Trash2 } from 'lucide-react-native';
+import { TrashSimpleIcon } from 'phosphor-react-native';
 import { useState } from 'react';
 import { Pressable, type PressableProps } from 'react-native';
 
@@ -33,7 +33,7 @@ export function DeleteIconButton({
           setIsPressed(false);
           onPressOut?.(event);
         }}>
-        <Trash2 color="#FF5A16" size={15} strokeWidth={2.4} />
+        <TrashSimpleIcon color="#FF5A16" size={15} />
       </Pressable>
     </Motion.View>
   );

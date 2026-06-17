@@ -1,4 +1,4 @@
-import { Pencil, Search, Star } from 'lucide-react-native';
+import { PencilSimpleIcon, MagnifyingGlassIcon, StarIcon } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -89,7 +89,7 @@ export function CustomFoodLibraryScreen() {
             </View>
           ) : filtered.length === 0 ? (
             <View className="mt-5 items-center rounded-3xl border border-white/10 bg-[#232220] p-8">
-              <Search color="#FF5A16" size={24} />
+              <MagnifyingGlassIcon color="#FF5A16" size={24} weight="bold" />
               <Text className="mt-3 font-black text-white">No custom foods found</Text>
             </View>
           ) : (
@@ -108,9 +108,9 @@ export function CustomFoodLibraryScreen() {
                         is_favorite: !food.is_favorite,
                       }).catch(() => setError('Unable to update favorite.'))
                     }>
-                    <Star
+                    <StarIcon
                       color={food.is_favorite ? '#F5F378' : '#777777'}
-                      fill={food.is_favorite ? '#F5F378' : 'transparent'}
+                      weight={food.is_favorite ? 'fill' : 'regular'}
                       size={18}
                     />
                   </Pressable>
@@ -127,7 +127,7 @@ export function CustomFoodLibraryScreen() {
                     accessibilityLabel={`Edit ${food.name}`}
                     className="h-9 w-9 items-center justify-center rounded-xl bg-white/5"
                     onPress={() => openEdit(food)}>
-                    <Pencil color="#FFFFFF" size={15} />
+                    <PencilSimpleIcon color="#FFFFFF" size={15} weight="bold" />
                   </Pressable>
                   <DeleteIconButton
                     accessibilityLabel={`Delete ${food.name}`}

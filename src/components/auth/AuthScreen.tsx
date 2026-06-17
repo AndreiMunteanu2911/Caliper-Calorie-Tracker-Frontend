@@ -1,5 +1,5 @@
 import { Redirect, useRouter } from 'expo-router';
-import { ArrowRight } from 'lucide-react-native';
+import { ArrowRightIcon } from 'phosphor-react-native';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -108,7 +108,7 @@ export function AuthScreen({ mode }: AuthScreenProps) {
           <View className="mt-7">
             <Button
               label={isSignIn ? 'Log In' : 'Sign Up'}
-              icon={ArrowRight}
+              icon={ArrowRightIcon}
               disabled={!form.isValid}
               loading={form.isSubmitting}
               onPress={() => void form.submit()}

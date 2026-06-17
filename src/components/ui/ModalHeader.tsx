@@ -1,4 +1,4 @@
-import { X } from 'lucide-react-native';
+import { XIcon } from 'phosphor-react-native';
 import { Pressable, Text, View } from 'react-native';
 
 type ModalHeaderProps = {
@@ -24,7 +24,7 @@ export function ModalHeader({
         accessibilityLabel="Close"
         className="h-9 w-9 items-center justify-center rounded-full bg-white/5"
         onPress={onClose}>
-        <X color="#FFFFFF" size={16} />
+        <XIcon color="#FFFFFF" size={16} weight="bold" />
       </Pressable>
     </View>
   );

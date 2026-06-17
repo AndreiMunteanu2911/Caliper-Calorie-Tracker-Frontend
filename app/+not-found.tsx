@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { SearchX } from 'lucide-react-native';
+import { MagnifyingGlassIcon } from 'phosphor-react-native';
 import { Text, View } from 'react-native';
 
 import { PageHead } from '@/src/components/layout/PageHead';
@@ -17,7 +17,7 @@ export default function NotFoundScreen() {
             style={shadows.card}>
             <View>
               <View className="mb-5 h-14 w-14 items-center justify-center rounded-2xl bg-accent">
-                <SearchX color="#FFFFFF" size={25} strokeWidth={2.5} />
+                <MagnifyingGlassIcon color="#FFFFFF" size={25} weight="bold" />
               </View>
               <Text className="text-3xl font-black tracking-tight text-white">
                 Page not found

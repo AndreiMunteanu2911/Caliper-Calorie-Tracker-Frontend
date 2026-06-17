@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import {
-  Check,
-  TrendingDown,
-  TrendingUp,
-} from 'lucide-react-native';
+  CheckIcon,
+  TrendDownIcon,
+  TrendUpIcon,
+} from 'phosphor-react-native';
 import { Fragment, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import Svg, {
@@ -318,7 +318,7 @@ export function WeightTrackerScreen() {
     weightValue >= 20 && weightValue <= 500 && isValidDateValue(date);
   const recentEntries = entries.slice(-12);
   const change = data?.change_kg;
-  const TrendIcon = (change ?? 0) <= 0 ? TrendingDown : TrendingUp;
+  const TrendIcon = (change ?? 0) <= 0 ? TrendDownIcon : TrendUpIcon;
   const { profile } = useProfile();
   const projection = useMemo(
     () => weightProjection(entries, profile?.target_weight_kg),
@@ -448,7 +448,7 @@ export function WeightTrackerScreen() {
               <MotionFade>
                 <View className="flex-row items-center gap-2 rounded-xl border border-accent bg-brand p-3.5">
                   <MotionPop>
-                    <Check color="#FF5A16" size={16} strokeWidth={3} />
+                    <CheckIcon color="#FF5A16" size={16} weight="bold" />
                   </MotionPop>
                   <Text className="font-black text-accent">Weight saved.</Text>
                 </View>

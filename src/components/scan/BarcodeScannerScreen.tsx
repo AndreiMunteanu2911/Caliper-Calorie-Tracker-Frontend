@@ -1,6 +1,6 @@
 import { CameraView } from 'expo-camera';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Barcode, RefreshCcw } from 'lucide-react-native';
+import { BarcodeIcon, ArrowsClockwiseIcon } from 'phosphor-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -64,7 +64,7 @@ export function BarcodeScannerScreen() {
     return (
       <View className="flex-1 items-center justify-center gap-5 bg-brand px-8">
         <View className="h-16 w-16 items-center justify-center rounded-full bg-carbs">
-          <Barcode color="#121212" size={29} />
+          <BarcodeIcon color="#121212" size={29} weight="bold" />
         </View>
         <Text className="text-center text-2xl font-black text-white">Camera access</Text>
         <Text className="text-center leading-6 text-white/60">
@@ -134,14 +134,14 @@ export function BarcodeScannerScreen() {
               </Pressable>
               <Button
                 label="Scan another"
-                icon={RefreshCcw}
+                icon={ArrowsClockwiseIcon}
                 variant="outline"
                 onPress={resume}
               />
             </View>
           ) : (
             <View className="items-center py-3">
-              <Barcode color="#F5F378" size={27} />
+              <BarcodeIcon color="#F5F378" size={27} weight="bold" />
               <Text className="mt-3 text-lg font-black text-white">
                 Center the barcode in the frame
               </Text>

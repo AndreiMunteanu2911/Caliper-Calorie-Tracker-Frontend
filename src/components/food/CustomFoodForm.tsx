@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import { Plus, ScanLine, Sparkles, X } from 'lucide-react-native';
+import { PlusIcon, ScanIcon, SparkleIcon, XIcon } from 'phosphor-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -222,7 +222,7 @@ export function CustomFoodForm({
                     accessibilityLabel="Close custom food"
                     className="h-10 w-10 items-center justify-center rounded-full bg-white/60"
                     onPress={onDismiss}>
-                    <X color="#101010" size={18} strokeWidth={2.7} />
+                    <XIcon color="#101010" size={18} weight="bold" />
                   </Pressable>
                 </View>
               </View>
@@ -231,7 +231,7 @@ export function CustomFoodForm({
                 {!initialFood ? (
                   <View className="gap-2">
                     <Button
-                      icon={ScanLine}
+                      icon={ScanIcon}
                       iconPosition="left"
                       label="Scan nutrition label"
                       loading={isScanningLabel}
@@ -255,7 +255,7 @@ export function CustomFoodForm({
 
                 <View className="gap-2">
                   <View className="flex-row items-center gap-2">
-                    <Sparkles color="#FF5A16" size={16} />
+                    <SparkleIcon color="#FF5A16" size={16} weight="bold" />
                     <Text className="font-black text-white">Food name *</Text>
                   </View>
                   <InputBox
@@ -336,7 +336,7 @@ export function CustomFoodForm({
 
                 <Button
                   disabled={!formIsValid}
-                  icon={Plus}
+                  icon={PlusIcon}
                   iconPosition="left"
                   label={initialFood ? 'Save changes' : 'Create and continue'}
                   loading={isSaving}

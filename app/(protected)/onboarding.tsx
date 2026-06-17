@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react-native';
+import { CheckIcon } from 'phosphor-react-native';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -328,7 +328,7 @@ function Choice({
       {selected ? (
         <MotionPop
           style={fill ? { left: 12, position: 'absolute' } : undefined}>
-          <Check color="#FFFFFF" size={14} />
+          <CheckIcon color="#FFFFFF" size={14} weight="bold" />
         </MotionPop>
       ) : null}
       <Text className={selected ? 'font-black text-white' : 'font-bold text-white/60'}>

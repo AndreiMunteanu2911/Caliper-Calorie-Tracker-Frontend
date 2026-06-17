@@ -1,4 +1,4 @@
-import { Check, MessageCircle, Plus } from 'lucide-react-native';
+import { CheckIcon, ChatCircleIcon, PlusIcon } from 'phosphor-react-native';
 import {
   Modal,
   Platform,
@@ -94,7 +94,7 @@ export function AdvisorHistoryConversations({
               className="flex-row items-center gap-3 border-b border-white/10 px-4 py-3 active:bg-white/5"
               onPress={onCreateConversation}>
               <View className="h-8 w-8 items-center justify-center rounded-xl bg-accent">
-                <Plus color="#FFFFFF" size={16} strokeWidth={2.5} />
+                <PlusIcon color="#FFFFFF" size={16} weight="bold" />
               </View>
               <View className="min-w-0 flex-1">
                 <Text className="text-sm font-black text-white">
@@ -136,12 +136,12 @@ export function AdvisorHistoryConversations({
                             isActive ? 'bg-accent' : 'bg-white/10'
                           }`}>
                           {isActive ? (
-                            <Check color="#FFFFFF" size={16} strokeWidth={3} />
+                            <CheckIcon color="#FFFFFF" size={16} weight="bold" />
                           ) : (
-                            <MessageCircle
+                            <ChatCircleIcon
                               color="#A8A8A8"
                               size={16}
-                              strokeWidth={2.5}
+                              weight="bold"
                             />
                           )}
                         </View>
@@ -162,7 +162,7 @@ export function AdvisorHistoryConversations({
               ) : (
                 <View className="items-center px-5 py-8">
                   <View className="mb-3 h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-                    <MessageCircle color="#8F8F8F" size={18} strokeWidth={2.4} />
+                    <ChatCircleIcon color="#8F8F8F" size={18} />
                   </View>
                   <Text className="text-center text-sm font-black text-white">
                     No conversations yet

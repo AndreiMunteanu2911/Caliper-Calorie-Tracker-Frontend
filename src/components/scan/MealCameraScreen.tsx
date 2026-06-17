@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
-import { Camera, Image as ImageIcon, RotateCcw } from 'lucide-react-native';
+import { CameraIcon, ImageIcon, ArrowCounterClockwiseIcon } from 'phosphor-react-native';
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -55,7 +55,7 @@ export function MealCameraScreen() {
     return (
       <View className="flex-1 items-center justify-center gap-5 bg-brand px-8">
         <View className="h-16 w-16 items-center justify-center rounded-full bg-fats">
-          <Camera color="#121212" size={28} />
+          <CameraIcon color="#121212" size={28} weight="bold" />
         </View>
         <Text className="text-center text-2xl font-black text-white">Camera access</Text>
         <Text className="text-center leading-6 text-white/60">
@@ -93,7 +93,7 @@ export function MealCameraScreen() {
             onPress={() =>
               setFacing((current) => (current === 'back' ? 'front' : 'back'))
             }>
-            <RotateCcw color="#FFFFFF" size={21} />
+            <ArrowCounterClockwiseIcon color="#FFFFFF" size={21} weight="bold" />
           </Pressable>
         </View>
 
@@ -105,7 +105,7 @@ export function MealCameraScreen() {
           className="absolute inset-x-0 bottom-0 items-center rounded-t-3xl bg-[#121212] px-6 pt-6"
           style={{ paddingBottom: insets.bottom + 20 }}>
           <View className="mb-7 flex-row items-center gap-2 rounded-2xl bg-[#2F2F2F] px-4 py-3">
-            <ImageIcon color="#DDC0FF" size={18} />
+            <ImageIcon color="#DDC0FF" size={18} weight="bold" />
             <Text className="text-sm text-white/70">
               Keep the full plate inside the frame
             </Text>

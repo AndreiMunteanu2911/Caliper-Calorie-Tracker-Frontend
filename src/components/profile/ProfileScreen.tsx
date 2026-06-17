@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import {
-  LogOut,
-  UserRound,
-} from 'lucide-react-native';
+  SignOutIcon,
+  UserIcon,
+} from 'phosphor-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -256,7 +256,7 @@ export function ProfileScreen() {
                 accessibilityLabel="Sign out"
                 className="h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#232220]"
                 onPress={() => void signOut()}>
-                <LogOut color="#FFFFFF" size={16} />
+                <SignOutIcon color="#FFFFFF" size={16} weight="bold" />
               </Pressable>
             }
           />
@@ -267,7 +267,7 @@ export function ProfileScreen() {
             <View className="mt-6 gap-3.5">
               <View className="items-center rounded-3xl border border-white/10 bg-[#232220] p-5">
                 <View className="h-16 w-16 items-center justify-center rounded-full bg-fats">
-                  <UserRound color="#121212" size={28} />
+                  <UserIcon color="#121212" size={28} weight="bold" />
                 </View>
                 <Text className="mt-3 text-lg font-black text-white">
                   {profile?.display_name || 'Your profile'}

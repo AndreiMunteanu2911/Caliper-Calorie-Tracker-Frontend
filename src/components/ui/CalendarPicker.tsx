@@ -1,8 +1,8 @@
 import {
-  CalendarDays,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react-native';
+  CalendarBlankIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+} from 'phosphor-react-native';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -89,7 +89,7 @@ export function CalendarPicker({
         <Text className="text-sm font-bold text-white">
           {displayValue ?? value}
         </Text>
-        <CalendarDays color="#FF5A16" size={17} />
+        <CalendarBlankIcon color="#FF5A16" size={17} weight="bold" />
       </Pressable>
 
       <ModalWrapper isOpen={isOpen} onClose={() => setIsOpen(false)}>
@@ -104,7 +104,7 @@ export function CalendarPicker({
               accessibilityLabel="Previous month"
               className="h-10 w-10 items-center justify-center rounded-xl bg-white/5"
               onPress={() => shiftMonth(-1)}>
-              <ChevronLeft color="#FFFFFF" size={18} />
+              <CaretLeftIcon color="#FFFFFF" size={18} />
             </Pressable>
             <Text className="font-black text-white">
               {new Intl.DateTimeFormat(undefined, {
@@ -116,7 +116,7 @@ export function CalendarPicker({
               accessibilityLabel="Next month"
               className="h-10 w-10 items-center justify-center rounded-xl bg-white/5"
               onPress={() => shiftMonth(1)}>
-              <ChevronRight color="#FFFFFF" size={18} />
+              <CaretRightIcon color="#FFFFFF" size={18} />
             </Pressable>
           </View>
 

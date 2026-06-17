@@ -1,4 +1,4 @@
-import { Cookie, Moon, Sun, Sunrise } from 'lucide-react-native';
+import { CookieIcon, MoonIcon, SunIcon, SunHorizonIcon } from 'phosphor-react-native';
 import { Text, View } from 'react-native';
 
 import { MotionPressable } from '@/src/lib/motion';
@@ -18,11 +18,11 @@ const LABELS: Record<MealType, string> = {
 };
 
 const ICONS = {
-  breakfast: Sunrise,
-  lunch: Sun,
-  dinner: Moon,
-  snack: Cookie,
-} satisfies Record<MealType, typeof Sunrise>;
+  breakfast: SunHorizonIcon,
+  lunch: SunIcon,
+  dinner: MoonIcon,
+  snack: CookieIcon,
+} satisfies Record<MealType, typeof SunHorizonIcon>;
 
 export function MealTypeSelector({
   value,
@@ -51,7 +51,7 @@ export function MealTypeSelector({
             <Icon
               color={selected ? '#FFFFFF' : dark ? '#B6B6B6' : '#77756F'}
               size={13}
-              strokeWidth={2.5}
+              weight="bold"
             />
             <Text
               className={

@@ -1,11 +1,11 @@
 import {
-  ChevronDown,
-  ClipboardList,
-  Dumbbell,
-  Send,
-  Sparkles,
-  Utensils,
-} from 'lucide-react-native';
+  CaretDownIcon,
+  ClipboardTextIcon,
+  BarbellIcon,
+  PaperPlaneRightIcon,
+  SparkleIcon,
+  ForkKnifeIcon,
+} from 'phosphor-react-native';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -32,9 +32,9 @@ import type { AdvisorMessage } from '@/src/types/api';
 const HISTORY_MENU_MAX_WIDTH = 320;
 
 const SUGGESTIONS = [
-  { icon: Utensils, label: 'What should I eat next?' },
-  { icon: Dumbbell, label: 'How can I hit my protein target?' },
-  { icon: ClipboardList, label: 'Review what I ate today' },
+  { icon: ForkKnifeIcon, label: 'What should I eat next?' },
+  { icon: BarbellIcon, label: 'How can I hit my protein target?' },
+  { icon: ClipboardTextIcon, label: 'Review what I ate today' },
 ] as const;
 
 export function AdvisorScreen() {
@@ -116,7 +116,7 @@ export function AdvisorScreen() {
                 className="z-50 items-end pt-2">
                 <Button
                   accessibilityLabel="Conversation history"
-                  icon={ChevronDown}
+                  icon={CaretDownIcon}
                   label="History"
                   size="compact"
                   variant="secondary"
@@ -156,7 +156,7 @@ export function AdvisorScreen() {
                             accessibilityRole="button"
                             className="w-full flex-row items-center gap-2.5 rounded-xl border border-white/10 bg-[#242424] px-3.5 py-2.5 active:bg-white/10"
                             onPress={() => setDraft(label)}>
-                            <Icon color="#FF5A16" size={15} strokeWidth={2.5} />
+                            <Icon color="#FF5A16" size={15} weight="bold" />
                             <Text className="min-w-0 flex-1 text-sm font-bold text-white">
                               {label}
                             </Text>
@@ -179,11 +179,11 @@ export function AdvisorScreen() {
                         <View className="gap-3">
                           <View className="flex-row items-center gap-2">
                             <View className="h-6 w-6 items-center justify-center rounded-lg bg-accent/15">
-                              <Sparkles
-                                color="#FF5A16"
-                                size={13}
-                                strokeWidth={2.5}
-                              />
+<SparkleIcon
+                                    color="#FF5A16"
+                                    size={13}
+                                    weight="bold"
+                                  />
                             </View>
                             <Text className="text-xs font-black uppercase tracking-widest text-white/35">
                               Advisor
@@ -228,7 +228,7 @@ export function AdvisorScreen() {
                     <Button
                       accessibilityLabel="Send message"
                       disabled={!draft.trim() || isSending}
-                      icon={Send}
+                      icon={PaperPlaneRightIcon}
                       iconPosition="left"
                       label="Send"
                       size="compact"

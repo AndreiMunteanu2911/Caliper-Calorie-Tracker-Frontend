@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Check, Scale, Utensils } from 'lucide-react-native';
+import { CheckIcon, ScalesIcon, ForkKnifeIcon } from 'phosphor-react-native';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -149,7 +149,7 @@ export function FoodDetailPage() {
                   ) : null}
                 </View>
                 <View className="h-10 w-10 items-center justify-center rounded-full bg-white/55">
-                  <Utensils color="#FFFFFF" size={18} strokeWidth={2.6} />
+                  <ForkKnifeIcon color="#FFFFFF" size={18} weight="bold" />
                 </View>
               </View>
 
@@ -192,7 +192,7 @@ export function FoodDetailPage() {
             style={shadows.card}>
             <View className="gap-2">
               <View className="flex-row items-center gap-2">
-                <Scale color="#FF5A16" size={15} strokeWidth={2.5} />
+                <ScalesIcon color="#FF5A16" size={15} weight="bold" />
                 <Text className="text-sm font-black text-white">Amount</Text>
               </View>
               <InputBox
@@ -237,7 +237,7 @@ export function FoodDetailPage() {
               <MotionFade>
                 <View className="flex-row items-center justify-center gap-2 rounded-xl border border-accent bg-brand p-3.5">
                   <MotionPop>
-                    <Check color="#FF5A16" size={16} strokeWidth={3} />
+                    <CheckIcon color="#FF5A16" size={16} weight="bold" />
                   </MotionPop>
                   <Text className="font-black text-accent">
                     {isEditing ? 'Diary item updated.' : 'Food logged.'}

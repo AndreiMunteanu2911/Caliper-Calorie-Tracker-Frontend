@@ -1,5 +1,5 @@
 import { Motion } from '@legendapp/motion';
-import { ChevronDown, ChevronUp } from 'lucide-react-native';
+import { CaretDownIcon, CaretUpIcon } from 'phosphor-react-native';
 import { useCallback, useEffect, useRef } from 'react';
 import {
   Pressable,
@@ -113,7 +113,7 @@ export function NumberSpinner({
               onPressIn={() => startHold(1)}
               onPressOut={stopHold}>
             <View className="flex-1" />
-            <ChevronUp color="#FF5A16" size={13} />
+            <CaretUpIcon color="#FF5A16" size={13} weight="bold" />
             <View className="flex-1 items-start pl-2">
               <Text className="text-xs font-black text-accent">
                 {clamp(roundedValue + step, min, max)}
@@ -151,7 +151,7 @@ export function NumberSpinner({
               onPressIn={() => startHold(-1)}
               onPressOut={stopHold}>
             <View className="flex-1" />
-            <ChevronDown color="#FF5A16" size={13} />
+            <CaretDownIcon color="#FF5A16" size={13} weight="bold" />
             <View className="flex-1 items-start pl-2">
               <Text className="text-xs font-black text-accent">
                 {clamp(roundedValue - step, min, max)}

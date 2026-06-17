@@ -1,4 +1,4 @@
-import { Flame } from 'lucide-react-native';
+import { FlameIcon } from 'phosphor-react-native';
 import { Text, View } from 'react-native';
 
 import { MotionPressable } from '@/src/lib/motion';
@@ -35,7 +35,7 @@ export function DropdownItem({
       onPress={onPress}>
       <View className="flex-row items-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded-2xl bg-accentSoft">
-          <Flame color="#FF5A16" size={17} strokeWidth={2.6} />
+          <FlameIcon color="#FF5A16" size={17} weight="bold" />
         </View>
         <View className="min-w-0 flex-1 gap-0.5">
           <Text

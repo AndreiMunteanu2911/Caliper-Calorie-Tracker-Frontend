@@ -1,15 +1,15 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import {
-  ChevronLeft,
-  ChevronRight,
-  Cookie,
-  Moon,
-  Plus,
-  Sun,
-  Sunrise,
-  Utensils,
-  type LucideIcon,
-} from 'lucide-react-native';
+  CaretLeftIcon,
+  CaretRightIcon,
+  CookieIcon,
+  MoonIcon,
+  PlusIcon,
+  SunIcon,
+  SunHorizonIcon,
+  ForkKnifeIcon,
+  type Icon,
+} from 'phosphor-react-native';
 import { Pressable, RefreshControl, Text, View } from 'react-native';
 
 import { MealLogCard } from '@/src/components/dashboard/MealLogCard';
@@ -43,12 +43,12 @@ const MEAL_LABELS: Record<MealType, string> = {
 
 const MEAL_META: Record<
   MealType,
-  { icon: LucideIcon; color: string; background: string }
+  { icon: Icon; color: string; background: string }
 > = {
-  breakfast: { icon: Sunrise, color: '#101010', background: 'bg-carbs' },
-  lunch: { icon: Sun, color: '#101010', background: 'bg-protein' },
-  dinner: { icon: Moon, color: '#101010', background: 'bg-fats' },
-  snack: { icon: Cookie, color: '#FFFFFF', background: 'bg-accent' },
+  breakfast: { icon: SunHorizonIcon, color: '#101010', background: 'bg-carbs' },
+  lunch: { icon: SunIcon, color: '#101010', background: 'bg-protein' },
+  dinner: { icon: MoonIcon, color: '#101010', background: 'bg-fats' },
+  snack: { icon: CookieIcon, color: '#FFFFFF', background: 'bg-accent' },
 };
 
 function diaryDateLabel(value: string): string {
@@ -120,7 +120,7 @@ export function DiaryScreen() {
                 const next = shiftLocalDate(selectedDate, -1);
                 setSelectedDate(next);
               }}>
-              <ChevronLeft color="#FFFFFF" size={18} />
+              <CaretLeftIcon color="#FFFFFF" size={18} />
             </Pressable>
             <View className="min-w-0 flex-1">
               <CalendarPicker
@@ -137,7 +137,7 @@ export function DiaryScreen() {
                 const next = shiftLocalDate(selectedDate, 1);
                 setSelectedDate(next);
               }}>
-              <ChevronRight color="#FFFFFF" size={18} />
+              <CaretRightIcon color="#FFFFFF" size={18} />
             </Pressable>
           </View>
         </View>
@@ -167,7 +167,7 @@ export function DiaryScreen() {
                   <Text className="mt-0.5 text-xs font-bold text-white/65">calories logged</Text>
                 </View>
                 <View className="h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                  <Utensils color="#FFFFFF" size={15} strokeWidth={2} />
+                  <ForkKnifeIcon color="#FFFFFF" size={15} />
                 </View>
               </View>
               <View className="mt-4 flex-row gap-1.5">
@@ -210,7 +210,7 @@ export function DiaryScreen() {
                     }>
                     <View className="flex-row items-center gap-2">
                       <View className={`h-7 w-7 items-center justify-center rounded-lg ${background}`}>
-                        <MealIcon color={color} size={14} strokeWidth={2} />
+                        <MealIcon color={color} size={14} />
                       </View>
                       <View>
                         <Text className="text-sm font-black text-white">
@@ -256,7 +256,7 @@ export function DiaryScreen() {
                             params: { date: selectedDate },
                           })
                         }>
-                        <Plus color="#FF5A16" size={14} strokeWidth={2} />
+                        <PlusIcon color="#FF5A16" size={14} />
                         <Text className="text-xs font-black text-accent">
                           Add {MEAL_LABELS[mealType].toLowerCase()}
                         </Text>

@@ -1,13 +1,13 @@
 import { Motion } from '@legendapp/motion';
 import { Tabs } from 'expo-router';
 import {
-    ChartNoAxesCombined,
-    CirclePlus,
-    NotebookTabs,
-    type LucideIcon,
-    MessageCircleMore,
-    UserRound,
-} from 'lucide-react-native';
+    ChartBarIcon,
+    PlusCircleIcon,
+    NotebookIcon,
+    type Icon,
+    ChatCircleDotsIcon,
+    UserIcon,
+} from 'phosphor-react-native';
 import {
     Platform,
     Pressable,
@@ -20,17 +20,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { motionTransition } from '@/src/lib/motion';
 
-const TAB_DETAILS: Record<string, { icon: LucideIcon; label: string }> = {
-    dashboard: { icon: ChartNoAxesCombined, label: 'Today' },
-    diary: { icon: NotebookTabs, label: 'Diary' },
-    scan: { icon: CirclePlus, label: 'Add Food' },
-    chat: { icon: MessageCircleMore, label: 'Advisor' },
-    profile: { icon: UserRound, label: 'Profile' },
+const TAB_DETAILS: Record<string, { icon: Icon; label: string }> = {
+    dashboard: { icon: ChartBarIcon, label: 'Today' },
+    diary: { icon: NotebookIcon, label: 'Diary' },
+    scan: { icon: PlusCircleIcon, label: 'Add Food' },
+    chat: { icon: ChatCircleDotsIcon, label: 'Advisor' },
+    profile: { icon: UserIcon, label: 'Profile' },
 };
 
 type DockItemProps = {
     focused: boolean;
-    icon: LucideIcon;
+    icon: Icon;
     label: string;
     onLongPress: () => void;
     onPress: () => void;
@@ -73,7 +73,7 @@ function DockItem({
                     overflow: 'hidden',
                 }}
                 transition={motionTransition.standard}>
-                <Icon color="#FFFFFF" size={21} strokeWidth={2.35} />
+                <Icon color="#FFFFFF" size={21} weight="bold" />
                 {focused ? (
                     <Motion.View
                         animate={{ opacity: 1, x: 0 }}

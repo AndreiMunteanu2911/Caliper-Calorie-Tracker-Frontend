@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Check, ScanLine } from 'lucide-react-native';
+import { CheckIcon, ScanIcon } from 'phosphor-react-native';
 import { useEffect, useRef, useState } from 'react';
 import {
   Pressable,
@@ -127,7 +127,7 @@ export function DashboardScreen() {
                       className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-accent"
                       distance={2}>
                       <View className="h-4 w-full items-center justify-center">
-                        <Check color="#FFFFFF" size={10} strokeWidth={3} />
+                        <CheckIcon color="#FFFFFF" size={10} weight="bold" />
                       </View>
                     </MotionFade>
                   ) : null}
@@ -240,7 +240,7 @@ export function DashboardScreen() {
                 lift
                 onPress={() => router.push('/scan')}>
                 <View className="h-9 w-9 items-center justify-center rounded-full bg-accent">
-                  <ScanLine color="#FFFFFF" size={18} />
+                  <ScanIcon color="#FFFFFF" size={18} weight="bold" />
                 </View>
                 <View className="mt-5">
                   <Text className="text-base font-black text-white">Log a meal</Text>

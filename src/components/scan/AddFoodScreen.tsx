@@ -1,11 +1,11 @@
 import {
-  Barcode,
-  Camera,
-  ChevronRight,
-  Library,
-  Plus,
-  Search,
-} from 'lucide-react-native';
+  BarcodeIcon,
+  CameraIcon,
+  CaretRightIcon,
+  BookOpenIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+} from 'phosphor-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
@@ -18,7 +18,7 @@ import { MotionPressable, MotionStagger } from '@/src/lib/motion';
 
 const ACTIONS = [
   {
-    icon: Search,
+    icon: MagnifyingGlassIcon,
     title: 'Search foods',
     description: 'Find foods and nutrition information',
     iconClassName: 'bg-fats',
@@ -26,7 +26,7 @@ const ACTIONS = [
     route: '/food-search',
   },
   {
-    icon: Barcode,
+    icon: BarcodeIcon,
     title: 'Scan a barcode',
     description: 'Point your camera at packaged food',
     iconClassName: 'bg-accent',
@@ -34,7 +34,7 @@ const ACTIONS = [
     route: '/barcode-camera',
   },
   {
-    icon: Camera,
+    icon: CameraIcon,
     title: 'Take a meal photo',
     description: 'Analyze a complete plate with AI',
     iconClassName: 'bg-carbs',
@@ -76,7 +76,7 @@ export function AddFoodScreen() {
                     }>
                     <View
                       className={`h-12 w-12 items-center justify-center rounded-full ${action.iconClassName}`}>
-                      <ActionIcon color={action.iconColor} size={22} strokeWidth={2.5} />
+                      <ActionIcon color={action.iconColor} size={22} weight="bold" />
                     </View>
                     <View className="min-w-0 flex-1">
                       <Text className="text-lg font-black text-white">{action.title}</Text>
@@ -84,7 +84,7 @@ export function AddFoodScreen() {
                         {action.description}
                       </Text>
                     </View>
-                    <ChevronRight color="#FFFFFF" size={20} />
+<CaretRightIcon color="#FFFFFF" size={20} />
                   </MotionPressable>
                 </MotionStagger>
               );
@@ -97,7 +97,7 @@ export function AddFoodScreen() {
                 lift
                 onPress={() => setShowCustomFoodForm(true)}>
                 <View className="h-12 w-12 items-center justify-center rounded-full bg-[#79C7FF]">
-                  <Plus color="#101010" size={22} strokeWidth={2.5} />
+                  <PlusIcon color="#101010" size={22} weight="bold" />
                 </View>
                 <View className="min-w-0 flex-1">
                   <Text className="text-lg font-black text-white">Add a custom food</Text>
@@ -105,7 +105,7 @@ export function AddFoodScreen() {
                     Create your own nutrition entry
                   </Text>
                 </View>
-                <ChevronRight color="#FFFFFF" size={20} />
+                <CaretRightIcon color="#FFFFFF" size={20} />
               </MotionPressable>
             </MotionStagger>
 
@@ -121,7 +121,7 @@ export function AddFoodScreen() {
                   })
                 }>
                 <View className="h-12 w-12 items-center justify-center rounded-full bg-protein">
-                  <Library color="#101010" size={22} strokeWidth={2.5} />
+                  <BookOpenIcon color="#101010" size={22} weight="bold" />
                 </View>
                 <View className="min-w-0 flex-1">
                   <Text className="text-lg font-black text-white">My food library</Text>
@@ -129,7 +129,7 @@ export function AddFoodScreen() {
                     Edit, favorite, search, or delete custom foods
                   </Text>
                 </View>
-                <ChevronRight color="#FFFFFF" size={20} />
+                <CaretRightIcon color="#FFFFFF" size={20} />
               </MotionPressable>
             </MotionStagger>
           </View>

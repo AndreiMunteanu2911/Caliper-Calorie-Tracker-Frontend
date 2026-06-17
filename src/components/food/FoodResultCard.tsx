@@ -1,4 +1,4 @@
-import { ChevronRight, Flame, Utensils } from 'lucide-react-native';
+import { CaretRightIcon, FlameIcon, ForkKnifeIcon } from 'phosphor-react-native';
 import { Pressable, Text, View } from 'react-native';
 
 import { shadows } from '@/src/lib/shadows';
@@ -19,7 +19,7 @@ export function FoodResultCard({ food, onPress }: FoodResultCardProps) {
       onPress={() => onPress(food)}>
       <View className="flex-row items-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded-2xl bg-carbs">
-          <Utensils color="#101010" size={18} strokeWidth={2.5} />
+          <ForkKnifeIcon color="#101010" size={18} weight="bold" />
         </View>
         <View className="flex-1 gap-0.5">
           <Text className="text-base font-black text-white">{food.name}</Text>
@@ -28,10 +28,10 @@ export function FoodResultCard({ food, onPress }: FoodResultCardProps) {
           </Text>
         </View>
         <View className="flex-row items-center gap-1.5 rounded-xl bg-accentSoft px-2.5 py-1.5">
-          <Flame color="#FF5A16" size={13} strokeWidth={2.5} />
+          <FlameIcon color="#FF5A16" size={13} weight="bold" />
           <Text className="text-sm font-black text-brand">{Math.round(food.calories)}</Text>
         </View>
-        <ChevronRight color="#A4A4A4" size={16} strokeWidth={2.4} />
+        <CaretRightIcon color="#A4A4A4" size={16} />
       </View>
       <Text className="mt-2 text-xs text-white/55">
         Per 100g / P {food.protein.toFixed(1)} / C {food.carbs.toFixed(1)} / F{' '}

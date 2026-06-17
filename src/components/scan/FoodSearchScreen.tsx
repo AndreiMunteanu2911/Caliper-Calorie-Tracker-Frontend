@@ -1,4 +1,4 @@
-import { Plus, Search } from 'lucide-react-native';
+import { PlusIcon, MagnifyingGlassIcon } from 'phosphor-react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -97,7 +97,7 @@ export function FoodSearchScreen() {
           {!hasQuery ? (
             <View className="mt-4 items-center rounded-3xl border border-white/10 bg-[#232220] p-6">
               <View className="mb-3 h-12 w-12 items-center justify-center rounded-2xl bg-fats">
-                <Search color="#101010" size={20} strokeWidth={2.5} />
+                <MagnifyingGlassIcon color="#101010" size={20} weight="bold" />
               </View>
               <Text className="text-base font-black text-white">
                 Search the food database
@@ -110,7 +110,7 @@ export function FoodSearchScreen() {
 
           {showEmptyState ? (
             <View className="mt-4 items-center rounded-3xl border border-white/10 bg-[#232220] p-6">
-              <Search color="#FF5A16" size={22} strokeWidth={2.5} />
+              <MagnifyingGlassIcon color="#FF5A16" size={22} weight="bold" />
               <Text className="mt-3 text-base font-black text-white">
                 No results found
               </Text>
@@ -147,7 +147,7 @@ export function FoodSearchScreen() {
             <Pressable
               className="mt-3 min-h-11 flex-row items-center justify-center gap-2 rounded-xl border border-accent bg-brand px-3.5"
               onPress={() => setShowCustomFoodForm(true)}>
-              <Plus color="#FF5A16" size={15} strokeWidth={2.5} />
+              <PlusIcon color="#FF5A16" size={15} weight="bold" />
               <Text className="text-sm font-black tracking-tight text-accent">
                 Create custom food
               </Text>
