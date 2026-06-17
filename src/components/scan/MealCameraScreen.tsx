@@ -29,7 +29,7 @@ export function MealCameraScreen() {
     try {
       const picture = await cameraRef.current.takePictureAsync({
         base64: true,
-        quality: 0.82,
+        quality: 0.6,
       });
       if (!picture) return;
       router.replace('/meal-analysis');
